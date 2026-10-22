@@ -1,0 +1,47 @@
+elecdef: a pure Python library of electrical blocks, pins, ratings and product identities for electrical engineers.
+Site: https://olejbondahl.github.io/elecdef/
+Index: https://olejbondahl.github.io/elecdef/
+Guide: https://olejbondahl.github.io/elecdef/guide/
+API: https://olejbondahl.github.io/elecdef/api/
+Design: https://olejbondahl.github.io/elecdef/design/
+Rules: https://olejbondahl.github.io/elecdef/rules/
+Changelog: https://olejbondahl.github.io/elecdef/changelog/
+Command: python -m elecdef api
+Rule: a change follows RULES.md.
+Rules:
+F1. The library declares no runtime dependency and imports only the standard library and itself; libraries of the family never import each other.
+F2. Every value is a frozen dataclass or an enum; the library performs no file, network, clock or random access.
+F3. Validation returns issues as values and never raises for content; only a malformed call (a wrong type, a wrong kind of argument, or a shape the library's RULES.md names as malformed) raises TypeError.
+F4. A closed vocabulary is an enum or a typed constant, never a string.
+F5. A fact has one home across the family: symdef draws, elecdef says what a thing is, refdef says what it is called, a consumer connects and lays out.
+F6. A caller's convention (a padding, an ordering, a default, a project class) arrives as an argument or a value; no general function carries a caller's default.
+F7. No paid standard is cited and no standard's wording is used; open sources are used only with the credit block in README.md.
+F8. The public surface is the names in __all__ of the top level and of each door, read by python -m <library> api, and it changes only with the snapshot.
+F9. Every surface name has a docstring and a runnable example on the docs site.
+F10. Code stays lean: a function has at most 15 statements, complexity 8 and 12 branches, no def inside a def; a module has at most 300 code lines; a docstring is one summary line plus at most two lines of why.
+F11. Versions are semantic and every surface change carries a changelog line.
+F12. A pull request that edits DESIGN.md or RULES.md, or changes docs/api-snapshot.txt, or changes a shipped table under src/<library>/tables/, carries a Design-review: trailer naming an approved review.
+F13. A consumer's missing need is met by a reviewed surface extension, never by a workaround in the consumer, a private import, a copy of the rule or a consumer-specific default in the library.
+F14. The library is MIT licensed, and the licence covers its code and its shipped tables.
+F15. One public spelling per task: a second way to build, read or print the same value is not added, and no operator is overloaded to build a value; arithmetic belongs only to the numeric value types the library's RULES.md names.
+F16. An agent finds everything from one place: AGENTS.md in the repository and llms.txt at the docs site root name the docs site, the surface command (python -m <library> api), the guide, DESIGN.md and RULES.md, and say that a change follows RULES.md.
+F17. The library stands alone: no file in the repository names an application that uses it.
+E1. The F4 allowlist for elecdef, covering fields annotated str or tuple[str, ...], is marking, alternates, markings, common, mpn, manufacturer, name, key, text, message, subject.
+E2. A measured figure is a Decimal inside a Quantity, a count is an int, a flag is a bool, a derived ratio (tolerance) is a Fraction, and float appears nowhere.
+E3. A Unit is an enum member with one Kind and an exact factor; conversion and comparison refuse a second kind.
+E4. Every quantity field of a block declares its kind, and a value of another kind is refused at construction.
+E5. A Range is written as Range(Role.X, nom=, min=, max=, at=) with an optional typ; role is positional and required, tolerance is a derived property, and there is no second constructor or helper spelling.
+E6. Current kind, frequency, utilisation code, coil state, conductor kind and ambient are conditions in At, never fields of a block; two conditions of one kind in an At is the malformed shape F3 names.
+E7. pick returns one covering range or an issue; it never returns the first of several.
+E8. The library answers which stated figure applies and never whether a figure is acceptable: the only surface callables that return a truth value are Quantity.same, Quantity ordering, Range.contains, Range.covers and At.covers.
+E9. Blocks compose by typed fields; an application never subclasses a block, and there is one base class, Block, for the kind check only.
+E10. A composite's pins and links are computed from its sub-blocks and stored nowhere else; a leaf's are stored once.
+E11. Pin markings, their alternates and marking schemes are data in elecdef.pins; a Coil or Contact stores only the pins its author gives (own_pins, may be empty) and computes pins on every read from its kind, form and position, and a composite numbers its unnumbered contacts on every read, so replace never leaves a stale marking; a marking is a non-empty string of letters, digits and / + - . '.
+E12. A Connection belongs to the pins a block owns itself: Coil, Contact, SupplyInput, ChannelGroup, Fuse, FuseHolder, Breaker, Overload, PowerSupply, Connector and Device have one connection field, TerminalBlock has sides, and every other block has neither.
+E13. elecdef.connections ships technology-only leaves with every range unfilled; vendor figures (torque, strip length, conductor ranges) never ship.
+E14. Data tables are generated Python modules whose rows carry no origin, and a row ships only when the generator's input file, which records each row's origin (an open source, a maker's datasheet or a measurement) and its confirmation status, marks it confirmed.
+E15. Product(mpn, manufacturer, block, name) is the one identity envelope; the library holds no supplier, price, footprint, class letter or description field.
+E16. check reports exactly the content issues the design names: an end below another, a repeated marking, a marking outside the character set, a link naming no pin, a figure a block kind needs and lacks, a class outside the catalogue; IssueCode has these six codes (END_ORDER, DUPLICATE_MARKING, BAD_MARKING, DANGLING_LINK, MISSING_FIGURE, UNKNOWN_CLASS) and the two that pick returns (NO_RATING, AMBIGUOUS_RATING), eight in all.
+E17. A block names its symbol by Symbol(key, version) and holds nothing else of it.
+E18. For F15, Quantity is the only numeric value type, and in v1 it defines comparison dunders only; no surface class defines an arithmetic or bitwise dunder.
+E19. Coverage never falls below 95 % per module, and ty check passes.
