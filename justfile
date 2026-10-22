@@ -45,12 +45,12 @@ api:
 api-write:
     uv run python -m elecdef api > docs/api-snapshot.txt
 
-# bump the version, rename Unreleased, run the gate, commit and tag (no push): just release 0.2.0
+# bump the version, open a new Unreleased above the version section, run the gate, commit and tag (no push): just release 0.2.0
 release V:
     #!/usr/bin/env bash
     set -euo pipefail
     sed -i 's/^version = ".*"/version = "{{V}}"/' pyproject.toml
-    sed -i 's/^## Unreleased$/## {{V}} ('"$(date +%F)"')/' docs/CHANGELOG.md
+    sed -i 's/^## Unreleased$/## Unreleased\n\n## {{V}} ('"$(date +%F)"')/' docs/CHANGELOG.md
     just ci
     git add pyproject.toml docs/CHANGELOG.md uv.lock
     git commit -m "Release {{V}}"

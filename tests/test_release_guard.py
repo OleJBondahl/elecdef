@@ -1,5 +1,6 @@
 """F11 gate: `scripts/release_guard.py` fails an API change with no changelog line or bump."""
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -88,3 +89,18 @@ def test_a_removed_name_with_a_bumped_version_passes(repo):
     _tag(repo)
     _write(repo, GONE, line="\n- Bar removed\n", version="0.2.0")
     assert run(repo)[0] == 0
+
+
+def test_release_recipe_opens_a_fresh_unreleased(tmp_path):
+    recipe = (family.ROOT / "justfile").read_text(encoding="utf-8").splitlines()
+    step = next(line.strip() for line in recipe if "CHANGELOG.md" in line and "sed" in line)
+    log = tmp_path / "docs" / "CHANGELOG.md"
+    log.parent.mkdir()
+    log.write_text("# Changelog\n\n## Unreleased\n\n- new\n\n## 0.1.0 (d)\n", encoding="utf-8")
+    script = step.replace("{{V}}", "0.2.0")
+    subprocess.run(["bash", "-c", script], cwd=tmp_path, check=True)  # noqa: S603, S607 - the recipe's own sed line
+    lines = log.read_text(encoding="utf-8").splitlines()
+    assert lines[:3] == ["# Changelog", "", "## Unreleased"]
+    assert lines[3] == ""
+    assert re.fullmatch(r"## 0\.2\.0 \(\d{4}-\d\d-\d\d\)", lines[4])
+    assert "- new" in lines[5:]
