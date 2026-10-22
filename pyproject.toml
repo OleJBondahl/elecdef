@@ -163,12 +163,14 @@ ignore_names = [
     "group_current", "hold_up", "input_type", "isolated", "off_max", "on_min", "output_current",
     "output_voltage", "overload", "pl", "polarity", "redundant", "rtd", "short_circuit_protected",
     "signal", "sil", "span", "thermocouple", "wires",
+    "curve", "icn", "icu", "ics", "trip_class", "setting", "reset", "phase_failure", "system", "fuse_class",
+    "breaking_capacity", "speed", "indicator", "disconnect",
     # private; the check of a later order calls it
     "_is_marking"
 ]
 
 [tool.family]
-doors = ["elecdef", "elecdef.vocab", "elecdef.connections", "elecdef.pins", "elecdef.supply", "elecdef.plc", "elecdef.tables", "elecdef.terminal", "elecdef.conductor", "elecdef.cable", "elecdef.connector", "elecdef.computer"]
+doors = ["elecdef", "elecdef.vocab", "elecdef.connections", "elecdef.pins", "elecdef.supply", "elecdef.plc", "elecdef.tables", "elecdef.terminal", "elecdef.fuse", "elecdef.conductor", "elecdef.cable", "elecdef.connector", "elecdef.computer"]
 str_allowlist = ["marking", "alternates", "markings", "common", "mpn", "manufacturer", "name", "key", "text", "message", "subject"]
 boundary_names = ["designation", "tag", "svg", "x", "y", "page"]
 numeric_classes = ["Quantity"]

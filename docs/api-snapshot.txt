@@ -7,6 +7,11 @@ class Body(width: 'Quantity | None' = None, height: 'Quantity | None' = None, de
 
     Temperature rows tell operating (RATED) from storage (LIMITING) by their role.
 
+class Breaker(poles: 'int | None' = None, current: 'Range | None' = None, curve: 'TripCurve | None' = None, icn: 'Range | None' = None, icu: 'Range | None' = None, ics: 'Range | None' = None, rating: 'Rating | None' = None, aux: 'tuple[Contact, ...]' = (), connection: 'Connection | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
+    A circuit breaker: current, trip curve and breaking capacities, pole pins, auxiliaries.
+
+    Pins and links are computed on every read, so `replace(breaker, poles=1)` leaves none stale.
+
 class Coil(kind: 'CoilKind | None' = None, voltage: 'Ranges' = (), pick_up: 'Range | None' = None, drop_out: 'Range | None' = None, resistance: 'Range | None' = None, power: 'Ranges' = (), apparent_power: 'Ranges' = (), operate_time: 'Range | None' = None, release_time: 'Range | None' = None, suppression: 'Suppression | None' = None, connection: 'Connection | None' = None, own_pins: 'tuple[Pin, ...]' = (), symbol: 'Symbol | None' = None) -> 'None'
     One coil: kind, drive figures, suppression, and the pins computed from kind and suppression.
 
@@ -35,11 +40,21 @@ class Device(pins: 'tuple[Pin, ...]' = (), links: 'tuple[Link, ...]' = (), ratin
 
     Every field is unfilled by default.
 
+class Fuse(system: 'FuseSystem | None' = None, fuse_class: 'FuseClass | None' = None, current: 'Range | None' = None, voltage: 'Ranges' = (), breaking_capacity: 'Ranges' = (), speed: 'FuseSpeed | None' = None, indicator: 'bool' = False, connection: 'Connection | None' = None, symbol: 'Symbol | None' = None) -> 'None'
+    A fuse: system, class, current, voltage and breaking capacity, and its two pins.
+
+    The pins are `1` (LINE) and `2` (LOAD), joined by a protective link.
+
 class Issue(code: 'IssueCode', message: 'str', subject: 'str') -> 'None'
     One finding: a code, a message and the subject path it concerns, such as `coil.voltage`.
 
 class IssueCode
     The closed set of issue codes; `check` reports the first six, `pick` the last two.
+
+class Overload(poles: 'int | None' = None, setting: 'Range | None' = None, trip_class: 'TripClass | None' = None, reset: 'Reset | None' = None, phase_failure: 'bool' = False, aux: 'tuple[Contact, ...]' = (), connection: 'Connection | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
+    A motor overload relay: main pins per pole, then auxiliaries numbered OVERLOAD.
+
+    Pins and links are computed on every read, so `replace(overload, poles=2)` leaves none stale.
 
 class Pick(found: 'Range | None' = None, issue: 'Issue | None' = None) -> 'None'
     The answer of `pick`: exactly one of the range found or the issue.
@@ -480,6 +495,10 @@ TRIP_TIMES: tuple
 ## elecdef.terminal
 class Level(marking: 'str', potential: 'Potential', kind: 'LevelKind') -> 'None'
     One level of a terminal: its marking, the potential it carries and its kind.
+
+## elecdef.fuse
+class FuseHolder(system: 'FuseSystem | None' = None, poles: 'int | None' = None, disconnect: 'bool' = False, indicator: 'bool' = False, rating: 'Rating | None' = None, connection: 'Connection | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
+    A fuse holder: pins `2p-1` and `2p` per pole, each pole joined by a protective link.
 
 ## elecdef.conductor
 class Conductor(material: 'ConductorMaterial | None' = None, conductor_class: 'ConductorClass | None' = None, area: 'Quantity | None' = None, gauge: 'Quantity | None' = None, insulation: 'Insulation | None' = None, max_temperature: 'Quantity | None' = None, colour: 'tuple[Colour, ...]' = (), voltage_u0: 'Quantity | None' = None, voltage_u: 'Quantity | None' = None) -> 'None'

@@ -31,6 +31,9 @@ ContactBlock: a coil-less carrier of contacts numbered AUX from numbered_from.
 PowerSupply: a power supply: its input, output figures and OK contact; the pins are read on every access.
 PlcCard: a PLC card: supply, groups of channels, form, role, bus and safety levels; the pins are read on every access.
 Device: a thing with no block of its own yet: its pins and links are stored as given.
+Overload: a motor overload relay: main pins per pole, then auxiliaries numbered OVERLOAD.
+Fuse: a fuse: system, class, current, voltage and breaking capacity, and its two pins.
+Breaker: a circuit breaker: current, trip curve and breaking capacities, pole pins, auxiliaries.
 TerminalBlock: a terminal block: its levels, the connection on each side and its mounting.
 elecdef.vocab.Kind: the physical kind a unit belongs to; conversion and ordering stay inside one kind.
 elecdef.vocab.Current: the current kind a figure is stated for, AC or DC.
@@ -115,6 +118,7 @@ elecdef.plc.ChannelGroup: channels that share a template and a common: one per m
 elecdef.plc.DigitalInput: what a digital input channel accepts: its type, polarity, voltage, thresholds and filter.
 elecdef.plc.DigitalOutput: what a digital output channel delivers: its stage, polarity and current.
 elecdef.terminal.Level: one level of a terminal: its marking, the potential it carries and its kind.
+elecdef.fuse.FuseHolder: a fuse holder: pins 2p-1 and 2p per pole, each pole joined by a protective link.
 elecdef.connector.Connector: a connector: family, coding, poles, gender, locking and whether it is shielded.
 elecdef.computer.Computer: a computer: the supply it draws, its power and its data ports.
 elecdef.computer.Port: a data port: its kind, how many there are and the connector it takes, if stated.
