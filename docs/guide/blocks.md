@@ -186,3 +186,18 @@ assert fuse.links[0].kind is LinkKind.PROTECTIVE
 assert [pin.marking for pin in FuseHolder(poles=2).pins] == ["1", "2", "3", "4"]
 assert len(Breaker(poles=2, curve=TripCurve.C).pins) == 4
 ```
+
+## Product and check
+
+`Product` wraps a block with the maker's part number and manufacturer. `check` reports content problems as a tuple of `Issue`, never raising for them; a figure a block needs is reported only inside a `Product`, because a bare block is a template.
+
+```python
+from elecdef import Fuse, IssueCode, Product, Range, Role, Unit, check
+
+fuse = Fuse(current=Range(Role.RATED, nom=Unit.A(16)))
+assert check(Product("5SD", "Maker", fuse)) == ()
+assert check(Fuse()) == ()
+missing = check(Product("5SD", "Maker", Fuse()))
+assert [issue.code for issue in missing] == [IssueCode.MISSING_FIGURE]
+assert missing[0].subject == "current"
+```

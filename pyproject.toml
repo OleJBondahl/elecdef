@@ -165,8 +165,8 @@ ignore_names = [
     "signal", "sil", "span", "thermocouple", "wires",
     "curve", "icn", "icu", "ics", "trip_class", "setting", "reset", "phase_failure", "system", "fuse_class",
     "breaking_capacity", "speed", "indicator", "disconnect",
-    # private; the check of a later order calls it
-    "_is_marking"
+    # ED-10: Product fields that src never reads
+    "mpn", "manufacturer",
 ]
 
 [tool.family]

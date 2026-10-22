@@ -2,6 +2,7 @@
 
 from elecdef._body import Body
 from elecdef._breaker import Breaker
+from elecdef._check import check
 from elecdef._coil import Coil
 from elecdef._connection import Connection
 from elecdef._contact import Contact
@@ -9,7 +10,7 @@ from elecdef._device import Device
 from elecdef._issue import Issue, IssueCode
 from elecdef._overload import Overload
 from elecdef._plccard import PlcCard
-from elecdef._product import Symbol
+from elecdef._product import Product, Symbol
 from elecdef._psu import PowerSupply
 from elecdef._quantity import Quantity, Unit
 from elecdef._range import At, Pick, Range, Ranges, Role, pick
@@ -35,6 +36,7 @@ __all__ = [
     "Pick",
     "PlcCard",
     "PowerSupply",
+    "Product",
     "Quantity",
     "Range",
     "Ranges",
@@ -44,5 +46,6 @@ __all__ = [
     "Symbol",
     "TerminalBlock",
     "Unit",
+    "check",
     "pick",
 ]

@@ -69,6 +69,11 @@ class PowerSupply(kind: 'PsuKind | None' = None, input: 'SupplyInput | None' = N
 
     Outputs: the first PLUS, the second MINUS, a further one PLUS; the OK contact is AUX 1.
 
+class Product(mpn: 'str', manufacturer: 'str', block: 'Block', name: 'str | None' = None) -> 'None'
+    A maker's product: part number, manufacturer, optional name and the block it is.
+
+    `check` reports the figures the block's kind needs only for a block inside a Product.
+
 class Quantity(value: 'Decimal', unit: 'Unit') -> 'None'
     A Decimal and its Unit; `==` compares as written, `same` and ordering in base units.
 
@@ -108,6 +113,11 @@ class TerminalBlock(kind: 'LevelKind | None' = None, levels: 'tuple[Level, ...]'
 
 class Unit
     A unit of one kind with an exact factor to the base unit; `U.V(24)` builds a Quantity.
+
+check(block: 'Block | Product') -> 'tuple[Issue, ...]'
+    Report the content issues of a block, or of the block inside a Product, as a tuple.
+
+    A figure a block kind needs is reported only inside a Product; a bare block is a template.
 
 pick(ranges: 'tuple[Range, ...]', *ask: 'Quantity | Range | Enum') -> 'Pick'
     The one range whose conditions cover every ask, else NO_RATING or AMBIGUOUS_RATING.

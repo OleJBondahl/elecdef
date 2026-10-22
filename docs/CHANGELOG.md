@@ -15,6 +15,7 @@ Every change to the public surface gets a line under Unreleased until the releas
 - Conductor and cable: the `elecdef.conductor` door (Conductor) and the `elecdef.cable` door (Cable, Core, TypeCode); a Cable computes one pin per core and an SH pin with the role SCREEN when it has a screen.
 - Protection: Overload, Fuse and Breaker at top level and the `elecdef.fuse` door (FuseHolder); an overload and a breaker number their auxiliaries on every read, and the fuse, fuse holder and breaker pin rows are proposed.
 - PSU and PLC: PowerSupply and PlcCard at top level, and the `elecdef.plc` door (DigitalInput, DigitalOutput, AnalogIo, Channel, ChannelGroup); a power supply and a card store no pins and read them on every access.
+- Product and check: Product(mpn, manufacturer, block, name=None) and check(block), which reports END_ORDER, DUPLICATE_MARKING, BAD_MARKING, DANGLING_LINK and UNKNOWN_CLASS for any block, and MISSING_FIGURE for the figures a block needs only inside a Product; the top-level surface is now 28 names.
 
 ## 0.1.0 (2026-10-22)
 
