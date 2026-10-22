@@ -78,14 +78,21 @@ def file_problems(path: Path, *, structure: bool) -> list[str]:
 
 
 def check_lean(root: Path = family.ROOT) -> None:
-    """Fail on any F10 problem under `src/<lib>` or any bad comment in `scripts/*.py`."""
+    """Fail on any F10 problem under `src/<lib>` or any bad comment in `scripts/` and `tests/`."""
     found = []
     for path in sorted((root / "src" / family.lib_name(root)).rglob("*.py")):
         found += file_problems(path, structure=True)
-    for path in sorted((root / "scripts").glob("*.py")):
-        found += file_problems(path, structure=False)
+    for folder in ("scripts", "tests"):
+        for path in sorted((root / folder).rglob("*.py")):
+            found += file_problems(path, structure=False)
     assert not found, "; ".join(found)
 
 
 def test_lean():
     check_lean()
+
+
+def test_bare_markers_are_found():
+    bare = "x = 1  # noqa\ny = 2  # ty: ignore\nz = 3  # noqa: E501\n"
+    assert len(comment_problems(bare)) == 3
+    assert comment_problems("x = 1  # noqa: E501 - reason\n") == []
