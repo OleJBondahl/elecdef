@@ -131,3 +131,28 @@ from elecdef.pins import Pin, PinRole
 device = Device(pins=(Pin("1", PinRole.SIGNAL),))
 assert device.pins[0].marking == "1"
 ```
+
+## Overload, Fuse and Breaker
+
+`Overload` gives a main pin pair per pole, then its auxiliaries numbered 95 to 98; `Fuse`, `FuseHolder` and `Breaker` give a line pin and a load pin per pole.
+
+```python
+from elecdef import Breaker, Contact, Fuse, Overload, Range, Role, Unit
+from elecdef.fuse import FuseHolder
+from elecdef.pins import LinkKind
+from elecdef.vocab import ContactForm, Reset, TripClass, TripCurve
+
+overload = Overload(
+    poles=3,
+    setting=Range(Role.RATED, min=Unit.A(7), max=Unit.A(10)),
+    trip_class=TripClass.C10,
+    reset=Reset.BOTH,
+    phase_failure=True,
+    aux=(Contact(ContactForm.BREAK), Contact(ContactForm.MAKE)),
+)
+assert [pin.marking for pin in overload.pins][-4:] == ["95", "96", "97", "98"]
+fuse = Fuse(current=Range(Role.RATED, nom=Unit.A(16)))
+assert fuse.links[0].kind is LinkKind.PROTECTIVE
+assert [pin.marking for pin in FuseHolder(poles=2).pins] == ["1", "2", "3", "4"]
+assert len(Breaker(poles=2, curve=TripCurve.C).pins) == 4
+```
