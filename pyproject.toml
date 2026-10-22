@@ -153,3 +153,6 @@ str_allowlist = ["marking", "alternates", "markings", "common", "mpn", "manufact
 boundary_names = ["designation", "tag", "svg", "x", "y", "page"]
 numeric_classes = ["Quantity"]
 review_paths = ["DESIGN.md", "RULES.md", "docs/api-snapshot.txt", "src/elecdef/tables/"]
+# ED-4 trailer slip 2026-10-22: these two pushed commits carry the Design-review line behind a blank
+# line, so git parses no trailer. History is never rewritten; the full shas are exempt, never a pattern.
+design_review_exempt = ["4eea0fda95b85b12fc30e69aa56fb440172df11b", "54639f10ed62916d1750ad8d042456d7cf393e39"]
