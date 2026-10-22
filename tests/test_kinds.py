@@ -16,9 +16,9 @@ from elecdef._range import Ranges
 
 @dataclass(frozen=True)
 class Sample(Block):
-    width: Quantity | None = figure(Kind.LENGTH)  # noqa: RUF009 - figure() is the field metadata
-    voltage: Ranges = figure(Kind.VOLTAGE, many=True)  # noqa: RUF009 - figure() is the field metadata
-    setting: Range | None = figure(Kind.CURRENT, Kind.VOLTAGE)  # noqa: RUF009 - field metadata
+    width: Quantity | None = figure(Kind.LENGTH)
+    voltage: Ranges = figure(Kind.VOLTAGE, many=True)
+    setting: Range | None = figure(Kind.CURRENT, Kind.VOLTAGE)
 
 
 @dataclass(frozen=True)

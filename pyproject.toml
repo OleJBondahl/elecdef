@@ -87,6 +87,9 @@ select = [
 # supported 3.14 (35 test modules failed to collect when tried 2026-10-07, with the contract library gone).
 ignore = ["TRY003", "TC001", "TC003"]
 
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["elecdef._block.figure"]
+
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 

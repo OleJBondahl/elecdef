@@ -17,9 +17,9 @@ class Body(Block):
     Temperature rows tell operating (RATED) from storage (LIMITING) by their role.
     """
 
-    width: Quantity | None = figure(Kind.LENGTH)  # noqa: RUF009 - figure() is the field metadata
-    height: Quantity | None = figure(Kind.LENGTH)  # noqa: RUF009 - figure() is the field metadata
-    depth: Quantity | None = figure(Kind.LENGTH)  # noqa: RUF009 - figure() is the field metadata
+    width: Quantity | None = figure(Kind.LENGTH)
+    height: Quantity | None = figure(Kind.LENGTH)
+    depth: Quantity | None = figure(Kind.LENGTH)
     ip: IpCode | None = None
-    temperature: Ranges = figure(Kind.TEMPERATURE, many=True)  # noqa: RUF009 - figure() is the field metadata
+    temperature: Ranges = figure(Kind.TEMPERATURE, many=True)
     mounting: Mounting | None = None

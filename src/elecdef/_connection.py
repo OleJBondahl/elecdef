@@ -18,11 +18,11 @@ class Connection(Block):
     """
 
     technology: Technology | None = None
-    conductor: Ranges = figure(Kind.AREA, many=True)  # noqa: RUF009 - figure() is the field metadata
-    conductor_awg: Ranges = figure(Kind.GAUGE, many=True)  # noqa: RUF009 - figure() is the field metadata
+    conductor: Ranges = figure(Kind.AREA, many=True)
+    conductor_awg: Ranges = figure(Kind.GAUGE, many=True)
     conductors_per_clamp: int | None = None
-    strip_length: Quantity | None = figure(Kind.LENGTH)  # noqa: RUF009 - figure() is the field metadata
-    torque: Range | None = figure(Kind.TORQUE)  # noqa: RUF009 - figure() is the field metadata
+    strip_length: Quantity | None = figure(Kind.LENGTH)
+    torque: Range | None = figure(Kind.TORQUE)
     screw: ScrewSize | None = None
-    pitch: Quantity | None = figure(Kind.LENGTH)  # noqa: RUF009 - figure() is the field metadata
+    pitch: Quantity | None = figure(Kind.LENGTH)
     material: ConductorMaterial | None = None
