@@ -85,7 +85,7 @@ def test_core_pins_by_colour() -> None:
         (None, False),
     ],
 )
-def test_sh_pin_follows_the_screen(screen: Screen | None, has_sh: bool) -> None:
+def test_sh_pin_follows_the_screen(screen: Screen | None, *, has_sh: bool) -> None:
     """SH is present for a real screen, last, with the role SCREEN; absent for NONE or unset."""
     pins = Cable(cores=(Core(number=1),), screen=screen).pins
     assert [p.marking for p in pins] == (["1", "SH"] if has_sh else ["1"])
@@ -108,7 +108,15 @@ def test_replace_never_leaves_a_stale_pin() -> None:
     assert len(replace(cable, cores=(Core(number=1), Core(number=2))).pins) == 2
 
 
-_MARKINGS_44 = ["WH", "BN", "GN", "YE", "GY", "PK", "BU", "RD", "BK", "VT", "GYPK", "RDBU", "WHGN", "BNGN", "WHYE", "YEBN", "WHGY", "GYBN", "WHPK", "PKBN", "WHBU", "BNBU", "WHRD", "BNRD", "WHBK", "BNBK", "GYGN", "YEGY", "PKGN", "YEPK", "GNBU", "YEBU", "GNRD", "YERD", "GNBK", "YEBK", "GYBU", "PKBU", "GYRD", "PKRD", "GYBK", "PKBK", "BUBK", "RDBK"]
+# fmt: off
+_MARKINGS_44 = (
+    "WH", "BN", "GN", "YE", "GY", "PK", "BU", "RD", "BK", "VT",
+    "GYPK", "RDBU", "WHGN", "BNGN", "WHYE", "YEBN", "WHGY", "GYBN", "WHPK", "PKBN",
+    "WHBU", "BNBU", "WHRD", "BNRD", "WHBK", "BNBK", "GYGN", "YEGY", "PKGN", "YEPK",
+    "GNBU", "YEBU", "GNRD", "YERD", "GNBK", "YEBK", "GYBU", "PKBU", "GYRD", "PKRD",
+    "GYBK", "PKBK", "BUBK", "RDBK",
+)
+# fmt: on
 
 
 def test_44_colour_table_gives_the_44_markings() -> None:

@@ -26,7 +26,7 @@ class Core:
     conductor: Conductor | None = None
 
     def __post_init__(self) -> None:
-        """Refuse a number or pair that is not an int, and a colour that is not a tuple of Colour."""
+        """Refuse a number or pair that is not an int and a colour that is not a tuple of Colour."""
         for name in ("number", "pair"):
             value = getattr(self, name)
             if value is not None and (not isinstance(value, int) or isinstance(value, bool)):

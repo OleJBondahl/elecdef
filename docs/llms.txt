@@ -100,6 +100,10 @@ elecdef.pins.PinRole: what a pin does in its part.
 elecdef.pins.Side: which side of a part a pin is on.
 elecdef.pins.contact_pins: the pins and links of contact n in a form under a marking scheme.
 elecdef.supply.SupplyInput: what a powered thing draws: voltage and current per conditions, and its supply pins.
+elecdef.conductor.Conductor: one conductor: material, class, cross-section, gauge, insulation, temperature and colour.
+elecdef.cable.Cable: a cable: conductor, cores, screen, sheath and ratings; its pins are one per core plus SH.
+elecdef.cable.Core: one core of a cable: number, colour, pair, role and own conductor.
+elecdef.cable.TypeCode: a cable type designation: the scheme family and the text as printed.
 elecdef.tables.AWG: American wire gauge rows (n, diameter, area), n from -3 (4/0) to 40.
 elecdef.tables.AWG_METRIC: each gauge with the smallest cross section in CROSS_SECTIONS that holds its area.
 elecdef.tables.BREAKER_CURRENTS: breaker rated currents in amperes.

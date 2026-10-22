@@ -407,3 +407,21 @@ TRIP_TIMES: tuple
     If iterable is specified the tuple is initialized from iterable's items.
 
     If the argument is a tuple, the return value is the same object.
+
+## elecdef.conductor
+class Conductor(material: 'ConductorMaterial | None' = None, conductor_class: 'ConductorClass | None' = None, area: 'Quantity | None' = None, gauge: 'Quantity | None' = None, insulation: 'Insulation | None' = None, max_temperature: 'Quantity | None' = None, colour: 'tuple[Colour, ...]' = (), voltage_u0: 'Quantity | None' = None, voltage_u: 'Quantity | None' = None) -> 'None'
+    One conductor: material, stranding class, cross-section, gauge, insulation and colour.
+
+    It has no pins; a product must fill the area.
+
+## elecdef.cable
+class Cable(conductor: 'Conductor | None' = None, cores: 'tuple[Core, ...]' = (), screen: 'Screen | None' = None, armour: 'Armour | None' = None, outer_diameter: 'Quantity | None' = None, bend_radius_static: 'Range | None' = None, bend_radius_moving: 'Range | None' = None, sheath_material: 'SheathMaterial | None' = None, sheath_colour: 'Colour | None' = None, temperature: 'Ranges' = (), halogen_free: 'bool | None' = None, flame_retardant: 'bool | None' = None, voltage_u0: 'Quantity | None' = None, voltage_u: 'Quantity | None' = None, type_code: 'TypeCode | None' = None) -> 'None'
+    A cable: its conductor, cores, screen, sheath and ratings.
+
+    Pins are computed on read: one per core, plus SH (role SCREEN) when a screen is set.
+
+class Core(number: 'int | None' = None, colour: 'tuple[Colour, ...]' = (), pair: 'int | None' = None, role: 'CoreRole | None' = None, conductor: 'Conductor | None' = None) -> 'None'
+    One core of a cable: its number, colour code, pair, role and own conductor.
+
+class TypeCode(scheme: 'Scheme', text: 'str') -> 'None'
+    A cable type designation: the scheme family and the text as printed.
