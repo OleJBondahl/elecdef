@@ -108,12 +108,37 @@ max-complexity = 8
 # member of the public data model, written out, never a pattern (designer 2026-10-22, option C).
 ignore_names = [
     "A", "AC", "AC_1", "AC_12", "AC_13", "AC_14", "AC_15", "AC_2", "AC_3", "AC_3E", "AC_4",
-    "AC_5A", "AC_5B", "AC_6A", "AC_6B", "AWG", "BAD_MARKING", "DANGLING_LINK", "DC", "DC_1",
-    "DC_12", "DC_13", "DC_14", "DC_3", "DC_5", "DC_6", "DEG_C", "DUPLICATE_MARKING",
-    "END_ORDER", "FINE", "FINE_FERRULE", "HOLD", "HZ", "INRUSH", "K", "KA", "KHZ", "KOHM",
-    "KV", "KVA", "KW", "LIMITING", "M", "MA", "MEGOHM", "MISSING_FIGURE", "MM", "MM2", "MS",
-    "MV", "N_M", "OHM", "PCT", "PPM", "RATED", "REFERENCE", "S", "SOLID", "STRANDED", "UA",
-    "UM", "UNKNOWN_CLASS", "US", "V", "VA", "W", "needs", "subject", "to", "tolerance"
+    "AC_5A", "AC_5B", "AC_6A", "AC_6B", "AC_DC", "AG", "AGNI", "AGSNO2", "AI_CURRENT",
+    "AI_VOLTAGE", "AL", "AL_CU", "AO_CURRENT", "AO_VOLTAGE", "AU", "AUTO", "AWG", "B",
+    "BAD_MARKING", "BAYONET", "BK", "BLADE", "BN", "BOLT", "BOTH", "BRAID", "BREAK", "BRIDGE",
+    "BU", "C", "C10", "C10A", "C20", "C30", "CANOPEN", "CAT_I", "CAT_II", "CAT_III", "CAT_IV",
+    "CHANGEOVER", "CLASS_1", "CLASS_2", "CLASS_5", "CLASS_6", "COMPACT", "CONSTANT",
+    "CONTROLLER", "CORE", "COUPLER", "CRIMP", "CU", "CYLINDRICAL", "D", "D0", "DANGLING_LINK",
+    "DC", "DC_1", "DC_12", "DC_13", "DC_14", "DC_3", "DC_5", "DC_6", "DC_DC", "DEG_C", "DI",
+    "DIN_15", "DIN_35", "DIN_RAIL", "DIODE", "DISCONNECT", "DISPLAY", "DO", "DRAIN",
+    "DUPLICATE_MARKING", "D_SUB", "E", "EARLY_MAKE", "ECONOMISER", "EITHER",
+    "ELECTROMECHANICAL", "ELV", "END_ORDER", "EPR", "ETHERCAT", "ETHERNET", "ETHERNET_IP",
+    "F", "FEED_THROUGH", "FEMALE", "FEP", "FF", "FINE", "FINE_FERRULE", "FLASHING", "FOIL",
+    "FOIL_BRAID", "FOOT", "FUSE", "GD", "GENDERLESS", "GN", "GNYE", "GY", "HARMONISED",
+    "HICCUP", "HOLD", "HZ", "IDC", "INRUSH", "INSTALLATION", "IO", "IO_LINK", "IP00", "IP20",
+    "IP30", "IP40", "IP44", "IP54", "IP55", "IP65", "IP66", "IP67", "IP68", "IP69K", "J", "K",
+    "KA", "KEY", "KHZ", "KOHM", "KV", "KVA", "KW", "L", "LATCHING", "LATE_BREAK", "LIMITING",
+    "LPS", "LSZH", "M", "M12", "M2_5", "M3", "M3_5", "M4", "M5", "M8", "MA", "MAKE",
+    "MAKE_BEFORE_BREAK", "MALE", "MANUAL", "MARINE", "MEGOHM", "MICRO_FIT", "MINIATURE",
+    "MIRROR", "MISSING_FIGURE", "MM", "MM2", "MODBUS_RTU", "MODBUS_TCP", "MODULAR", "MS",
+    "MUSHROOM", "MV", "N", "NH", "NI100", "NONE", "NORDIC", "N_M", "OFF_DELAY", "OG", "OHM",
+    "ON_DELAY", "ON_OFF_DELAY", "OTHER", "P1", "P2", "P3", "P4", "PANEL", "PCB", "PCT", "PE",
+    "PELV", "PEN", "PK", "PLUG_IN", "PL_A", "PL_B", "PL_C", "PL_D", "PL_E", "POSITION",
+    "POSITIVE_OPENING", "PPM", "PRESS_IN", "PROFIBUS", "PROFINET", "PT100", "PT1000", "PTFE",
+    "PULL", "PULSE", "PUR", "PUSH", "PUSH_IN", "PUSH_PULL", "PVC", "RATED", "RC", "RD",
+    "RECTIFIER", "REFERENCE", "RELAY", "RJ45", "RTD", "S", "SCREW", "SELV", "SENSOR_ACTUATOR",
+    "SERIAL", "SIGNAL", "SILICONE", "SIL_1", "SIL_2", "SIL_3", "SINKING", "SMD", "SNAP",
+    "SOLDER", "SOLID", "SOLID_STATE", "SOURCING", "SPRING_CAGE", "SR", "STRANDED", "T", "T1",
+    "T2", "T3", "TAPE", "TC", "TENSION", "THT", "TIMER", "TINNED_CU", "TPE", "TQ",
+    "TRANSFORMER", "TRANSISTOR", "TRIAC", "TT", "TURN", "UA", "UM", "UNKNOWN_CLASS", "UPS",
+    "US", "USB", "V", "VA", "VARISTOR", "VDE", "VT", "W", "WH", "WIRE", "WIRE_WRAP", "X",
+    "XLPE", "YE", "Z", "aM", "aR", "gG", "gL", "gPV", "gR", "gS", "needs", "subject", "to",
+    "tolerance"
 ]
 
 [tool.family]
