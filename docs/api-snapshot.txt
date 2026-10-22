@@ -1,1 +1,51 @@
 ## elecdef
+class At(*conds: 'Quantity | Range | Enum') -> 'None'
+    The conditions a figure holds under, one per kind, in a canonical order.
+
+class Issue(code: 'IssueCode', message: 'str', subject: 'str') -> 'None'
+    One finding: a code, a message and the subject path it concerns, such as `coil.voltage`.
+
+class IssueCode
+    The closed set of issue codes; `check` reports the first six, `pick` the last two.
+
+class Pick(found: 'Range | None' = None, issue: 'Issue | None' = None) -> 'None'
+    The answer of `pick`: exactly one of the range found or the issue.
+
+class Quantity(value: 'Decimal', unit: 'Unit') -> 'None'
+    A Decimal and its Unit; `==` compares as written, `same` and ordering in base units.
+
+class Range(role: 'Role', *, min: 'Quantity | None' = None, nom: 'Quantity | None' = None, typ: 'Quantity | None' = None, max: 'Quantity | None' = None, at: 'At' = At(items=())) -> 'None'
+    A figure as a datasheet states it: a role, up to four ends, and its conditions.
+
+Ranges(iterable=(), /)
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+class Role
+    What a stated figure means: the maker's rating, an extreme withstood, or a reference band.
+
+class Unit
+    A unit of one kind with an exact factor to the base unit; `U.V(24)` builds a Quantity.
+
+pick(ranges: 'tuple[Range, ...]', *ask: 'Quantity | Range | Enum') -> 'Pick'
+    The one range whose conditions cover every ask, else NO_RATING or AMBIGUOUS_RATING.
+
+## elecdef.vocab
+class CoilState
+    The state of a coil a figure is stated for.
+
+class ConductorKind
+    The construction of a conductor a terminal range is stated for.
+
+class Current
+    The current kind a figure is stated for.
+
+class Kind
+    The physical kind a unit belongs to; conversion and comparison stay inside one kind.
+
+class Utilisation
+    The utilisation code a contact rating is stated for.

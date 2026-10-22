@@ -8,6 +8,22 @@ Rules: https://olejbondahl.github.io/elecdef/rules/
 Changelog: https://olejbondahl.github.io/elecdef/changelog/
 Command: python -m elecdef api
 Rule: a change follows RULES.md.
+Names:
+Unit: the units of every kind, each with an exact factor; calling a unit with a figure builds a Quantity.
+Quantity: an exact Decimal figure with its unit; == compares as written, same and ordering use base units.
+Range: a datasheet figure with a role, up to four ends and the At it holds under.
+Ranges: a plain tuple of Range.
+Role: what a stated figure means: RATED, LIMITING or REFERENCE.
+At: the conditions a figure holds under, one per kind, in a canonical order.
+pick: the one Range that covers every ask, or an Issue of NO_RATING or AMBIGUOUS_RATING.
+Pick: the answer of pick, holding exactly one of found and issue.
+Issue: one finding as a value: a code, a message and the subject it concerns.
+IssueCode: the closed set of issue codes.
+elecdef.vocab.Kind: the physical kind a unit belongs to; conversion and ordering stay inside one kind.
+elecdef.vocab.Current: the current kind a figure is stated for, AC or DC.
+elecdef.vocab.Utilisation: the utilisation code a contact rating is stated for, such as AC_15.
+elecdef.vocab.CoilState: the state of a coil a figure is stated for, while pulling in or once held.
+elecdef.vocab.ConductorKind: the construction of a conductor a terminal range is stated for.
 Rules:
 F1. The library declares no runtime dependency and imports only the standard library and itself; libraries of the family never import each other.
 F2. Every value is a frozen dataclass or an enum; the library performs no file, network, clock or random access.
