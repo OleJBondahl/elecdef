@@ -3,7 +3,7 @@
 import re
 
 import family
-from test_vocab import E1_ALLOWLIST
+from test_vocab_e import E1_ALLOWLIST
 
 BACKTICKED = re.compile(r"`([^`]+)`")
 
