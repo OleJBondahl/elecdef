@@ -245,17 +245,14 @@ def test_a_cable_with_numbered_cores_has_no_bad_marking() -> None:
     assert IssueCode.BAD_MARKING not in _codes(issues)
 
 
-def test_channel_group_overwrites_a_template_number_and_pins_pending_a_ruling() -> None:
-    """SHOWS that `ChannelGroup.channels` replaces a template Channel's own number and pins.
-
-    `check` does not report it. Awaiting a designer ruling: report it, refuse it, or document it.
-    """
-    template = Channel(number=99, pins=(Pin("X", PinRole.SIGNAL),))
-    group = ChannelGroup(template=template, markings=("A", "B"))
-    channels = group.channels()
-    assert tuple(c.number for c in channels) == (1, 2)
-    assert tuple(tuple(p.marking for p in c.pins) for c in channels) == (("A",), ("B",))
-    assert check(group) == ()
+def test_channel_group_refuses_a_template_number_or_pins() -> None:
+    """A template Channel carries no number or pins; the group numbers them."""
+    message = "a template channel carries no number or pins; the group numbers them"
+    with pytest.raises(TypeError, match=message):
+        ChannelGroup(template=Channel(number=99), markings=("A",))
+    with pytest.raises(TypeError, match=message):
+        ChannelGroup(template=Channel(pins=(Pin("X", PinRole.SIGNAL),)), markings=("A",))
+    assert ChannelGroup(template=Channel(), markings=("A",)).channels()[0].number == 1
 
 
 def test_a_pin_issue_of_a_sub_block_is_kept_once_at_the_outermost_block() -> None:

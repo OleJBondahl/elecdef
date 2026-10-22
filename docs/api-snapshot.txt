@@ -396,7 +396,7 @@ class AnalogIo(span: 'Range | None' = None, bits: 'int | None' = None, wires: 'i
 class Channel(signal: 'Signal | None' = None, number: 'int | None' = None, electrical: 'DigitalInput | DigitalOutput | AnalogIo | Contact | None' = None, pins: 'tuple[Pin, ...]' = (), symbol: 'Symbol | None' = None) -> 'None'
     One channel: its signal, number, electrical block and the pins it is wired on.
 
-    A leaf like Device: the pins are stored as given.
+    A leaf like Device: the pins are stored as given. A group's template carries no number or pins.
 
 class ChannelGroup(template: 'Channel | None' = None, markings: 'tuple[str, ...]' = (), common: 'tuple[str, ...]' = (), isolated: 'bool | None' = None, group_current: 'Range | None' = None, connection: 'Connection | None' = None) -> 'None'
     Channels that share a template and a common: one per marking, numbered from `first`.

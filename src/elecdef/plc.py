@@ -65,7 +65,7 @@ _ELECTRICAL = (DigitalInput, DigitalOutput, AnalogIo, Contact)
 class Channel(Block):
     """One channel: its signal, number, electrical block and the pins it is wired on.
 
-    A leaf like Device: the pins are stored as given.
+    A leaf like Device: the pins are stored as given. A group's template carries no number or pins.
     """
 
     signal: Signal | None = None
@@ -104,6 +104,9 @@ class ChannelGroup(Block):
         super().__post_init__()
         if self.template is not None and not isinstance(self.template, Channel):
             message = "template is a Channel"
+            raise TypeError(message)
+        if self.template is not None and (self.template.number is not None or self.template.pins):
+            message = "a template channel carries no number or pins; the group numbers them"
             raise TypeError(message)
         for name in ("markings", "common"):
             value = getattr(self, name)
