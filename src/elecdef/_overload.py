@@ -55,11 +55,8 @@ class Overload(Block):
     symbol: Symbol | None = None
 
     def __post_init__(self) -> None:
-        """Check the figures and that setting is a Range, then read the pins once."""
+        """Check the figures, then read the pins once."""
         super().__post_init__()
-        if self.setting is not None and not isinstance(self.setting, Range):
-            message = f"setting is a Range, not {type(self.setting).__name__}"
-            raise TypeError(message)
         _ = self.pins
 
     def _joined(self) -> tuple[tuple[Pin, ...], tuple[Link, ...]]:

@@ -60,9 +60,7 @@ def test_overload_stores_no_pins_or_links():
     assert isinstance(Overload.pins, property)
 
 
-def test_overload_setting_must_be_a_current_range():
-    with pytest.raises(TypeError):
-        Overload(setting=U.A(7))  # ty: ignore[invalid-argument-type] - the refusal under test
+def test_overload_setting_must_be_of_kind_current():
     with pytest.raises(TypeError):
         Overload(setting=Range(Role.RATED, nom=U.V(7)))
 
