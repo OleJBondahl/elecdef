@@ -1,0 +1,111 @@
+[build-system]
+requires = ["hatchling==1.32.4"]
+build-backend = "hatchling.build"
+
+[project]
+name = "elecdef"
+version = "0.1.0"
+description = "Standard-agnostic electrical engineering vocabulary as strict, typed, immutable Python values"
+readme = "README.md"
+requires-python = ">=3.14"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Ole Johan Bondahl" }]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/OleJBondahl/elecdef"
+
+[dependency-groups]
+dev = [
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "ruff==0.17.2",
+    "ty==0.0.91",
+    "vulture==2.16",
+    "zensical==0.0.71",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/elecdef"]
+
+[tool.ty.environment]
+python-version = "3.15"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=elecdef --cov-report=term-missing --cov-fail-under=95"
+
+[tool.ruff]
+line-length = 100
+target-version = "py315"
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "C",    # flake8-comprehensions
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "SIM",  # flake8-simplify
+    "FA",   # flake8-future-annotations
+    "N",    # pep8-naming
+    "D",    # pydocstyle
+    "ARG",  # flake8-unused-arguments
+    "PLR",  # pylint refactor
+    "PT",   # flake8-pytest-style
+    "RET",  # flake8-return
+    "C90",  # mccabe complexity
+    "RUF",  # Ruff-specific rules
+    "PERF", # perflint
+    "PIE",  # flake8-pie
+    "ICN",  # flake8-import-conventions
+    "ISC",  # flake8-implicit-str-concat
+    "T20",  # flake8-print
+    "LOG",  # flake8-logging
+    "G",    # flake8-logging-format
+    "Q",    # flake8-quotes
+    "BLE",  # flake8-blind-except
+    "RSE",  # flake8-raise
+    "TRY",  # tryceratops
+    "S",    # flake8-bandit (security)
+    "DTZ",  # flake8-datetimez
+    "PTH",  # flake8-use-pathlib
+    "ERA",  # flake8-eradicate (commented-out code)
+    "FBT",  # flake8-boolean-trap
+    "EM",   # flake8-errmsg
+    "TC",   # flake8-type-checking
+    "TID",  # flake8-tidy-imports
+    "ANN",  # flake8-annotations
+]
+# TC001/TC003 (move type-only-looking imports into `if TYPE_CHECKING:`) stay ignored: under
+# target-version py315 their unsafe fixes make `lazy import` statements, a SyntaxError on the
+# supported 3.14 (35 test modules failed to collect when tried 2026-10-07, with the contract library gone).
+ignore = ["TRY003", "TC001", "TC003"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.pylint]
+max-statements = 15
+max-branches = 12
+
+[tool.ruff.lint.mccabe]
+max-complexity = 8
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN", "PLR2004", "S101", "D"]
+# CLI scripts report through stdout.
+"scripts/**" = ["T20"]
+
+[tool.vulture]
+ignore_names = []
+
+[tool.family]
+doors = ["elecdef"]
+str_allowlist = ["marking", "alternates", "markings", "common", "mpn", "manufacturer", "name", "key", "text", "message", "subject"]
+boundary_names = ["designation", "tag", "svg", "x", "y", "page"]
+numeric_classes = ["Quantity"]
+review_paths = ["DESIGN.md", "RULES.md", "docs/api-snapshot.txt", "src/elecdef/tables/"]
