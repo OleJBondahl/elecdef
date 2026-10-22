@@ -51,3 +51,8 @@ def test_a_missing_file_fails(tmp_path):
     here, other = _pair(tmp_path)
     (other / "a.txt").unlink()
     assert run(here, other) == (1, "family: DIFFERENT a.txt\n")
+
+
+def test_the_list_names_itself():
+    listing = family.ROOT / "scripts" / "family_files.txt"
+    assert "scripts/family_files.txt" in listing.read_text(encoding="utf-8").split()
