@@ -26,6 +26,7 @@ class PinRole(Enum):
     SIGNAL = auto()
     SUPPLY = auto()
     PE = auto()
+    SCREEN = auto()
 
 
 class Side(Enum):

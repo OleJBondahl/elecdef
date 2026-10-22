@@ -134,3 +134,11 @@ def test_port_bad_count_raises(count: object) -> None:
     """A count that is not a positive int is a TypeError."""
     with pytest.raises(TypeError):
         Port(PortKind.USB, count)  # ty: ignore[invalid-argument-type] - refused on purpose
+
+
+def test_shielded_connector_ends_with_an_sh_screen_pin() -> None:
+    """Proposed row: a shielded connector adds `SH` after its poles, with the role SCREEN."""
+    pins = Connector(poles=2, shielded=True).pins
+    assert [pin.marking for pin in pins] == ["1", "2", "SH"]
+    assert pins[-1].role is PinRole.SCREEN
+    assert [pin.marking for pin in Connector(poles=2).pins] == ["1", "2"]

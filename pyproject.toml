@@ -150,12 +150,16 @@ ignore_names = [
     # ED-8 block fields
     "rating", "body", "connector", "power", "family", "coding", "gender", "locking", "sides",
     "cross_section", "short_time_current", "rail",
+    # ED-7: Conductor and Cable fields that src never reads
+    "armour", "outer_diameter", "bend_radius_static", "bend_radius_moving", "sheath_material",
+    "sheath_colour", "halogen_free", "flame_retardant", "voltage_u0", "voltage_u", "type_code",
+    "conductor_class", "area", "gauge", "insulation", "max_temperature",
     # private; the check of a later order calls it
     "_is_marking"
 ]
 
 [tool.family]
-doors = ["elecdef", "elecdef.vocab", "elecdef.connections", "elecdef.pins", "elecdef.supply", "elecdef.terminal", "elecdef.connector", "elecdef.computer", "elecdef.tables"]
+doors = ["elecdef", "elecdef.vocab", "elecdef.connections", "elecdef.pins", "elecdef.supply", "elecdef.tables", "elecdef.terminal", "elecdef.conductor", "elecdef.cable", "elecdef.connector", "elecdef.computer"]
 str_allowlist = ["marking", "alternates", "markings", "common", "mpn", "manufacturer", "name", "key", "text", "message", "subject"]
 boundary_names = ["designation", "tag", "svg", "x", "y", "page"]
 numeric_classes = ["Quantity"]

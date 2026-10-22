@@ -46,8 +46,9 @@ class Connector(Block):
 
     @property
     def pins(self) -> tuple[Pin, ...]:
-        """Pins `1..poles`, each a signal pin; none while poles is unfilled."""
-        return tuple(Pin(str(n), PinRole.SIGNAL) for n in range(1, (self.poles or 0) + 1))
+        """Pins `1..poles`, each a signal pin, then `SH` with the role SCREEN when shielded."""
+        pins = tuple(Pin(str(n), PinRole.SIGNAL) for n in range(1, (self.poles or 0) + 1))
+        return (*pins, Pin("SH", PinRole.SCREEN)) if self.shielded else pins
 
     @property
     def links(self) -> tuple[Link, ...]:
