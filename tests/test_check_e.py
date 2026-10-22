@@ -255,10 +255,46 @@ def test_channel_group_refuses_a_template_number_or_pins() -> None:
     assert ChannelGroup(template=Channel(), markings=("A",)).channels()[0].number == 1
 
 
-def test_a_pin_issue_of_a_sub_block_is_kept_once_at_the_outermost_block() -> None:
-    """A repeated marking in a supply shows once, on the computer that reads it, not twice."""
-    twice = SupplyInput(pins=(Pin("a", PinRole.PLUS), Pin("a", PinRole.PLUS)))
-    found = check(Computer(supply=twice))
-    assert [(issue.code, issue.subject) for issue in found] == [
-        (IssueCode.DUPLICATE_MARKING, "pins[1]")
+def _pairs(issues: tuple[Issue, ...], code: IssueCode) -> list[tuple[IssueCode, str]]:
+    return [(issue.code, issue.subject) for issue in issues if issue.code is code]
+
+
+def test_bad_marking_is_reported_once_per_authored_pin_at_its_own_path() -> None:
+    """Two sibling contacts each marked with a space give two BAD_MARKING with distinct subjects."""
+    bad = Pin("a b", PinRole.SIGNAL)
+    relay = Relay(contacts=(Contact(own_pins=(bad,)), Contact(own_pins=(bad,))))
+    assert _pairs(check(relay), IssueCode.BAD_MARKING) == [
+        (IssueCode.BAD_MARKING, "contacts[0].own_pins[0]"),
+        (IssueCode.BAD_MARKING, "contacts[1].own_pins[0]"),
     ]
+
+
+def test_a_sub_block_pin_is_syntax_checked_once_not_again_in_the_composite() -> None:
+    """A bad marking in a supply shows once, at the supply's own path, not on the computer."""
+    bad = SupplyInput(pins=(Pin("a b", PinRole.PLUS),))
+    found = check(Computer(supply=bad))
+    assert _pairs(found, IssueCode.BAD_MARKING) == [(IssueCode.BAD_MARKING, "supply.pins[0]")]
+
+
+def test_three_equal_markings_on_one_block_give_two_duplicates() -> None:
+    """n equal markings give n-1 DUPLICATE_MARKING, at the repeats after the first."""
+    one = Pin("1", PinRole.SIGNAL)
+    found = check(Device(pins=(one, one, one)))
+    assert _pairs(found, IssueCode.DUPLICATE_MARKING) == [
+        (IssueCode.DUPLICATE_MARKING, "pins[1]"),
+        (IssueCode.DUPLICATE_MARKING, "pins[2]"),
+    ]
+
+
+def test_sibling_contacts_sharing_a_marking_give_one_duplicate_at_the_composite() -> None:
+    """Markings are unique across the whole device: the repeat is the second contact's pin."""
+    pin = Pin("13", PinRole.SIGNAL)
+    relay = Relay(contacts=(Contact(own_pins=(pin,)), Contact(own_pins=(pin,))))
+    assert _pairs(check(relay), IssueCode.DUPLICATE_MARKING) == [
+        (IssueCode.DUPLICATE_MARKING, "contacts[1].own_pins[0]")
+    ]
+
+
+def test_a_clean_relay_has_no_pin_issue() -> None:
+    """A coil and two numbered contacts give no issue."""
+    assert check(Relay(coil=COIL, contacts=(CONTACT, CONTACT))) == ()
