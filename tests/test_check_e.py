@@ -256,3 +256,12 @@ def test_channel_group_overwrites_a_template_number_and_pins_pending_a_ruling() 
     assert tuple(c.number for c in channels) == (1, 2)
     assert tuple(tuple(p.marking for p in c.pins) for c in channels) == (("A",), ("B",))
     assert check(group) == ()
+
+
+def test_a_pin_issue_of_a_sub_block_is_kept_once_at_the_outermost_block() -> None:
+    """A repeated marking in a supply shows once, on the computer that reads it, not twice."""
+    twice = SupplyInput(pins=(Pin("a", PinRole.PLUS), Pin("a", PinRole.PLUS)))
+    found = check(Computer(supply=twice))
+    assert [(issue.code, issue.subject) for issue in found] == [
+        (IssueCode.DUPLICATE_MARKING, "pins[1]")
+    ]
