@@ -7,10 +7,10 @@ from elecdef._block import Block, figure
 from elecdef._body import Body
 from elecdef._connection import Connection
 from elecdef._contact import Contact
+from elecdef._numbering import _joined, _numbered
 from elecdef._product import Symbol
 from elecdef._quantity import Kind
 from elecdef._range import Range, Ranges
-from elecdef._relay import _joined, _numbered
 from elecdef.pins import Link, Marking, Pin, PinRole
 from elecdef.supply import SupplyInput
 from elecdef.vocab import CircuitClass, OverloadBehaviour, PsuKind

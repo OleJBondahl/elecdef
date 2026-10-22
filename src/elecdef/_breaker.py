@@ -7,11 +7,11 @@ from elecdef._block import Block, figure
 from elecdef._body import Body
 from elecdef._connection import Connection
 from elecdef._contact import Contact
+from elecdef._numbering import _joined, _numbered
 from elecdef._product import Symbol
 from elecdef._quantity import Kind
 from elecdef._range import Range
 from elecdef._rating import Rating
-from elecdef._relay import _joined, _numbered
 from elecdef.fuse import pole_pins
 from elecdef.pins import Link, Marking, Pin
 from elecdef.vocab import TripCurve

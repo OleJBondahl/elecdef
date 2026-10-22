@@ -1,40 +1,19 @@
 """Relay, Contactor and ContactBlock: composites whose pins come from their contacts and coil."""
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from typing import ClassVar
 
 from elecdef._block import Block
 from elecdef._body import Body
 from elecdef._coil import Coil
 from elecdef._contact import Contact
+from elecdef._numbering import _joined, _numbered
 from elecdef._product import Symbol
 from elecdef._rating import Rating
 from elecdef.pins import Link, Marking, Pin
 from elecdef.vocab import ActuatorKind, ContactForm, RelayKind, TimerFunction
 
 __all__ = ["ContactBlock", "Contactor", "Relay"]
-
-
-def _numbered(
-    contacts: tuple[Contact, ...], scheme: Marking, first: int = 1
-) -> tuple[Contact, ...]:
-    """The contacts set to `scheme` from number `first`; a contact with `own_pins` is kept."""
-    return tuple(
-        contact if contact.own_pins else replace(contact, number=number, scheme=scheme)
-        for number, contact in enumerate(contacts, first)
-    )
-
-
-def _joined(
-    coil: Coil | None, contacts: tuple[Contact, ...]
-) -> tuple[tuple[Pin, ...], tuple[Link, ...]]:
-    """The coil pins, if any, then the pins and links of each contact in order."""
-    pins = coil.pins if coil else ()
-    links: tuple[Link, ...] = ()
-    for contact in contacts:
-        pins += contact.pins
-        links += contact.links
-    return pins, links
 
 
 @dataclass(frozen=True)
