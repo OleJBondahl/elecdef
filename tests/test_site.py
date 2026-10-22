@@ -26,6 +26,7 @@ def _stand_in(root: Path) -> Path:
     for name in ("DESIGN", "RULES"):
         (root / f"{name}.md").write_text(f"# {name}\n\n[home](README.md)\n")
     (root / "docs" / "CHANGELOG.md").write_text("# Changelog\n\n## Unreleased\n")
+    (root / "AGENTS.md").write_text("# Agents\n")
     shutil.copytree(ROOT / "src", root / "src", ignore=shutil.ignore_patterns("__pycache__"))
     for name in ("pyproject.toml", "mkdocs.yml", "docs/llms.txt", "docs/api-snapshot.txt"):
         shutil.copy2(ROOT / name, root / name)
@@ -90,3 +91,10 @@ def test_the_real_repository_builds_strict(tmp_path):
     out = SITE["stage"](ROOT, tmp_path)
     SITE["build"](out)
     assert (out / ".site" / "index.html").is_file()
+
+
+def test_relink_keeps_a_link_to_no_file_so_the_build_can_fail_it():
+    mapping = {"README.md": "index.md"}
+    out = SITE["relink"]("[x](nope.md) [y](AGENTS.md)\n", "README.md", mapping, "https://r.x", ROOT)
+    assert "[x](nope.md)" in out
+    assert "[y](https://r.x/blob/main/AGENTS.md)" in out

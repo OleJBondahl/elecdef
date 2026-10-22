@@ -51,9 +51,16 @@ def pages(root: Path = ROOT) -> dict[str, str]:
 
 
 def relink(
-    text: str, source: str, mapping: dict[str, str] | None = None, repo: str | None = None
+    text: str,
+    source: str,
+    mapping: dict[str, str] | None = None,
+    repo: str | None = None,
+    root: Path = ROOT,
 ) -> str:
-    """Point each relative Markdown link outside fenced code at a site page or at GitHub."""
+    """Point each relative link outside fenced code at a site page or, if the file exists, GitHub.
+
+    A target that is no file of the repository stays as written, so the strict build fails it.
+    """
     mapping = pages() if mapping is None else mapping
     repo = repo_url() if repo is None else repo
     folder = posixpath.dirname(source)
@@ -66,6 +73,8 @@ def relink(
         target = posixpath.normpath(posixpath.join(folder, path))
         if target in mapping:
             return f"]({posixpath.relpath(mapping[target], page_dir or '.')}{frag})"
+        if not (root / target).exists():
+            return match.group(0)
         return f"]({repo}/blob/main/{target}{frag})"
 
     out, fenced = [], False
@@ -104,7 +113,7 @@ def stage(root: Path, out: Path) -> Path:
     for source, page in mapping.items():
         text = (root / source).read_text(encoding="utf-8")
         (site_src / page).parent.mkdir(parents=True, exist_ok=True)
-        (site_src / page).write_text(relink(text, source, mapping, repo), encoding="utf-8")
+        (site_src / page).write_text(relink(text, source, mapping, repo, root), encoding="utf-8")
     (site_src / "api.md").write_text(api_markdown(root), encoding="utf-8")
     shutil.copy2(root / "docs" / "llms.txt", site_src.parent / "llms.txt")
     if out.resolve() != root.resolve():
