@@ -7,6 +7,9 @@ from pathlib import Path
 import family
 import pytest
 
+from elecdef import Coil
+from elecdef._block import Block
+
 
 def test_f8_snapshot_and_docs():
     family.gate_f8()
@@ -56,7 +59,9 @@ def _surface() -> list[tuple[str, object]]:
 
 
 def _returns_bool(obj: object) -> bool:
-    return getattr(obj, "__annotations__", {}).get("return") in (bool, "bool")
+    """True when a function, or the getter of a property, is annotated `-> bool`."""
+    func = obj.fget if isinstance(obj, property) else obj
+    return getattr(func, "__annotations__", {}).get("return") in (bool, "bool")
 
 
 def bool_callables(named: list[tuple[str, object]]) -> set[str]:
@@ -119,6 +124,25 @@ def test_e8_checker_can_fail():
             return True
 
     assert "Fake.acceptable" in bool_callables([("Fake", Fake)])
+
+
+def _verdict(_self: object) -> bool:
+    return True
+
+
+def _string_verdict(_self: object) -> "bool":  # noqa: UP037 - the string annotation is the test
+    return True
+
+
+@pytest.mark.parametrize(
+    "member",
+    [_verdict, _string_verdict, property(_verdict), classmethod(_verdict), staticmethod(_verdict)],
+    ids=["method", "string annotation", "property", "classmethod", "staticmethod"],
+)
+def test_e8_sees_a_bool_member_added_to_block(member, monkeypatch):
+    """A `-> bool` member added to Block shows on every surface class that inherits it."""
+    monkeypatch.setattr(Block, "acceptable", member, raising=False)
+    assert "Block.acceptable" in bool_callables([("Coil", Coil)])
 
 
 def test_e18_no_arithmetic_on_surface_classes():
