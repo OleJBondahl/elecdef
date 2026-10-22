@@ -31,9 +31,11 @@ packages = ["src/elecdef"]
 
 [tool.ty.environment]
 python-version = "3.15"
+extra-paths = ["tests"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
 addopts = "--cov=elecdef --cov-report=term-missing --cov-fail-under=95"
 
 [tool.ruff]
