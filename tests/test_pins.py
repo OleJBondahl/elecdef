@@ -113,7 +113,7 @@ def test_roles_sides_links_for_n1(key: tuple[Marking, ContactForm], shape: tuple
 def test_contact_pins_refuses(scheme: Marking, form: ContactForm, n: object) -> None:
     """A form the scheme lacks and an n that is not an int from 1 to 9 raise TypeError."""
     with pytest.raises(TypeError):
-        contact_pins(form, n, scheme)  # type: ignore[arg-type]  # ty: ignore[invalid-argument-type] - the bad n is the test
+        contact_pins(form, n, scheme)  # ty: ignore[invalid-argument-type] - the bad n is the test
 
 
 @pytest.mark.parametrize("text", ["13", "A1", "1/L1", "+", "a.b-c"])
@@ -142,7 +142,7 @@ def test_link_accepts_a_pair() -> None:
 def test_link_refuses(markings: object) -> None:
     """One marking, three, a list and a non-str element raise TypeError."""
     with pytest.raises(TypeError):
-        Link(markings, LinkKind.CONDUCTIVE)  # type: ignore[arg-type]  # ty: ignore[invalid-argument-type] - the bad pair is the test
+        Link(markings, LinkKind.CONDUCTIVE)  # ty: ignore[invalid-argument-type] - the bad pair is the test
 
 
 def test_pin_defaults() -> None:
