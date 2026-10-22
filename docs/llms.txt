@@ -100,6 +100,17 @@ elecdef.pins.PinRole: what a pin does in its part.
 elecdef.pins.Side: which side of a part a pin is on.
 elecdef.pins.contact_pins: the pins and links of contact n in a form under a marking scheme.
 elecdef.supply.SupplyInput: what a powered thing draws: voltage and current per conditions, and its supply pins.
+elecdef.tables.AWG: American wire gauge rows (n, diameter, area), n from -3 (4/0) to 40.
+elecdef.tables.AWG_METRIC: each gauge with the smallest cross section in CROSS_SECTIONS that holds its area.
+elecdef.tables.BREAKER_CURRENTS: breaker rated currents in amperes.
+elecdef.tables.BREAKER_CURVES: each trip curve with its low and high bound as multiples of rated current.
+elecdef.tables.BREAKER_ICN: breaker rated breaking capacities in kiloamperes.
+elecdef.tables.CABLE_VOLTAGES: cable voltage digits with the rated voltage to earth and between conductors.
+elecdef.tables.CORE_COLOURS: core colours for positions 1 to 44, base colour first.
+elecdef.tables.CROSS_SECTIONS: conductor cross sections in mm2.
+elecdef.tables.E_SERIES: preferred value series E3, E6, E12 and E24 as (series, mantissa times ten) pairs.
+elecdef.tables.OVERVOLTAGE_IMPULSE: impulse withstand voltage per overvoltage category.
+elecdef.tables.TRIP_TIMES: trip time band in seconds per trip class, at 7.2 times the setting.
 Rules:
 F1. The library declares no runtime dependency and imports only the standard library and itself; libraries of the family never import each other.
 F2. Every value is a frozen dataclass or an enum; the library performs no file, network, clock or random access.

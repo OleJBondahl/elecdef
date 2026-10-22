@@ -318,3 +318,92 @@ class SupplyInput(voltage: 'Ranges' = (), current: 'Ranges' = (), pins: 'tuple[P
     What a powered thing draws: voltage and current per conditions, and its supply pins.
 
     The pins default to a plus and a minus; a connection is unfilled until a leaf states one.
+
+## elecdef.tables
+AWG: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+AWG_METRIC: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+BREAKER_CURRENTS: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+BREAKER_CURVES: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+BREAKER_ICN: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+CABLE_VOLTAGES: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+CORE_COLOURS: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+CROSS_SECTIONS: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+E_SERIES: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+OVERVOLTAGE_IMPULSE: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.
+
+TRIP_TIMES: tuple
+    Built-in immutable sequence.
+
+    If no argument is given, the constructor returns an empty tuple.
+    If iterable is specified the tuple is initialized from iterable's items.
+
+    If the argument is a tuple, the return value is the same object.

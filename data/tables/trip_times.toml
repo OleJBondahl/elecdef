@@ -1,0 +1,10 @@
+kind = "rows"
+doc = "Trip time band in seconds per class, at 7.2 times the current setting."
+const = "TRIP_TIMES"
+columns = ["enum:TripClass", "unit:S", "unit:S"]
+rows = [
+    { id = "C10", v = ["C10", "4", "10"], origin = "own", status = "confirmed" },
+    { id = "C20", v = ["C20", "6", "20"], origin = "own", status = "confirmed" },
+    { id = "C30", v = ["C30", "9", "30"], origin = "own", status = "confirmed" },
+    { id = "C10A", origin = "own", status = "held" },
+]

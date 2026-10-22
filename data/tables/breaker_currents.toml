@@ -1,0 +1,21 @@
+kind = "rows"
+doc = "Breaker rated currents in amperes."
+const = "BREAKER_CURRENTS"
+columns = ["unit:A"]
+rows = [
+    { id = "1", v = "1", origin = "own", status = "confirmed" },
+    { id = "2", v = "2", origin = "own", status = "confirmed" },
+    { id = "4", v = "4", origin = "own", status = "confirmed" },
+    { id = "6", v = "6", origin = "own", status = "confirmed" },
+    { id = "10", v = "10", origin = "own", status = "confirmed" },
+    { id = "13", v = "13", origin = "own", status = "confirmed" },
+    { id = "16", v = "16", origin = "own", status = "confirmed" },
+    { id = "20", v = "20", origin = "own", status = "confirmed" },
+    { id = "25", v = "25", origin = "own", status = "confirmed" },
+    { id = "32", v = "32", origin = "own", status = "confirmed" },
+    { id = "40", v = "40", origin = "own", status = "confirmed" },
+    { id = "50", v = "50", origin = "own", status = "confirmed" },
+    { id = "63", v = "63", origin = "own", status = "confirmed" },
+    { id = "80", v = "80", origin = "own", status = "confirmed" },
+    { id = "100", v = "100", origin = "own", status = "confirmed" },
+]

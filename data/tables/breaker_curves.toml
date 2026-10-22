@@ -1,0 +1,11 @@
+kind = "rows"
+doc = "Breaker trip curves with the low and high bound as multiples of rated current."
+const = "BREAKER_CURVES"
+columns = ["enum:TripCurve", "int", "int"]
+rows = [
+    { id = "A", v = ["A", 2, 3], origin = "own", status = "confirmed" },
+    { id = "B", v = ["B", 3, 5], origin = "own", status = "confirmed" },
+    { id = "C", v = ["C", 5, 10], origin = "own", status = "confirmed" },
+    { id = "D", origin = "own", status = "held" },
+    { id = "E", origin = "own", status = "held" },
+]

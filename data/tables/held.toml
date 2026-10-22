@@ -1,0 +1,12 @@
+kind = "held"
+doc = "Rows that wait for a confirmed value."
+rows = [
+    { id = "fuse:D", origin = "own", status = "held" },
+    { id = "fuse:D0", origin = "own", status = "held" },
+    { id = "fuse:blade-colour-codes", origin = "own", status = "held" },
+    { id = "plc:24v-thresholds", origin = "own", status = "held" },
+    { id = "plc:ne43-current-limits", origin = "own", status = "held" },
+    { id = "conductor:phase-colours", origin = "own", status = "held" },
+    { id = "conductor:resistance", origin = "own", status = "held" },
+    { id = "conductor:kcmil", origin = "own", status = "held" },
+]
