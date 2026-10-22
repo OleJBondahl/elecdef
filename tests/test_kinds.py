@@ -3,7 +3,7 @@
 import importlib
 import pkgutil
 from dataclasses import dataclass, fields, is_dataclass
-from typing import get_type_hints
+from typing import get_args, get_type_hints
 
 import pytest
 
@@ -12,6 +12,7 @@ from elecdef import Unit as U  # noqa: N817 - the brief names the alias U
 from elecdef._block import Block, figure
 from elecdef._quantity import Kind, Quantity
 from elecdef._range import Ranges
+from elecdef.vocab import CoilState, ConductorKind, Current, Utilisation
 
 
 @dataclass(frozen=True)
@@ -134,3 +135,57 @@ class Plain(Block):
 
 def test_a_field_without_a_figure_is_left_alone():
     assert Plain(count=3).count == 3
+
+
+E6_TYPES = (Current, Utilisation, CoilState, ConductorKind)
+E6_PARTS = frozenset({"ac", "dc", "hz"})
+# The fields that carry a condition instead of a figure: none, a condition is an At (E6).
+E6_EXPECTED: list[str] = []
+
+
+def _mentions(hint: object, wanted: tuple[type, ...]) -> bool:
+    """Say whether a type hint is, or holds as an argument, one of `wanted`."""
+    if isinstance(hint, type) and issubclass(hint, wanted):
+        return True
+    return any(_mentions(arg, wanted) for arg in get_args(hint))
+
+
+def e6_fields(classes: list[type]) -> list[str]:
+    """The `Class.field` of each Block field typed as a condition or named with ac, dc or hz."""
+    found = []
+    for cls in classes:
+        if not (isinstance(cls, type) and is_dataclass(cls) and issubclass(cls, Block)):
+            continue
+        hints = get_type_hints(cls)
+        for item in fields(cls):
+            named = E6_PARTS & set(item.name.split("_"))
+            if named or _mentions(hints.get(item.name), E6_TYPES):
+                found.append(f"{cls.__qualname__}.{item.name}")
+    return found
+
+
+def test_no_block_field_states_a_condition():
+    assert e6_fields(src_dataclasses()) == E6_EXPECTED
+
+
+def test_the_switching_blocks_are_in_the_e6_walk():
+    names = {cls.__qualname__ for cls in src_dataclasses()}
+    assert {"Contact", "Coil", "Relay", "Contactor", "ContactBlock"} <= names
+
+
+@dataclass(frozen=True)
+class ByName(Block):
+    ac: bool = False
+    max_hz: int = 0
+
+
+@dataclass(frozen=True)
+class ByType(Block):
+    current: Current | None = None
+    plain: int = 0
+
+
+def test_e6_walk_can_fail():
+    assert e6_fields([ByName]) == ["ByName.ac", "ByName.max_hz"]
+    assert e6_fields([ByType]) == ["ByType.current"]
+    assert e6_fields([Plain]) == []
