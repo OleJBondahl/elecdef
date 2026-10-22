@@ -145,7 +145,7 @@ ignore_names = [
 ]
 
 [tool.family]
-doors = ["elecdef", "elecdef.vocab"]
+doors = ["elecdef", "elecdef.vocab", "elecdef.connections"]
 str_allowlist = ["marking", "alternates", "markings", "common", "mpn", "manufacturer", "name", "key", "text", "message", "subject"]
 boundary_names = ["designation", "tag", "svg", "x", "y", "page"]
 numeric_classes = ["Quantity"]

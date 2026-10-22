@@ -2,6 +2,16 @@
 class At(*conds: 'Quantity | Range | Enum') -> 'None'
     The conditions a figure holds under, one per kind, in a canonical order.
 
+class Body(width: 'Quantity | None' = None, height: 'Quantity | None' = None, depth: 'Quantity | None' = None, ip: 'IpCode | None' = None, temperature: 'Ranges' = (), mounting: 'Mounting | None' = None) -> 'None'
+    The physical body of a part.
+
+    Temperature rows tell operating (RATED) from storage (LIMITING) by their role.
+
+class Connection(technology: 'Technology | None' = None, conductor: 'Ranges' = (), conductor_awg: 'Ranges' = (), conductors_per_clamp: 'int | None' = None, strip_length: 'Quantity | None' = None, torque: 'Range | None' = None, screw: 'ScrewSize | None' = None, pitch: 'Quantity | None' = None, material: 'ConductorMaterial | None' = None) -> 'None'
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
 class Issue(code: 'IssueCode', message: 'str', subject: 'str') -> 'None'
     One finding: a code, a message and the subject path it concerns, such as `coil.voltage`.
 
@@ -25,8 +35,18 @@ Ranges(iterable=(), /)
 
     If the argument is a tuple, the return value is the same object.
 
+class Rating(voltage: 'Ranges' = (), insulation_voltage: 'Range | None' = None, impulse_voltage: 'Range | None' = None, thermal_current: 'Range | None' = None, frequency: 'Range | None' = None, overvoltage_category: 'OvervoltageCategory | None' = None, pollution_degree: 'PollutionDegree | None' = None) -> 'None'
+    The ratings of a whole part: voltages, thermal current, frequency and clearance classes.
+
+    Every field is unfilled by default.
+
 class Role
     What a stated figure means: the maker's rating, an extreme withstood, or a reference band.
+
+class Symbol(key: 'str', version: 'int') -> 'None'
+    A reference to a drawn symbol by key and version.
+
+    Nothing else of the symbol is held here.
 
 class Unit
     A unit of one kind with an exact factor to the base unit; `U.V(24)` builds a Quantity.
@@ -35,17 +55,236 @@ pick(ranges: 'tuple[Range, ...]', *ask: 'Quantity | Range | Enum') -> 'Pick'
     The one range whose conditions cover every ask, else NO_RATING or AMBIGUOUS_RATING.
 
 ## elecdef.vocab
+class ActuatorKind
+    The kind of operating head.
+
+class Armour
+    The armour construction.
+
+class Bus
+    The field or network bus.
+
+class CardForm
+    The build form of a card.
+
+class CardRole
+    The role of a card in a station.
+
+class CircuitClass
+    The protective class of a circuit.
+
+class Coding
+    The connector coding key.
+
+class CoilKind
+    The drive kind of a coil.
+
 class CoilState
     The state of a coil a figure is stated for.
+
+class Colour
+    A conductor colour code.
+
+class ConductorClass
+    The conductor stranding class.
 
 class ConductorKind
     The construction of a conductor a terminal range is stated for.
 
+class ConductorMaterial
+    The metal a conductor is made of.
+
+class ConnectorFamily
+    The connector family.
+
+class ContactFeature
+    A special property of a contact.
+
+class ContactForm
+    The switching form of a contact.
+
+class ContactMaterial
+    The contact surface material.
+
+class CoreRole
+    The role of a core in a cable.
+
 class Current
     The current kind a figure is stated for.
+
+class DiType
+    The digital input type.
+
+class FuseClass
+    The fuse operating class, as typed on the fuse.
+
+class FuseSpeed
+    The fuse speed letters.
+
+class FuseSystem
+    The fuse construction system.
+
+class Gender
+    The connector gender.
+
+class Insulation
+    The conductor insulation material.
+
+class IpCode
+    Ingress protection class, by name.
 
 class Kind
     The physical kind a unit belongs to; conversion and comparison stay inside one kind.
 
+class LevelKind
+    The kind of a terminal level.
+
+class Locking
+    How a connector locks.
+
+class Mounting
+    How a part is fixed in place.
+
+class OutputKind
+    The digital output stage.
+
+class OverloadBehaviour
+    How a supply behaves on overload.
+
+class OvervoltageCategory
+    Overvoltage category of the installation point.
+
+class Pl
+    The performance level.
+
+class Polarity
+    The digital channel polarity.
+
+class PollutionDegree
+    Pollution degree of the environment.
+
+class PortKind
+    The kind of a data port.
+
+class Potential
+    The potential a level carries.
+
+class PsuKind
+    The kind of power supply.
+
+class Rail
+    The mounting rail kind.
+
+class RelayKind
+    The kind of relay.
+
+class Reset
+    How a protective device is reset.
+
+class RtdType
+    The resistance thermometer type.
+
+class Scheme
+    The wire colour scheme family.
+
+class Screen
+    The screen construction.
+
+class ScrewSize
+    Terminal screw thread size.
+
+class SheathMaterial
+    The outer sheath material.
+
+class Signal
+    The signal kind of a channel.
+
+class Sil
+    The safety integrity level.
+
+class Suppression
+    How a coil is suppressed against switch-off spikes.
+
+class Technology
+    How a conductor or part is joined.
+
+class ThermocoupleType
+    The thermocouple type letter.
+
+class TimerFunction
+    The function of a timing relay.
+
+class TripClass
+    The motor protection trip class.
+
+class TripCurve
+    The breaker trip curve letter.
+
 class Utilisation
     The utilisation code a contact rating is stated for.
+
+## elecdef.connections
+BOLT: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+CRIMP: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+IDC: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+PLUG_IN: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+PRESS_IN: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+PUSH_IN: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+SCREW: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+SMD: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+SOLDER: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+SPRING_CAGE: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+TENSION: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+THT: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.
+
+WIRE_WRAP: Connection
+    One connection point: its technology, conductor range, strip length and torque.
+
+    Every field is unfilled by default, so a leaf states only its technology.

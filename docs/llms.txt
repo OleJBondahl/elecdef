@@ -19,11 +19,79 @@ pick: the one Range that covers every ask, or an Issue of NO_RATING or AMBIGUOUS
 Pick: the answer of pick, holding exactly one of found and issue.
 Issue: one finding as a value: a code, a message and the subject it concerns.
 IssueCode: the closed set of issue codes.
+Symbol: a drawn symbol named by key and version; nothing else of it is held.
+Body: the outer shape of a thing: width, height, depth, protection code, temperatures and mounting.
+Rating: voltages, thermal current, frequency, overvoltage category and pollution degree of a thing.
+Connection: how a conductor attaches: technology, conductor ranges, strip length, torque, screw, pitch and material.
 elecdef.vocab.Kind: the physical kind a unit belongs to; conversion and ordering stay inside one kind.
 elecdef.vocab.Current: the current kind a figure is stated for, AC or DC.
 elecdef.vocab.Utilisation: the utilisation code a contact rating is stated for, such as AC_15.
 elecdef.vocab.CoilState: the state of a coil a figure is stated for, while pulling in or once held.
 elecdef.vocab.ConductorKind: the construction of a conductor a terminal range is stated for.
+elecdef.vocab.ActuatorKind: the kind of operating head.
+elecdef.vocab.Armour: the armour construction.
+elecdef.vocab.Bus: the field or network bus.
+elecdef.vocab.CardForm: the build form of a card.
+elecdef.vocab.CardRole: the role of a card in a station.
+elecdef.vocab.CircuitClass: the protective class of a circuit.
+elecdef.vocab.Coding: the connector coding key.
+elecdef.vocab.CoilKind: the drive kind of a coil.
+elecdef.vocab.Colour: a conductor colour code.
+elecdef.vocab.ConductorClass: the conductor stranding class.
+elecdef.vocab.ConductorMaterial: the metal a conductor is made of.
+elecdef.vocab.ConnectorFamily: the connector family.
+elecdef.vocab.ContactFeature: a special property of a contact.
+elecdef.vocab.ContactForm: the switching form of a contact.
+elecdef.vocab.ContactMaterial: the contact surface material.
+elecdef.vocab.CoreRole: the role of a core in a cable.
+elecdef.vocab.DiType: the digital input type.
+elecdef.vocab.FuseClass: the fuse operating class, as typed on the fuse.
+elecdef.vocab.FuseSpeed: the fuse speed letters.
+elecdef.vocab.FuseSystem: the fuse construction system.
+elecdef.vocab.Gender: the connector gender.
+elecdef.vocab.Insulation: the conductor insulation material.
+elecdef.vocab.IpCode: ingress protection class, by name.
+elecdef.vocab.LevelKind: the kind of a terminal level.
+elecdef.vocab.Locking: how a connector locks.
+elecdef.vocab.Mounting: how a part is fixed in place.
+elecdef.vocab.OutputKind: the digital output stage.
+elecdef.vocab.OverloadBehaviour: how a supply behaves on overload.
+elecdef.vocab.OvervoltageCategory: overvoltage category of the installation point.
+elecdef.vocab.Pl: the performance level.
+elecdef.vocab.Polarity: the digital channel polarity.
+elecdef.vocab.PollutionDegree: pollution degree of the environment.
+elecdef.vocab.PortKind: the kind of a data port.
+elecdef.vocab.Potential: the potential a level carries.
+elecdef.vocab.PsuKind: the kind of power supply.
+elecdef.vocab.Rail: the mounting rail kind.
+elecdef.vocab.RelayKind: the kind of relay.
+elecdef.vocab.Reset: how a protective device is reset.
+elecdef.vocab.RtdType: the resistance thermometer type.
+elecdef.vocab.Scheme: the wire colour scheme family.
+elecdef.vocab.Screen: the screen construction.
+elecdef.vocab.ScrewSize: terminal screw thread size.
+elecdef.vocab.SheathMaterial: the outer sheath material.
+elecdef.vocab.Signal: the signal kind of a channel.
+elecdef.vocab.Sil: the safety integrity level.
+elecdef.vocab.Suppression: how a coil is suppressed against switch-off spikes.
+elecdef.vocab.Technology: how a conductor or part is joined.
+elecdef.vocab.ThermocoupleType: the thermocouple type letter.
+elecdef.vocab.TimerFunction: the function of a timing relay.
+elecdef.vocab.TripClass: the motor protection trip class.
+elecdef.vocab.TripCurve: the breaker trip curve letter.
+elecdef.connections.BOLT: the bolt connection leaf: technology only, every range unfilled.
+elecdef.connections.CRIMP: the crimp connection leaf: technology only, every range unfilled.
+elecdef.connections.IDC: the idc connection leaf: technology only, every range unfilled.
+elecdef.connections.PLUG_IN: the plug in connection leaf: technology only, every range unfilled.
+elecdef.connections.PRESS_IN: the press in connection leaf: technology only, every range unfilled.
+elecdef.connections.PUSH_IN: the push in connection leaf: technology only, every range unfilled.
+elecdef.connections.SCREW: the screw connection leaf: technology only, every range unfilled.
+elecdef.connections.SMD: the smd connection leaf: technology only, every range unfilled.
+elecdef.connections.SOLDER: the solder connection leaf: technology only, every range unfilled.
+elecdef.connections.SPRING_CAGE: the spring cage connection leaf: technology only, every range unfilled.
+elecdef.connections.TENSION: the tension connection leaf: technology only, every range unfilled.
+elecdef.connections.THT: the tht connection leaf: technology only, every range unfilled.
+elecdef.connections.WIRE_WRAP: the wire wrap connection leaf: technology only, every range unfilled.
 Rules:
 F1. The library declares no runtime dependency and imports only the standard library and itself; libraries of the family never import each other.
 F2. Every value is a frozen dataclass or an enum; the library performs no file, network, clock or random access.

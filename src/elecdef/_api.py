@@ -6,7 +6,7 @@ import enum
 import importlib
 import inspect
 
-DOORS: tuple[str, ...] = ("elecdef", "elecdef.vocab")
+DOORS: tuple[str, ...] = ("elecdef", "elecdef.vocab", "elecdef.connections")
 
 
 def _signature(obj: object) -> str:
