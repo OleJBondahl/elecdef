@@ -7,7 +7,7 @@ from fractions import Fraction
 import pytest
 
 from elecdef import At, Range, Role
-from elecdef import Unit as U  # noqa: N817  # the brief fixes the U alias for Unit
+from elecdef import Unit as U  # noqa: N817 - U is the guide spelling of Unit
 from elecdef.vocab import Current, Kind
 
 RANGE_SRC = pathlib.Path(__file__).resolve().parent.parent / "src" / "elecdef" / "_range.py"
@@ -127,3 +127,12 @@ def test_default_at_and_kind() -> None:
     assert rng.kind is Kind.VOLTAGE
     conditioned = Range(Role.RATED, nom=U.A(1), at=At(Current.DC))
     assert conditioned.at == At(Current.DC)
+
+
+def test_a_wrong_role_at_or_end_type_is_refused():
+    with pytest.raises(TypeError):
+        Range("rated", nom=U.V(1))  # ty: ignore[invalid-argument-type] - the refusal under test
+    with pytest.raises(TypeError):
+        Range(Role.RATED, nom=U.V(1), at="dc")  # ty: ignore[invalid-argument-type] - the refusal under test
+    with pytest.raises(TypeError):
+        Range(Role.RATED, nom=24)  # ty: ignore[invalid-argument-type] - the refusal under test

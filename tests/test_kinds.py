@@ -125,3 +125,12 @@ def test_every_src_figure_states_its_kinds():
 def test_missing_kinds_can_fail():
     assert missing_kinds([Sample]) == []
     assert missing_kinds([Bare]) == ["Bare.width"]
+
+
+@dataclass(frozen=True)
+class Plain(Block):
+    count: int = 0
+
+
+def test_a_field_without_a_figure_is_left_alone():
+    assert Plain(count=3).count == 3
