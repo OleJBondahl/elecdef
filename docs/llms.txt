@@ -23,6 +23,8 @@ Symbol: a drawn symbol named by key and version; nothing else of it is held.
 Body: the outer shape of a thing: width, height, depth, protection code, temperatures and mounting.
 Rating: voltages, thermal current, frequency, overvoltage category and pollution degree of a thing.
 Connection: how a conductor attaches: technology, conductor ranges, strip length, torque, screw, pitch and material.
+Device: a thing with no block of its own yet: its pins and links are stored as given.
+TerminalBlock: a terminal block: its levels, the connection on each side and its mounting.
 elecdef.vocab.Kind: the physical kind a unit belongs to; conversion and ordering stay inside one kind.
 elecdef.vocab.Current: the current kind a figure is stated for, AC or DC.
 elecdef.vocab.Utilisation: the utilisation code a contact rating is stated for, such as AC_15.
@@ -100,6 +102,10 @@ elecdef.pins.PinRole: what a pin does in its part.
 elecdef.pins.Side: which side of a part a pin is on.
 elecdef.pins.contact_pins: the pins and links of contact n in a form under a marking scheme.
 elecdef.supply.SupplyInput: what a powered thing draws: voltage and current per conditions, and its supply pins.
+elecdef.terminal.Level: one level of a terminal: its marking, the potential it carries and its kind.
+elecdef.connector.Connector: a connector: family, coding, poles, gender, locking and whether it is shielded.
+elecdef.computer.Computer: a computer: the supply it draws, its power and its data ports.
+elecdef.computer.Port: a data port: its kind, how many there are and the connector it takes, if stated.
 elecdef.tables.AWG: American wire gauge rows (n, diameter, area), n from -3 (4/0) to 40.
 elecdef.tables.AWG_METRIC: each gauge with the smallest cross section in CROSS_SECTIONS that holds its area.
 elecdef.tables.BREAKER_CURRENTS: breaker rated currents in amperes.

@@ -12,6 +12,11 @@ class Connection(technology: 'Technology | None' = None, conductor: 'Ranges' = (
 
     Every field is unfilled by default, so a leaf states only its technology.
 
+class Device(pins: 'tuple[Pin, ...]' = (), links: 'tuple[Link, ...]' = (), rating: 'Rating | None' = None, connection: 'Connection | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
+    A thing with no block of its own yet: its pins and links are stored as given.
+
+    Every field is unfilled by default.
+
 class Issue(code: 'IssueCode', message: 'str', subject: 'str') -> 'None'
     One finding: a code, a message and the subject path it concerns, such as `coil.voltage`.
 
@@ -47,6 +52,11 @@ class Symbol(key: 'str', version: 'int') -> 'None'
     A reference to a drawn symbol by key and version.
 
     Nothing else of the symbol is held here.
+
+class TerminalBlock(kind: 'LevelKind | None' = None, levels: 'tuple[Level, ...]' = (), sides: 'tuple[Connection, ...]' = (), cross_section: 'Quantity | None' = None, short_time_current: 'Range | None' = None, width: 'Quantity | None' = None, rail: 'Rail | None' = None, rating: 'Rating | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
+    A terminal block: its levels, the connection on each side and its mounting.
+
+    Pins are computed from the levels on every read.
 
 class Unit
     A unit of one kind with an exact factor to the base unit; `U.V(24)` builds a Quantity.
@@ -318,6 +328,25 @@ class SupplyInput(voltage: 'Ranges' = (), current: 'Ranges' = (), pins: 'tuple[P
     What a powered thing draws: voltage and current per conditions, and its supply pins.
 
     The pins default to a plus and a minus; a connection is unfilled until a leaf states one.
+
+## elecdef.terminal
+class Level(marking: 'str', potential: 'Potential', kind: 'LevelKind') -> 'None'
+    One level of a terminal: its marking, the potential it carries and its kind.
+
+## elecdef.connector
+class Connector(family: 'ConnectorFamily | None' = None, coding: 'Coding | None' = None, poles: 'int | None' = None, gender: 'Gender | None' = None, locking: 'Locking | None' = None, shielded: 'bool' = False, rating: 'Rating | None' = None, connection: 'Connection | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
+    A connector: family, coding, poles, gender, locking and whether it is shielded.
+
+    Pins `1..poles` are computed on every read. Every field is unfilled by default.
+
+## elecdef.computer
+class Computer(supply: 'SupplyInput | None' = None, power: 'Range | None' = None, ports: 'tuple[Port, ...]' = (), body: 'Body | None' = None) -> 'None'
+    A computer: the supply it draws, its power and its data ports.
+
+    Pins are the supply pins, then one `<KIND><n>` pin per port instance, numbered per kind.
+
+class Port(kind: 'PortKind', count: 'int' = 1, connector: 'Connector | None' = None) -> 'None'
+    A data port: its kind, how many there are and the connector it takes, if stated.
 
 ## elecdef.tables
 AWG: tuple

@@ -12,6 +12,9 @@ DOORS: tuple[str, ...] = (
     "elecdef.connections",
     "elecdef.pins",
     "elecdef.supply",
+    "elecdef.terminal",
+    "elecdef.connector",
+    "elecdef.computer",
     "elecdef.tables",
 )
 
