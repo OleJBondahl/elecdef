@@ -20,8 +20,7 @@ _MAX_N = 9
 class Contact(Block):
     """One contact: form, ratings per condition, and the pins computed from number and scheme.
 
-    `own_pins` holds only pins the author gave; with none, `pins` is read from `number` and
-    `scheme` on every access, so `replace` never leaves a stale marking.
+    `own_pins` holds only what the author gave; `pins` is read from `number` and `scheme` each time.
     """
 
     needs: ClassVar[tuple[str, ...]] = ("switching",)

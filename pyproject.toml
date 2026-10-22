@@ -147,6 +147,10 @@ ignore_names = [
     "temperature", "thermal_current", "to", "tolerance", "torque", "voltage", "width",
     "COIL", "SUPPLY", "CONDUCTIVE", "PROTECTIVE", "side", "alternates", "closed_at_rest",
     "current", "connection",
+    "pick_up", "drop_out", "resistance", "power", "apparent_power", "operate_time",
+    "release_time", "features", "switching", "min_load_voltage", "min_load_current",
+    "mechanical_life", "electrical_life", "latching", "force_guided", "timer_function",
+    "rating", "actuator", "body",
     # private; the check of a later order calls it
     "_is_marking"
 ]

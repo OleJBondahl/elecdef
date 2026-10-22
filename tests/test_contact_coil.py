@@ -79,15 +79,15 @@ def test_a_form_the_scheme_refuses_is_refused_at_construction():
 
 
 def test_coil_figures_are_checked_for_kind():
-    assert Coil(power=Range(Role.RATED, nom=U.W(2))).power[0].nom == U.W(2)
+    assert Coil(power=(Range(Role.RATED, nom=U.W(2)),)).power[0].nom == U.W(2)
     with pytest.raises(TypeError):
-        Coil(power=Range(Role.RATED, nom=U.VA(8)))
+        Coil(power=(Range(Role.RATED, nom=U.VA(8)),))
     with pytest.raises(TypeError):
-        Coil(apparent_power=Range(Role.RATED, nom=U.W(2)))
+        Coil(apparent_power=(Range(Role.RATED, nom=U.W(2)),))
     with pytest.raises(TypeError):
         Coil(pick_up=Range(Role.LIMITING, max=U.V(5)))
     with pytest.raises(TypeError):
-        Coil(power=U.VA(8))
+        Coil(power=U.VA(8))  # ty: ignore[invalid-argument-type] - the spec case: a bare Quantity is refused
 
 
 def test_coil_states_that_it_needs_voltage():

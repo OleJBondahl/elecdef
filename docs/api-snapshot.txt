@@ -7,10 +7,28 @@ class Body(width: 'Quantity | None' = None, height: 'Quantity | None' = None, de
 
     Temperature rows tell operating (RATED) from storage (LIMITING) by their role.
 
+class Coil(kind: 'CoilKind | None' = None, voltage: 'Ranges' = (), pick_up: 'Range | None' = None, drop_out: 'Range | None' = None, resistance: 'Range | None' = None, power: 'Ranges' = (), apparent_power: 'Ranges' = (), operate_time: 'Range | None' = None, release_time: 'Range | None' = None, suppression: 'Suppression | None' = None, connection: 'Connection | None' = None, own_pins: 'tuple[Pin, ...]' = (), symbol: 'Symbol | None' = None) -> 'None'
+    One coil: kind, drive figures, suppression, and the pins computed from kind and suppression.
+
+    `own_pins` holds only pins the author gave; with none, `pins` is A1 and A2 read on every access.
+
 class Connection(technology: 'Technology | None' = None, conductor: 'Ranges' = (), conductor_awg: 'Ranges' = (), conductors_per_clamp: 'int | None' = None, strip_length: 'Quantity | None' = None, torque: 'Range | None' = None, screw: 'ScrewSize | None' = None, pitch: 'Quantity | None' = None, material: 'ConductorMaterial | None' = None) -> 'None'
     One connection point: its technology, conductor range, strip length and torque.
 
     Every field is unfilled by default, so a leaf states only its technology.
+
+class Contact(form: 'ContactForm | None' = None, features: 'frozenset[ContactFeature]' = <factory>, switching: 'Ranges' = (), voltage: 'Range | None' = None, min_load_voltage: 'Range | None' = None, min_load_current: 'Range | None' = None, material: 'ContactMaterial | None' = None, mechanical_life: 'int | None' = None, electrical_life: 'int | None' = None, connection: 'Connection | None' = None, number: 'int | None' = None, scheme: 'Marking | None' = None, own_pins: 'tuple[Pin, ...]' = (), symbol: 'Symbol | None' = None) -> 'None'
+    One contact: form, ratings per condition, and the pins computed from number and scheme.
+
+    `own_pins` holds only what the author gave; `pins` is read from `number` and `scheme` each time.
+
+class ContactBlock(contacts: 'tuple[Contact, ...]' = (), numbered_from: 'int' = 1, actuator: 'ActuatorKind | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
+    A coil-less carrier of contacts numbered AUX from `numbered_from`.
+
+class Contactor(coil: 'Coil | None' = None, main: 'tuple[Contact, ...]' = (), aux: 'tuple[Contact, ...]' = (), rating: 'Rating | None' = None, body: 'Body | None' = None) -> 'None'
+    A contactor: a coil, MAKE main contacts numbered MAIN 1..n, then auxiliaries AUX 1..n.
+
+    A mirror contact is an auxiliary whose features hold `ContactFeature.MIRROR`.
 
 class Issue(code: 'IssueCode', message: 'str', subject: 'str') -> 'None'
     One finding: a code, a message and the subject path it concerns, such as `coil.voltage`.
@@ -39,6 +57,11 @@ class Rating(voltage: 'Ranges' = (), insulation_voltage: 'Range | None' = None, 
     The ratings of a whole part: voltages, thermal current, frequency and clearance classes.
 
     Every field is unfilled by default.
+
+class Relay(kind: 'RelayKind | None' = None, coil: 'Coil | None' = None, contacts: 'tuple[Contact, ...]' = (), latching: 'bool' = False, force_guided: 'bool' = False, timer_function: 'TimerFunction | None' = None, body: 'Body | None' = None) -> 'None'
+    A relay: a coil and contacts numbered 1..n on every read (the timer scheme for a timer).
+
+    It owns no pin and no symbol of its own, so it has no connection.
 
 class Role
     What a stated figure means: the maker's rating, an extreme withstood, or a reference band.

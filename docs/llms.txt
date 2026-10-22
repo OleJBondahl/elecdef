@@ -23,6 +23,11 @@ Symbol: a drawn symbol named by key and version; nothing else of it is held.
 Body: the outer shape of a thing: width, height, depth, protection code, temperatures and mounting.
 Rating: voltages, thermal current, frequency, overvoltage category and pollution degree of a thing.
 Connection: how a conductor attaches: technology, conductor ranges, strip length, torque, screw, pitch and material.
+Contact: one contact: form, features, switching ratings per condition, number and scheme; its pins and links are read from them.
+Coil: a coil: kind, voltage, pick-up and drop-out, power, suppression; its A1 and A2 pins are read from kind and suppression.
+Relay: a coil and contacts numbered 1..n on every read; the timer scheme when its kind is TIMER.
+Contactor: a coil, MAKE main contacts numbered MAIN 1..n, then auxiliaries numbered AUX 1..n.
+ContactBlock: a coil-less carrier of contacts numbered AUX from numbered_from.
 elecdef.vocab.Kind: the physical kind a unit belongs to; conversion and ordering stay inside one kind.
 elecdef.vocab.Current: the current kind a figure is stated for, AC or DC.
 elecdef.vocab.Utilisation: the utilisation code a contact rating is stated for, such as AC_15.

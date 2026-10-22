@@ -24,7 +24,7 @@ COIL = Coil(
     CoilKind.DC,
     connection=SCREW_M3,
     suppression=Suppression.DIODE,
-    voltage=Range(Role.RATED, nom=U.V(24)),
+    voltage=(Range(Role.RATED, nom=U.V(24)),),
 )
 CO = Contact(ContactForm.CHANGEOVER, connection=SCREW_M3)
 MAIN = Contact(ContactForm.MAKE)
@@ -53,7 +53,7 @@ def test_relay_states_that_it_needs_contacts():
 
 def test_the_connection_is_shared_by_identity():
     assert COIL.connection is CO.connection
-    assert RELAY.coil.connection is RELAY.contacts[0].connection
+    assert COIL.connection is RELAY.contacts[0].connection
 
 
 def test_reading_pins_leaves_the_library_contact_unchanged():
@@ -116,7 +116,7 @@ def test_a_non_make_main_contact_is_refused_at_construction():
 
 def test_contactor_shares_the_coil_connection_by_identity():
     contactor = Contactor(COIL, (replace(MAIN, connection=COIL.connection),))
-    assert contactor.coil.connection is contactor.main[0].connection
+    assert COIL.connection is contactor.main[0].connection
 
 
 def test_contact_block_numbers_from_numbered_from():
