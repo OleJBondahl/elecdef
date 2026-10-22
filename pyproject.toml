@@ -137,8 +137,11 @@ ignore_names = [
     "T2", "T3", "TAPE", "TC", "TENSION", "THT", "TIMER", "TINNED_CU", "TPE", "TQ",
     "TRANSFORMER", "TRANSISTOR", "TRIAC", "TT", "TURN", "UA", "UM", "UNKNOWN_CLASS", "UPS",
     "US", "USB", "V", "VA", "VARISTOR", "VDE", "VT", "W", "WH", "WIRE", "WIRE_WRAP", "X",
-    "XLPE", "YE", "Z", "aM", "aR", "gG", "gL", "gPV", "gR", "gS", "needs", "subject", "to",
-    "tolerance"
+    "XLPE", "YE", "Z", "aM", "aR", "conductor", "conductor_awg", "conductors_per_clamp",
+    "depth", "frequency", "gG", "gL", "gPV", "gR", "gS", "height", "impulse_voltage",
+    "insulation_voltage", "ip", "material", "mounting", "needs", "overvoltage_category",
+    "pitch", "pollution_degree", "screw", "strip_length", "subject", "technology",
+    "temperature", "thermal_current", "to", "tolerance", "torque", "voltage", "width"
 ]
 
 [tool.family]
