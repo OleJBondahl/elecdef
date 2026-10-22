@@ -27,7 +27,7 @@ def _class_decorators(source: str) -> list[str]:
 
 def test_role_and_end_are_required() -> None:
     with pytest.raises(TypeError):
-        Range(nom=U.V(24))  # ty: ignore[missing-argument]  # role missing on purpose
+        Range(nom=U.V(24))  # ty: ignore[missing-argument] - role missing on purpose
     with pytest.raises(TypeError):
         Range(Role.RATED)
 
@@ -39,7 +39,7 @@ def test_ends_share_one_kind() -> None:
 
 def test_ends_are_keyword_only() -> None:
     with pytest.raises(TypeError):
-        Range(Role.RATED, U.V(1))  # ty: ignore[too-many-positional-arguments]  # positional end on purpose
+        Range(Role.RATED, U.V(1))  # ty: ignore[too-many-positional-arguments] - positional end on purpose
 
 
 def test_tolerance_is_exact_fractions() -> None:
