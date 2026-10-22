@@ -44,6 +44,16 @@ class IssueCode
 class Pick(found: 'Range | None' = None, issue: 'Issue | None' = None) -> 'None'
     The answer of `pick`: exactly one of the range found or the issue.
 
+class PlcCard(supply: 'SupplyInput | None' = None, groups: 'tuple[ChannelGroup, ...]' = (), form: 'CardForm | None' = None, role: 'CardRole | None' = None, bus: 'Bus | None' = None, sil: 'Sil | None' = None, pl: 'Pl | None' = None, body: 'Body | None' = None) -> 'None'
+    A PLC card: supply, groups of channels, form, role, bus and safety levels.
+
+    It stores no pins: `pins` are the supply pins, then each group's channel pins and common pins.
+
+class PowerSupply(kind: 'PsuKind | None' = None, input: 'SupplyInput | None' = None, markings: 'tuple[str, ...]' = ('+', '-'), output_voltage: 'Range | None' = None, output_current: 'Ranges' = (), boost_current: 'Range | None' = None, hold_up: 'Range | None' = None, overload: 'OverloadBehaviour | None' = None, circuit_class: 'CircuitClass | None' = None, isolated: 'bool | None' = None, redundant: 'bool | None' = None, efficiency: 'Ranges' = (), ok_contact: 'Contact | None' = None, connection: 'Connection | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
+    A power supply: input, output figures and OK contact; the pins are read on every access.
+
+    Outputs: the first PLUS, the second MINUS, a further one PLUS; the OK contact is AUX 1.
+
 class Quantity(value: 'Decimal', unit: 'Unit') -> 'None'
     A Decimal and its Unit; `==` compares as written, `same` and ordering in base units.
 
@@ -351,6 +361,32 @@ class SupplyInput(voltage: 'Ranges' = (), current: 'Ranges' = (), pins: 'tuple[P
     What a powered thing draws: voltage and current per conditions, and its supply pins.
 
     The pins default to a plus and a minus; a connection is unfilled until a leaf states one.
+
+## elecdef.plc
+class AnalogIo(span: 'Range | None' = None, bits: 'int | None' = None, wires: 'int | None' = None, rtd: 'RtdType | None' = None, thermocouple: 'ThermocoupleType | None' = None, accuracy: 'Ranges' = ()) -> 'None'
+    An analog channel: a voltage or current span, resolution, wires, sensor type and accuracy.
+
+    Every field is unfilled by default; the block holds no pin and no connection.
+
+class Channel(signal: 'Signal | None' = None, number: 'int | None' = None, electrical: 'DigitalInput | DigitalOutput | AnalogIo | Contact | None' = None, pins: 'tuple[Pin, ...]' = (), symbol: 'Symbol | None' = None) -> 'None'
+    One channel: its signal, number, electrical block and the pins it is wired on.
+
+    A leaf like Device: the pins are stored as given.
+
+class ChannelGroup(template: 'Channel | None' = None, markings: 'tuple[str, ...]' = (), common: 'tuple[str, ...]' = (), isolated: 'bool | None' = None, group_current: 'Range | None' = None, connection: 'Connection | None' = None) -> 'None'
+    Channels that share a template and a common: one per marking, numbered from `first`.
+
+    `common` holds the markings of the group's common pins; every channel shares one `electrical`.
+
+class DigitalInput(input_type: 'DiType | None' = None, polarity: 'Polarity | None' = None, voltage: 'Ranges' = (), off_max: 'Range | None' = None, on_min: 'Range | None' = None, current: 'Ranges' = (), filter_time: 'Range | None' = None) -> 'None'
+    What a digital input channel accepts: its type, polarity, voltage, thresholds and filter.
+
+    Every field is unfilled by default; the block holds no pin and no connection.
+
+class DigitalOutput(kind: 'OutputKind | None' = None, polarity: 'Polarity | None' = None, current: 'Ranges' = (), short_circuit_protected: 'bool | None' = None) -> 'None'
+    What a digital output channel delivers: its stage, polarity and current.
+
+    Every field is unfilled by default; the block holds no pin and no connection.
 
 ## elecdef.tables
 AWG: tuple

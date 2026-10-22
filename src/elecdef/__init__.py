@@ -6,7 +6,9 @@ from elecdef._connection import Connection
 from elecdef._contact import Contact
 from elecdef._device import Device
 from elecdef._issue import Issue, IssueCode
+from elecdef._plccard import PlcCard
 from elecdef._product import Symbol
+from elecdef._psu import PowerSupply
 from elecdef._quantity import Quantity, Unit
 from elecdef._range import At, Pick, Range, Ranges, Role, pick
 from elecdef._rating import Rating
@@ -25,6 +27,8 @@ __all__ = [
     "Issue",
     "IssueCode",
     "Pick",
+    "PlcCard",
+    "PowerSupply",
     "Quantity",
     "Range",
     "Ranges",

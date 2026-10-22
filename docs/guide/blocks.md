@@ -131,3 +131,33 @@ from elecdef.pins import Pin, PinRole
 device = Device(pins=(Pin("1", PinRole.SIGNAL),))
 assert device.pins[0].marking == "1"
 ```
+
+## PowerSupply and PlcCard
+
+A `PlcCard` numbers the channels of its groups 1..N and reads its pins on every access; a `PowerSupply` reads its input, output and OK-contact pins the same way.
+
+```python
+from elecdef import Contact, PlcCard, PowerSupply
+from elecdef.connections import PUSH_IN
+from elecdef.pins import Pin, PinRole
+from elecdef.plc import AnalogIo, Channel, ChannelGroup, DigitalInput, DigitalOutput
+from elecdef.supply import SupplyInput
+from elecdef.vocab import ContactForm, Signal
+
+group = ChannelGroup(
+    Channel(Signal.DI, electrical=DigitalInput()),
+    markings=("1", "2"),
+    common=("1M",),
+    isolated=True,
+    connection=PUSH_IN,
+)
+assert DigitalOutput().short_circuit_protected is None
+assert AnalogIo().bits is None
+card = PlcCard(supply=SupplyInput(), groups=(group,))
+assert [channel.number for channel in card.channels] == [1, 2]
+assert [pin.marking for pin in card.pins] == ["+", "-", "1", "2", "1M"]
+
+mains = SupplyInput(pins=(Pin("L", PinRole.LINE), Pin("N", PinRole.LINE), Pin("PE", PinRole.PE)))
+psu = PowerSupply(input=mains, ok_contact=Contact(ContactForm.MAKE))
+assert [pin.marking for pin in psu.pins] == ["L", "N", "PE", "+", "-", "13", "14"]
+```

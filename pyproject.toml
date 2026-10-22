@@ -158,12 +158,17 @@ ignore_names = [
     "armour", "outer_diameter", "bend_radius_static", "bend_radius_moving", "sheath_material",
     "sheath_colour", "halogen_free", "flame_retardant", "voltage_u0", "voltage_u", "type_code",
     "conductor_class", "area", "gauge", "insulation", "max_temperature",
+    # ED-9: PSU and PLC fields that src never reads
+    "accuracy", "bits", "boost_current", "bus", "circuit_class", "efficiency", "filter_time",
+    "group_current", "hold_up", "input_type", "isolated", "off_max", "on_min", "output_current",
+    "output_voltage", "overload", "pl", "polarity", "redundant", "rtd", "short_circuit_protected",
+    "signal", "sil", "span", "thermocouple", "wires",
     # private; the check of a later order calls it
     "_is_marking"
 ]
 
 [tool.family]
-doors = ["elecdef", "elecdef.vocab", "elecdef.connections", "elecdef.pins", "elecdef.supply", "elecdef.tables", "elecdef.terminal", "elecdef.conductor", "elecdef.cable", "elecdef.connector", "elecdef.computer"]
+doors = ["elecdef", "elecdef.vocab", "elecdef.connections", "elecdef.pins", "elecdef.supply", "elecdef.plc", "elecdef.tables", "elecdef.terminal", "elecdef.conductor", "elecdef.cable", "elecdef.connector", "elecdef.computer"]
 str_allowlist = ["marking", "alternates", "markings", "common", "mpn", "manufacturer", "name", "key", "text", "message", "subject"]
 boundary_names = ["designation", "tag", "svg", "x", "y", "page"]
 numeric_classes = ["Quantity"]

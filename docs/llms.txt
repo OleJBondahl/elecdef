@@ -28,6 +28,8 @@ Coil: a coil: kind, voltage, pick-up and drop-out, power, suppression; its A1 an
 Relay: a coil and contacts numbered 1..n on every read; the timer scheme when its kind is TIMER.
 Contactor: a coil, MAKE main contacts numbered MAIN 1..n, then auxiliaries numbered AUX 1..n.
 ContactBlock: a coil-less carrier of contacts numbered AUX from numbered_from.
+PowerSupply: a power supply: its input, output figures and OK contact; the pins are read on every access.
+PlcCard: a PLC card: supply, groups of channels, form, role, bus and safety levels; the pins are read on every access.
 Device: a thing with no block of its own yet: its pins and links are stored as given.
 TerminalBlock: a terminal block: its levels, the connection on each side and its mounting.
 elecdef.vocab.Kind: the physical kind a unit belongs to; conversion and ordering stay inside one kind.
@@ -107,6 +109,11 @@ elecdef.pins.PinRole: what a pin does in its part.
 elecdef.pins.Side: which side of a part a pin is on.
 elecdef.pins.contact_pins: the pins and links of contact n in a form under a marking scheme.
 elecdef.supply.SupplyInput: what a powered thing draws: voltage and current per conditions, and its supply pins.
+elecdef.plc.AnalogIo: an analog channel: a voltage or current span, resolution, wires, sensor type and accuracy.
+elecdef.plc.Channel: one channel: its signal, number, electrical block and the pins it is wired on.
+elecdef.plc.ChannelGroup: channels that share a template and a common: one per marking, numbered from first.
+elecdef.plc.DigitalInput: what a digital input channel accepts: its type, polarity, voltage, thresholds and filter.
+elecdef.plc.DigitalOutput: what a digital output channel delivers: its stage, polarity and current.
 elecdef.terminal.Level: one level of a terminal: its marking, the potential it carries and its kind.
 elecdef.connector.Connector: a connector: family, coding, poles, gender, locking and whether it is shielded.
 elecdef.computer.Computer: a computer: the supply it draws, its power and its data ports.
