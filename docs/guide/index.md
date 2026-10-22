@@ -7,3 +7,4 @@ Start with values, then ranges, lookup and the vocabularies.
 - [Ranges](ranges.md): `Range`, `Ranges`, `Role`, `At`.
 - [Lookup](lookup.md): `pick`, `Pick`, `Issue`, `IssueCode`.
 - [Vocabularies](vocab.md): `Kind` and the condition enums.
+- [Pins](pins.md): `Pin`, `PinRole`, `Side`, `Link`, `LinkKind`, `Marking`, `contact_pins`, `SupplyInput`.

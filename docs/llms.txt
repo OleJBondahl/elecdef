@@ -92,6 +92,14 @@ elecdef.connections.SPRING_CAGE: the spring cage connection leaf: technology onl
 elecdef.connections.TENSION: the tension connection leaf: technology only, every range unfilled.
 elecdef.connections.THT: the tht connection leaf: technology only, every range unfilled.
 elecdef.connections.WIRE_WRAP: the wire wrap connection leaf: technology only, every range unfilled.
+elecdef.pins.Link: a join between two pins named by their markings, with its kind and whether it is closed at rest.
+elecdef.pins.LinkKind: how two pins are joined: conductive, switched or protective.
+elecdef.pins.Marking: the marking schemes: auxiliary, main, overload, timer and plain.
+elecdef.pins.Pin: one pin: its marking, role, side and alternate markings.
+elecdef.pins.PinRole: what a pin does in its part.
+elecdef.pins.Side: which side of a part a pin is on.
+elecdef.pins.contact_pins: the pins and links of contact n in a form under a marking scheme.
+elecdef.supply.SupplyInput: what a powered thing draws: voltage and current per conditions, and its supply pins.
 Rules:
 F1. The library declares no runtime dependency and imports only the standard library and itself; libraries of the family never import each other.
 F2. Every value is a frozen dataclass or an enum; the library performs no file, network, clock or random access.

@@ -144,11 +144,15 @@ ignore_names = [
     "depth", "frequency", "gG", "gL", "gPV", "gR", "gS", "height", "impulse_voltage",
     "insulation_voltage", "ip", "material", "mounting", "needs", "overvoltage_category",
     "pitch", "pollution_degree", "screw", "strip_length", "subject", "technology",
-    "temperature", "thermal_current", "to", "tolerance", "torque", "voltage", "width"
+    "temperature", "thermal_current", "to", "tolerance", "torque", "voltage", "width",
+    "COIL", "SUPPLY", "CONDUCTIVE", "PROTECTIVE", "side", "alternates", "closed_at_rest",
+    "current", "connection",
+    # private; the check of a later order calls it
+    "_is_marking"
 ]
 
 [tool.family]
-doors = ["elecdef", "elecdef.vocab", "elecdef.connections"]
+doors = ["elecdef", "elecdef.vocab", "elecdef.connections", "elecdef.pins", "elecdef.supply"]
 str_allowlist = ["marking", "alternates", "markings", "common", "mpn", "manufacturer", "name", "key", "text", "message", "subject"]
 boundary_names = ["designation", "tag", "svg", "x", "y", "page"]
 numeric_classes = ["Quantity"]

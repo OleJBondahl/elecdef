@@ -288,3 +288,33 @@ WIRE_WRAP: Connection
     One connection point: its technology, conductor range, strip length and torque.
 
     Every field is unfilled by default, so a leaf states only its technology.
+
+## elecdef.pins
+class Link(markings: 'tuple[str, ...]', kind: 'LinkKind', closed_at_rest: 'bool | None' = None) -> 'None'
+    A join between the two pins named by `markings`; `closed_at_rest` is for a switched link.
+
+class LinkKind
+    How two pins of a part are joined.
+
+class Marking
+    The marking schemes; TIMER and PLAIN are proposed, not sourced.
+
+class Pin(marking: 'str', role: 'PinRole', side: 'Side | None' = None, alternates: 'tuple[str, ...]' = ()) -> 'None'
+    One pin: its marking, its role, its side and the alternate markings it may carry.
+
+class PinRole
+    What a pin does in its part.
+
+class Side
+    Which side of a part a pin is on.
+
+contact_pins(form: 'ContactForm', n: 'int', scheme: 'Marking') -> 'tuple[tuple[Pin, ...], tuple[Link, ...]]'
+    Return the pins and links of contact `n` (1 to 9) in `form` under `scheme`.
+
+    Raises TypeError for an `n` out of range or a form the scheme does not have.
+
+## elecdef.supply
+class SupplyInput(voltage: 'Ranges' = (), current: 'Ranges' = (), pins: 'tuple[Pin, ...]' = (Pin(marking='+', role=<PinRole.PLUS: 7>, side=None, alternates=()), Pin(marking='-', role=<PinRole.MINUS: 8>, side=None, alternates=())), connection: 'Connection | None' = None) -> 'None'
+    What a powered thing draws: voltage and current per conditions, and its supply pins.
+
+    The pins default to a plus and a minus; a connection is unfilled until a leaf states one.
