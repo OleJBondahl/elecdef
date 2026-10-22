@@ -92,6 +92,17 @@ elecdef.connections.SPRING_CAGE: the spring cage connection leaf: technology onl
 elecdef.connections.TENSION: the tension connection leaf: technology only, every range unfilled.
 elecdef.connections.THT: the tht connection leaf: technology only, every range unfilled.
 elecdef.connections.WIRE_WRAP: the wire wrap connection leaf: technology only, every range unfilled.
+elecdef.tables.AWG: American wire gauge rows (n, diameter, area), n from -3 (4/0) to 40.
+elecdef.tables.AWG_METRIC: each gauge with the smallest cross section in CROSS_SECTIONS that holds its area.
+elecdef.tables.BREAKER_CURRENTS: breaker rated currents in amperes.
+elecdef.tables.BREAKER_CURVES: each trip curve with its low and high bound as multiples of rated current.
+elecdef.tables.BREAKER_ICN: breaker rated breaking capacities in kiloamperes.
+elecdef.tables.CABLE_VOLTAGES: cable voltage digits with the rated voltage to earth and between conductors.
+elecdef.tables.CORE_COLOURS: core colours for positions 1 to 44, base colour first.
+elecdef.tables.CROSS_SECTIONS: conductor cross sections in mm2.
+elecdef.tables.E_SERIES: preferred value series E3, E6, E12 and E24 as (series, mantissa times ten) pairs.
+elecdef.tables.OVERVOLTAGE_IMPULSE: impulse withstand voltage per overvoltage category.
+elecdef.tables.TRIP_TIMES: trip time band in seconds per trip class, at 7.2 times the setting.
 Rules:
 F1. The library declares no runtime dependency and imports only the standard library and itself; libraries of the family never import each other.
 F2. Every value is a frozen dataclass or an enum; the library performs no file, network, clock or random access.
