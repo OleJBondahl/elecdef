@@ -1,8 +1,20 @@
-"""E11 gate: contact pins and links per marking scheme, the marking test and the refusals."""
+"""E11 gate: contact pins and links per marking scheme, the marking test and the refusals.
+
+The E10 gate, composite pins as the union of the sub-blocks', is at the end.
+"""
+
+import importlib
+import inspect
+import pkgutil
+from dataclasses import dataclass, fields, replace
 
 import pytest
 
+import elecdef
+from elecdef import Breaker, Coil, Contact, Contactor, Overload, PowerSupply, Relay
+from elecdef._block import Block
 from elecdef.pins import Link, LinkKind, Marking, Pin, PinRole, _is_marking, contact_pins
+from elecdef.supply import SupplyInput
 from elecdef.vocab import ContactForm
 
 # TIMER and PLAIN rows are proposed, not sourced. Each value is the nine contacts, space separated.
@@ -150,3 +162,181 @@ def test_pin_defaults() -> None:
     pin = Pin("1", PinRole.COIL)
     assert pin.side is None
     assert pin.alternates == ()
+
+
+# E10: a leaf stores its pins once; a composite computes them from its sub-blocks.
+_LEAVES = {"SupplyInput", "Channel", "Device"}
+_COMPUTED = {
+    "PowerSupply",
+    "PlcCard",
+    "Relay",
+    "Contactor",
+    "ContactBlock",
+    "Overload",
+    "Breaker",
+    "Cable",
+    "Connector",
+    "Fuse",
+    "FuseHolder",
+    "TerminalBlock",
+    "Computer",
+    "Coil",
+    "Contact",
+}
+
+
+def _block_classes() -> list[type]:
+    """Every Block subclass defined in an `elecdef` module, once."""
+    found: dict[type, None] = {}
+    for info in pkgutil.walk_packages(elecdef.__path__, "elecdef."):
+        if info.name.endswith("__main__"):
+            continue
+        for member in vars(importlib.import_module(info.name)).values():
+            if isinstance(member, type) and issubclass(member, Block) and member is not Block:
+                found[member] = None
+    return [c for c in found if c.__module__.startswith("elecdef")]
+
+
+def _field_names(cls: type) -> set[str]:
+    return {item.name for item in fields(cls)}  # ty: ignore[invalid-argument-type] - a dataclass
+
+
+def _is_property(cls: type, name: str) -> bool:
+    return isinstance(inspect.getattr_static(cls, name, None), property)
+
+
+def _has_pins(cls: type) -> bool:
+    return "pins" in _field_names(cls) or _is_property(cls, "pins")
+
+
+def _stored_in_composite(classes: list[type]) -> list[str]:
+    """The classes that are not leaves and store `pins` or `links` as a field."""
+    return [
+        f"{c.__name__}.{n}"
+        for c in classes
+        if c.__name__ not in _LEAVES
+        for n in ("pins", "links")
+        if n in _field_names(c)
+    ]
+
+
+def _clashes(classes: list[type]) -> list[str]:
+    """The classes with a field and a property of one name."""
+    return [
+        f"{c.__name__}.{n}" for c in classes for n in sorted(_field_names(c)) if _is_property(c, n)
+    ]
+
+
+def test_e10_composites_store_no_pins_or_links() -> None:
+    """Only SupplyInput, Channel and Device store pins; Device alone also stores links."""
+    classes = {c.__name__: c for c in _block_classes()}
+    assert _stored_in_composite(list(classes.values())) == []
+    assert {n for n, c in classes.items() if "pins" in _field_names(c)} == _LEAVES
+    assert {n for n, c in classes.items() if "links" in _field_names(c)} == {"Device"}
+    assert classes.keys() >= _COMPUTED
+
+
+def test_e10_pin_bearing_blocks_are_the_leaves_and_composites() -> None:
+    """The Blocks with a `pins` field or property are exactly the leaves plus the composites."""
+    bearing = {c.__name__ for c in _block_classes() if _has_pins(c)}
+    assert bearing == _LEAVES | _COMPUTED
+
+
+def test_e10_no_field_and_property_of_one_name() -> None:
+    """No block has a field and a property sharing a name."""
+    assert _clashes(_block_classes()) == []
+
+
+def test_e10_property_pins_leaves_keep_own_pins() -> None:
+    """Coil and Contact compute `pins` from a stored `own_pins`."""
+    for cls in (Coil, Contact):
+        assert _is_property(cls, "pins")
+        assert "own_pins" in _field_names(cls)
+
+
+def test_e10_checker_can_fail() -> None:
+    """The scans flag a composite that stores `pins` and a class with a field and a property."""
+
+    @dataclass(frozen=True)
+    class Fake(Block):
+        pins: tuple[Pin, ...] = ()
+
+        @property
+        def links(self) -> tuple[Link, ...]:
+            return ()
+
+    @dataclass(frozen=True)
+    class Both(Block):
+        links: tuple[Link, ...] = ()
+
+    Both.links = property(lambda _: ())  # ty: ignore[invalid-assignment] - the clash is the test
+    assert _stored_in_composite([Fake]) == ["Fake.pins"]
+    assert _has_pins(Fake)
+    assert _clashes([Both]) == ["Both.links"]
+
+
+def _aux(form: ContactForm = ContactForm.MAKE) -> Contact:
+    return Contact(form=form)
+
+
+def _numbered(contact: Contact, number: int, scheme: Marking) -> tuple[tuple[Pin, ...], tuple]:
+    """The pins and links an independently numbered copy of `contact` has."""
+    return contact_pins(contact.form, number, scheme)  # ty: ignore[invalid-argument-type] - form set
+
+
+def test_e10_relay_pins_are_coil_then_numbered_contacts() -> None:
+    """Relay pins are the coil pins, then each contact's pins as AUX 1..n; links the contacts'."""
+    coil = Coil()
+    contacts = (_aux(), _aux(ContactForm.BREAK), _aux(ContactForm.CHANGEOVER))
+    relay = Relay(coil=coil, contacts=contacts)
+    parts = [_numbered(c, i, Marking.AUX) for i, c in enumerate(contacts, 1)]
+    assert relay.pins == coil.pins + sum((p for p, _ in parts), ())
+    assert relay.links == sum((k for _, k in parts), ())
+    assert all(c.pins == () for c in contacts)
+
+
+def test_e10_contactor_pins_are_coil_main_then_aux() -> None:
+    """Contactor pins are the coil, MAIN 1..n for `main`, then AUX 1..n for `aux`."""
+    coil, main, aux = Coil(), (_aux(), _aux()), (_aux(ContactForm.BREAK),)
+    got = Contactor(coil=coil, main=main, aux=aux)
+    expected = coil.pins
+    for i, c in enumerate(main, 1):
+        expected += _numbered(c, i, Marking.MAIN)[0]
+    for i, c in enumerate(aux, 1):
+        expected += _numbered(c, i, Marking.AUX)[0]
+    assert got.pins == expected
+
+
+def test_e10_power_supply_pins_are_input_output_then_ok_contact() -> None:
+    """PowerSupply pins are the input pins, the output pair, then the OK contact as AUX 1."""
+    supply = SupplyInput(pins=(Pin("L", PinRole.LINE), Pin("N", PinRole.LOAD)))
+    ok = _aux()
+    got = PowerSupply(input=supply, ok_contact=ok)
+    output = (Pin("+", PinRole.PLUS), Pin("-", PinRole.MINUS))
+    assert got.pins == supply.pins + output + _numbered(ok, 1, Marking.AUX)[0]
+    assert got.links == _numbered(ok, 1, Marking.AUX)[1]
+
+
+def test_e10_overload_pins_are_main_pairs_then_numbered_aux() -> None:
+    """Overload pins are 1/L1,2/T1 per pole, then each aux as OVERLOAD 1..n."""
+    aux = (_aux(ContactForm.BREAK), _aux())
+    got = Overload(poles=2, aux=aux)
+    main = sum((contact_pins(ContactForm.MAKE, n, Marking.MAIN)[0] for n in (1, 2)), ())
+    expected = main + sum((_numbered(c, i, Marking.OVERLOAD)[0] for i, c in enumerate(aux, 1)), ())
+    assert got.pins == expected
+    assert [p.marking for p in main] == ["1/L1", "2/T1", "3/L2", "4/T2"]
+
+
+def test_e10_breaker_pins_are_pole_pairs_then_numbered_aux() -> None:
+    """Breaker pins are 2p-1 and 2p per pole, then each aux as AUX 1..n."""
+    aux = (_aux(), _aux())
+    got = Breaker(poles=2, aux=aux)
+    poles = tuple(Pin(str(n), PinRole.LINE if n % 2 else PinRole.LOAD) for n in (1, 2, 3, 4))
+    expected = poles + sum((_numbered(c, i, Marking.AUX)[0] for i, c in enumerate(aux, 1)), ())
+    assert got.pins == expected
+
+
+def test_e10_a_replaced_sub_block_is_read_fresh() -> None:
+    """`replace` on a composite leaves no stale pins: they are read on every access."""
+    relay = Relay(contacts=(_aux(),))
+    assert replace(relay, contacts=(_aux(), _aux())).pins != relay.pins
