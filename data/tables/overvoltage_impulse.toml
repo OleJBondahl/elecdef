@@ -1,0 +1,10 @@
+kind = "rows"
+doc = "Impulse withstand voltage in volts per overvoltage category."
+const = "OVERVOLTAGE_IMPULSE"
+columns = ["enum:OvervoltageCategory", "unit:V"]
+rows = [
+    { id = "CAT_I", v = ["CAT_I", "1500"], origin = "own", status = "confirmed" },
+    { id = "CAT_II", v = ["CAT_II", "2500"], origin = "own", status = "confirmed" },
+    { id = "CAT_III", v = ["CAT_III", "4000"], origin = "own", status = "confirmed" },
+    { id = "CAT_IV", v = ["CAT_IV", "6000"], origin = "own", status = "confirmed" },
+]

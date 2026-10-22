@@ -1,0 +1,12 @@
+kind = "rows"
+doc = "Breaker rated breaking capacities in kiloamperes."
+const = "BREAKER_ICN"
+columns = ["unit:KA"]
+rows = [
+    { id = "3", v = "3", origin = "own", status = "confirmed" },
+    { id = "4.5", v = "4.5", origin = "own", status = "confirmed" },
+    { id = "6", v = "6", origin = "own", status = "confirmed" },
+    { id = "10", v = "10", origin = "own", status = "confirmed" },
+    { id = "15", v = "15", origin = "own", status = "confirmed" },
+    { id = "25", v = "25", origin = "own", status = "confirmed" },
+]

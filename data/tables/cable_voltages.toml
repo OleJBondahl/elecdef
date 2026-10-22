@@ -1,0 +1,11 @@
+kind = "rows"
+doc = "Cable voltage digits with the rated voltage to earth and between conductors."
+const = "CABLE_VOLTAGES"
+columns = ["str", "unit:V", "unit:V"]
+rows = [
+    { id = "01", v = ["01", "100", "100"], origin = "own", status = "confirmed" },
+    { id = "03", v = ["03", "300", "300"], origin = "own", status = "confirmed" },
+    { id = "05", v = ["05", "300", "500"], origin = "own", status = "confirmed" },
+    { id = "07", v = ["07", "450", "750"], origin = "own", status = "confirmed" },
+    { id = "11", v = ["11", "600", "1000"], origin = "own", status = "confirmed" },
+]
