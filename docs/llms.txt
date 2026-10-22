@@ -28,6 +28,8 @@ Coil: a coil: kind, voltage, pick-up and drop-out, power, suppression; its A1 an
 Relay: a coil and contacts numbered 1..n on every read; the timer scheme when its kind is TIMER.
 Contactor: a coil, MAKE main contacts numbered MAIN 1..n, then auxiliaries numbered AUX 1..n.
 ContactBlock: a coil-less carrier of contacts numbered AUX from numbered_from.
+Device: a thing with no block of its own yet: its pins and links are stored as given.
+TerminalBlock: a terminal block: its levels, the connection on each side and its mounting.
 elecdef.vocab.Kind: the physical kind a unit belongs to; conversion and ordering stay inside one kind.
 elecdef.vocab.Current: the current kind a figure is stated for, AC or DC.
 elecdef.vocab.Utilisation: the utilisation code a contact rating is stated for, such as AC_15.
@@ -105,6 +107,14 @@ elecdef.pins.PinRole: what a pin does in its part.
 elecdef.pins.Side: which side of a part a pin is on.
 elecdef.pins.contact_pins: the pins and links of contact n in a form under a marking scheme.
 elecdef.supply.SupplyInput: what a powered thing draws: voltage and current per conditions, and its supply pins.
+elecdef.terminal.Level: one level of a terminal: its marking, the potential it carries and its kind.
+elecdef.connector.Connector: a connector: family, coding, poles, gender, locking and whether it is shielded.
+elecdef.computer.Computer: a computer: the supply it draws, its power and its data ports.
+elecdef.computer.Port: a data port: its kind, how many there are and the connector it takes, if stated.
+elecdef.conductor.Conductor: one conductor: material, class, cross-section, gauge, insulation, temperature and colour.
+elecdef.cable.Cable: a cable: conductor, cores, screen, sheath and ratings; its pins are one per core plus SH.
+elecdef.cable.Core: one core of a cable: number, colour, pair, role and own conductor.
+elecdef.cable.TypeCode: a cable type designation: the scheme family and the text as printed.
 elecdef.tables.AWG: American wire gauge rows (n, diameter, area), n from -3 (4/0) to 40.
 elecdef.tables.AWG_METRIC: each gauge with the smallest cross section in CROSS_SECTIONS that holds its area.
 elecdef.tables.BREAKER_CURRENTS: breaker rated currents in amperes.

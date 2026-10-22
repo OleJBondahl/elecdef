@@ -80,3 +80,54 @@ assert [pin.marking for pin in contactor.pins][-2:] == ["11", "12"]
 block = ContactBlock((Contact(ContactForm.MAKE), Contact(ContactForm.BREAK)), numbered_from=5)
 assert [pin.marking for pin in block.pins] == ["53", "54", "61", "62"]
 ```
+
+## TerminalBlock and Level
+
+`TerminalBlock` holds the levels of a terminal; each `Level` gives a pin, and a fuse or disconnect level gives a second pin `marking'` and a link.
+
+```python
+from elecdef import TerminalBlock
+from elecdef.terminal import Level
+from elecdef.vocab import LevelKind, Potential
+
+block = TerminalBlock(levels=(Level("1", Potential.L, LevelKind.FUSE),))
+assert [pin.marking for pin in block.pins] == ["1", "1'"]
+assert len(block.links) == 1
+```
+
+## Connector
+
+`Connector` states a connector family and its poles; its pins run from 1 to the poles.
+
+```python
+from elecdef.connector import Connector
+from elecdef.vocab import ConnectorFamily
+
+connector = Connector(family=ConnectorFamily.M12, poles=4)
+assert [pin.marking for pin in connector.pins] == ["1", "2", "3", "4"]
+```
+
+## Computer and Port
+
+`Computer` gives its supply pins, then one pin per `Port` instance.
+
+```python
+from elecdef.computer import Computer, Port
+from elecdef.supply import SupplyInput
+from elecdef.vocab import PortKind
+
+computer = Computer(supply=SupplyInput(), ports=(Port(PortKind.ETHERNET, 2),))
+assert [pin.marking for pin in computer.pins][-2:] == ["ETHERNET1", "ETHERNET2"]
+```
+
+## Device
+
+`Device` holds pins and links given outright, for a thing with no block yet.
+
+```python
+from elecdef import Device
+from elecdef.pins import Pin, PinRole
+
+device = Device(pins=(Pin("1", PinRole.SIGNAL),))
+assert device.pins[0].marking == "1"
+```
