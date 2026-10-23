@@ -12,7 +12,7 @@ __all__ = ["Rating"]
 
 @dataclass(frozen=True)
 class Rating(Block):
-    """The ratings of a whole part: voltages, thermal current, frequency and clearance classes.
+    """The ratings of a whole part: voltages, currents, thermal current, frequency, clearances.
 
     Every field is unfilled by default.
     """
@@ -24,3 +24,4 @@ class Rating(Block):
     frequency: Range | None = figure(Kind.FREQUENCY)
     overvoltage_category: OvervoltageCategory | None = None
     pollution_degree: PollutionDegree | None = None
+    current: Ranges = figure(Kind.CURRENT, many=True)

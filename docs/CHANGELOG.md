@@ -5,6 +5,8 @@ Every change to the public surface gets a line under Unreleased until the releas
 
 ## Unreleased
 
+- `Rating.current`: rated current as `Ranges`, per current kind and conditions.
+
 ## 0.1.0 (2026-10-23)
 
 - Value layer: Unit, Quantity, Range, Ranges, Role, At, pick, Pick, Issue and IssueCode, and the `elecdef.vocab` door with Kind, Current, Utilisation, CoilState and ConductorKind.

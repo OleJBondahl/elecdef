@@ -44,6 +44,17 @@ rating = Rating(voltage=Range(Role.RATED, max=U.V(400)), overvoltage_category=Ov
 assert rating.voltage[0].max == U.V(400)
 ```
 
+A datasheet that states the current for AC and for DC side by side fills `current`; `pick` reads one.
+
+```python
+from elecdef import At, Range, Rating, Role, Unit as U, pick
+from elecdef.vocab import Current
+
+rating = Rating(current=(Range(Role.RATED, max=U.A(16), at=At(Current.AC)),
+                         Range(Role.RATED, max=U.A(20), at=At(Current.DC))))
+assert pick(rating.current, Current.DC).found.max == U.A(20)
+```
+
 ## Symbol
 
 `Symbol` names a drawn symbol by key and version and holds nothing else of it.
