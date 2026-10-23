@@ -87,7 +87,8 @@ from elecdef.pins import PinRole
 from elecdef.vocab import CoilKind, ContactFeature, ContactForm, RelayKind, Suppression
 
 coil = Coil(CoilKind.DC, suppression=Suppression.DIODE, voltage=Range(Role.RATED, nom=U.V(24)))
-co = Contact(ContactForm.CHANGEOVER)
+co = Contact(ContactForm.CHANGEOVER, voltage=Range(Role.LIMITING, max=U.V(250)))
+assert co.voltage[0].max == U.V(250)
 relay = Relay(contacts=(co, co), coil=coil)
 assert [pin.marking for pin in relay.pins] == ["A1", "A2", "11", "12", "14", "21", "22", "24"]
 assert relay.pins[0].role is PinRole.PLUS

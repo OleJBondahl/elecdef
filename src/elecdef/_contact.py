@@ -28,7 +28,7 @@ class Contact(Block):
     form: ContactForm | None = None
     features: frozenset[ContactFeature] = field(default_factory=frozenset)
     switching: Ranges = figure(Kind.CURRENT, many=True)
-    voltage: Range | None = figure(Kind.VOLTAGE)
+    voltage: Ranges = figure(Kind.VOLTAGE, many=True)
     min_load_voltage: Range | None = figure(Kind.VOLTAGE)
     min_load_current: Range | None = figure(Kind.CURRENT)
     material: ContactMaterial | None = None

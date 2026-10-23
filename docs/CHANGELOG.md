@@ -9,6 +9,7 @@ Every change to the public surface gets a line under Unreleased until the releas
 
 - `Rating.current`: rated current as `Ranges`, per current kind and conditions.
 - `Rating.power_loss`: the power a part dissipates, with the load in `at`.
+- `Contact.voltage`: the limiting voltage as `Ranges`, per current kind, like `Rating.voltage`. Break from 0.1.0: the field was one `Range`; it is now a tuple of them, and a bare `Range` is wrapped into a one-item tuple, so `Contact(voltage=one_range)` still builds but `contact.voltage` reads as a tuple.
 
 ## 0.1.0 (2026-10-23)
 

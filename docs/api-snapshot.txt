@@ -22,7 +22,7 @@ class Connection(technology: 'Technology | None' = None, conductor: 'Ranges' = (
 
     Every field is unfilled by default, so a leaf states only its technology.
 
-class Contact(form: 'ContactForm | None' = None, features: 'frozenset[ContactFeature]' = <factory>, switching: 'Ranges' = (), voltage: 'Range | None' = None, min_load_voltage: 'Range | None' = None, min_load_current: 'Range | None' = None, material: 'ContactMaterial | None' = None, mechanical_life: 'int | None' = None, electrical_life: 'int | None' = None, connection: 'Connection | None' = None, number: 'int | None' = None, scheme: 'Marking | None' = None, own_pins: 'tuple[Pin, ...]' = (), symbol: 'Symbol | None' = None) -> 'None'
+class Contact(form: 'ContactForm | None' = None, features: 'frozenset[ContactFeature]' = <factory>, switching: 'Ranges' = (), voltage: 'Ranges' = (), min_load_voltage: 'Range | None' = None, min_load_current: 'Range | None' = None, material: 'ContactMaterial | None' = None, mechanical_life: 'int | None' = None, electrical_life: 'int | None' = None, connection: 'Connection | None' = None, number: 'int | None' = None, scheme: 'Marking | None' = None, own_pins: 'tuple[Pin, ...]' = (), symbol: 'Symbol | None' = None) -> 'None'
     One contact: form, ratings per condition, and the pins computed from number and scheme.
 
     `own_pins` holds only what the author gave; `pins` is read from `number` and `scheme` each time.

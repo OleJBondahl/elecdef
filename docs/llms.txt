@@ -25,7 +25,7 @@ check: the content issues of a block, or of a Product's block, as a tuple of Iss
 Body: the outer shape of a thing: width, height, depth, protection code, temperatures and mounting.
 Rating: voltages, currents per condition, thermal current, power loss, frequency, overvoltage category and pollution degree of a thing.
 Connection: how a conductor attaches: technology, conductor ranges, strip length, torque, screw, pitch and material.
-Contact: one contact: form, features, switching ratings per condition, number and scheme; its pins and links are read from them.
+Contact: one contact: form, features, switching ratings and limiting voltage per condition, number and scheme; its pins and links are read from them.
 Coil: a coil: kind, voltage, pick-up and drop-out, power, suppression; its A1 and A2 pins are read from kind and suppression.
 Relay: a coil and contacts numbered 1..n on every read; the timer scheme when its kind is TIMER.
 Contactor: a coil, MAKE main contacts numbered MAIN 1..n, then auxiliaries numbered AUX 1..n.

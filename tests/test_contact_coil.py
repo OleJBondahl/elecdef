@@ -4,12 +4,12 @@ from dataclasses import replace
 
 import pytest
 
-from elecdef import Range, Role
+from elecdef import At, Range, Role, pick
 from elecdef import Unit as U  # noqa: N817 - the brief names the alias U
 from elecdef._coil import Coil
 from elecdef._contact import Contact
 from elecdef.pins import LinkKind, Marking, Pin, PinRole
-from elecdef.vocab import CoilKind, ContactForm, Suppression
+from elecdef.vocab import CoilKind, ContactForm, Current, Suppression
 
 CO = Contact(ContactForm.CHANGEOVER)
 
@@ -23,7 +23,7 @@ def test_contact_figures_are_checked_for_kind():
     with pytest.raises(TypeError):
         Contact(switching=(Range(Role.RATED, nom=U.V(6)),))
     with pytest.raises(TypeError):
-        Contact(voltage=Range(Role.LIMITING, max=U.A(1)))
+        Contact(voltage=(Range(Role.LIMITING, max=U.A(1)),))
     with pytest.raises(TypeError):
         Contact(min_load_current=Range(Role.RATED, min=U.V(1)))
 
@@ -120,3 +120,18 @@ def test_the_coil_default_is_not_stored_in_own_pins():
 def test_coil_own_pins_win():
     given = (Pin("1", PinRole.COIL), Pin("2", PinRole.COIL))
     assert Coil(CoilKind.DC, suppression=Suppression.DIODE, own_pins=given).pins == given
+
+
+def test_contact_voltage_is_picked_per_current_kind():
+    ac = Range(Role.LIMITING, max=U.V(250), at=At(Current.AC))
+    dc = Range(Role.LIMITING, max=U.V(30), at=At(Current.DC))
+    contact = Contact(voltage=(ac, dc))
+    assert pick(contact.voltage, Current.DC).found is dc
+    assert pick(contact.voltage, Current.AC).found is ac
+
+
+def test_contact_voltage_wraps_a_bare_range_and_refuses_a_current():
+    one = Range(Role.LIMITING, max=U.V(250))
+    assert Contact(voltage=one).voltage == (one,)  # ty: ignore[invalid-argument-type] - a bare Range is wrapped on purpose
+    with pytest.raises(TypeError):
+        Contact(voltage=(Range(Role.LIMITING, max=U.A(1)),))
