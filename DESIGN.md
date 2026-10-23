@@ -168,6 +168,14 @@ functions), `elecdef.connections` (`SCREW`, `SPRING_CAGE`, `PUSH_IN`, `TENSION`,
 Unit as U`. `python -m elecdef api` prints every surface name with its signature and docstring;
 `docs/api-snapshot.txt` is that output, and a test fails when they differ.
 
+## 0.2.0 surface (2026-10-23)
+
+`Rating.current` is the rated current as `Ranges`, per current kind and conditions: a datasheet states the AC and the DC rating side by side, each with its own conditions. `Rating.thermal_current` stays beside it, because the thermal current is another datasheet figure and the two are never one fact. `Rating.power_loss` is the power a part dissipates, one `Range` with the load in `at`; several loads are several `Rating`s. Both new fields follow `pollution_degree`, so positional calls from 0.1.0 keep their meaning.
+
+`Contact.voltage` is the limiting voltage as `Ranges`, per current kind, the same shape as `Rating.voltage`. A contact has one limiting voltage for alternating current and another for direct current, which one `Range` cannot say. A bare `Range` passed in is wrapped into a one-item tuple, so a 0.1.0 call that builds a `Contact` from one `Range` still builds. A 0.1.0 reader of `contact.voltage.max` breaks, and the changelog says so. The supply blocks need no change: a rated 24 V with its operating window is one `Range` (nom, min, max).
+
+The three needs behind this section are N11 (current as `Ranges`), N12 (power loss) and N13 (`Contact.voltage` as `Ranges`, ruled in for that field only, F12-approved under `SPEC-ELECDEF`).
+
 ## 6. Out of scope
 
 Checks and judgements (is this load acceptable, is this wire big enough), derating and
