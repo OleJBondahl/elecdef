@@ -88,8 +88,8 @@ Ranges(iterable=(), /)
 
     If the argument is a tuple, the return value is the same object.
 
-class Rating(voltage: 'Ranges' = (), insulation_voltage: 'Range | None' = None, impulse_voltage: 'Range | None' = None, thermal_current: 'Range | None' = None, frequency: 'Range | None' = None, overvoltage_category: 'OvervoltageCategory | None' = None, pollution_degree: 'PollutionDegree | None' = None, current: 'Ranges' = ()) -> 'None'
-    The ratings of a whole part: voltages, currents, thermal current, frequency, clearances.
+class Rating(voltage: 'Ranges' = (), insulation_voltage: 'Range | None' = None, impulse_voltage: 'Range | None' = None, thermal_current: 'Range | None' = None, frequency: 'Range | None' = None, overvoltage_category: 'OvervoltageCategory | None' = None, pollution_degree: 'PollutionDegree | None' = None, current: 'Ranges' = (), power_loss: 'Range | None' = None) -> 'None'
+    A part's ratings: voltages, currents, thermal current, power loss, frequency, clearances.
 
     Every field is unfilled by default.
 

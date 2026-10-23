@@ -6,6 +6,7 @@ Every change to the public surface gets a line under Unreleased until the releas
 ## Unreleased
 
 - `Rating.current`: rated current as `Ranges`, per current kind and conditions.
+- `Rating.power_loss`: the power a part dissipates, with the load in `at`.
 
 ## 0.1.0 (2026-10-23)
 

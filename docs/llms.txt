@@ -23,7 +23,7 @@ Symbol: a drawn symbol named by key and version; nothing else of it is held.
 Product: a maker's part number, manufacturer, optional name and the one block it is.
 check: the content issues of a block, or of a Product's block, as a tuple of Issue; it never raises for them.
 Body: the outer shape of a thing: width, height, depth, protection code, temperatures and mounting.
-Rating: voltages, currents per condition, thermal current, frequency, overvoltage category and pollution degree of a thing.
+Rating: voltages, currents per condition, thermal current, power loss, frequency, overvoltage category and pollution degree of a thing.
 Connection: how a conductor attaches: technology, conductor ranges, strip length, torque, screw, pitch and material.
 Contact: one contact: form, features, switching ratings per condition, number and scheme; its pins and links are read from them.
 Coil: a coil: kind, voltage, pick-up and drop-out, power, suppression; its A1 and A2 pins are read from kind and suppression.

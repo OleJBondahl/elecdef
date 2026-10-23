@@ -143,7 +143,7 @@ ignore_names = [
     "XLPE", "YE", "Z", "aM", "aR", "conductor", "conductor_awg", "conductors_per_clamp",
     "depth", "frequency", "gG", "gL", "gPV", "gR", "gS", "height", "impulse_voltage",
     "insulation_voltage", "ip", "material", "mounting", "needs", "overvoltage_category",
-    "pitch", "pollution_degree", "screw", "strip_length", "subject", "technology",
+    "pitch", "pollution_degree", "power_loss", "screw", "strip_length", "subject", "technology",
     "temperature", "thermal_current", "to", "tolerance", "torque", "voltage", "width",
     "COIL", "SUPPLY", "CONDUCTIVE", "PROTECTIVE", "side", "alternates", "closed_at_rest",
     "current", "connection",

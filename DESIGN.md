@@ -124,7 +124,7 @@ kind, two conditions of one kind in an `At`) raises `TypeError`; content never d
 |---|---|---|
 | `Body` | - | width, height, depth; ip; temperature (rated, storage); mounting |
 | `Connection` | - | technology; conductor area per conductor kind; AWG as stated; conductors per clamp; strip length; torque; screw; pitch; material |
-| `Rating` | - | operational voltage per current kind; insulation and impulse voltage; thermal current; current per current kind and conditions; frequency; overvoltage category; pollution degree |
+| `Rating` | - | operational voltage per current kind; insulation and impulse voltage; thermal current; current per current kind and conditions; power loss; frequency; overvoltage category; pollution degree |
 | `SupplyInput` | Connection | what a powered thing draws: voltage and current per conditions; its supply pins |
 | `Contact` | Connection | form (make, break, changeover) and features; switching current per voltage, current kind and utilisation code; limiting voltage; minimum load; material; life |
 | `Coil` | Connection | kind; voltage per current kind and frequency; pick-up and drop-out as ratio; resistance; power and apparent power per coil state; times; suppression; A1-A2 |

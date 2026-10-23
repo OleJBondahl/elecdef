@@ -36,3 +36,26 @@ def test_a_list_in_current_is_refused():
 def test_current_defaults_to_empty_and_thermal_current_is_unchanged():
     assert Rating().current == ()
     assert Rating(thermal_current=AC).thermal_current is AC
+
+
+def test_power_loss_holds_one_range_with_its_load():
+    loss = Range(Role.RATED, nom=U.W("4.5"), at=At(U.A(16)))
+    assert Rating(power_loss=loss).power_loss is loss
+
+
+def test_power_loss_takes_a_bare_power_quantity_like_other_single_figures():
+    assert Rating(power_loss=U.W(4)).power_loss == U.W(4)  # ty: ignore[invalid-argument-type] - a bare Quantity is accepted by the kind check
+
+
+def test_a_current_range_in_power_loss_is_refused():
+    with pytest.raises(TypeError):
+        Rating(power_loss=AC)
+
+
+def test_power_loss_accepts_kilowatts():
+    loss = Range(Role.RATED, nom=U.KW("0.004"))
+    assert Rating(power_loss=loss).power_loss is loss
+
+
+def test_power_loss_defaults_to_none():
+    assert Rating().power_loss is None

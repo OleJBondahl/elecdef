@@ -55,6 +55,15 @@ rating = Rating(current=(Range(Role.RATED, max=U.A(16), at=At(Current.AC)),
 assert pick(rating.current, Current.DC).found.max == U.A(20)
 ```
 
+The power a part dissipates is `power_loss`, with the load it is stated at in `at`.
+
+```python
+from elecdef import At, Range, Rating, Role, Unit as U
+
+rating = Rating(power_loss=Range(Role.RATED, nom=U.W("4.5"), at=At(U.A(16))))
+assert rating.power_loss.nom == U.W("4.5")
+```
+
 ## Symbol
 
 `Symbol` names a drawn symbol by key and version and holds nothing else of it.
