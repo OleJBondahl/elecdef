@@ -15,6 +15,7 @@ Range: a datasheet figure with a role, up to four ends and the At it holds under
 Ranges: a plain tuple of Range.
 Role: what a stated figure means: RATED, LIMITING or REFERENCE.
 At: the conditions a figure holds under, one per kind, in a canonical order.
+Block: the base of every block; it refuses a figure of the wrong kind at construction.
 pick: the one Range that covers every ask, or an Issue of NO_RATING or AMBIGUOUS_RATING.
 Pick: the answer of pick, holding exactly one of found and issue.
 Issue: one finding as a value: a code, a message and the subject it concerns.

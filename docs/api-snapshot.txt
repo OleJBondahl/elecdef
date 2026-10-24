@@ -2,6 +2,11 @@
 class At(*conds: 'Quantity | Range | Enum') -> 'None'
     The conditions a figure holds under, one per kind, in a canonical order.
 
+class Block() -> 'None'
+    The base of every block: it refuses a figure of the wrong kind at construction.
+
+    A caller types a block field, or checks isinstance, against this one class for every block.
+
 class Body(width: 'Quantity | None' = None, height: 'Quantity | None' = None, depth: 'Quantity | None' = None, ip: 'IpCode | None' = None, temperature: 'Ranges' = (), mounting: 'Mounting | None' = None) -> 'None'
     The physical body of a part.
 

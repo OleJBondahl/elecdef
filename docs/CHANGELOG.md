@@ -5,6 +5,8 @@ Every change to the public surface gets a line under Unreleased until the releas
 
 ## Unreleased
 
+- `Block`: the base class of every block, now exported; it refuses a figure of the wrong kind at construction.
+
 ## 0.3.0 (2026-10-24)
 
 - `Unit.AH`, symbol "Ah", and `Kind.CHARGE`: battery and cell capacity in ampere-hours. It converts only within its own kind.

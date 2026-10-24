@@ -1,6 +1,15 @@
 # Blocks
 
-This page shows the leaf blocks `Connection`, `Body`, `Rating` and `Symbol`, and the switching blocks `Coil`, `Contact`, `Relay`, `Contactor` and `ContactBlock`. A block holds figures checked for their kind, and a bare `Range` given to a list field becomes a one-item tuple.
+This page shows the leaf blocks `Connection`, `Body`, `Rating` and `Symbol`, and the switching blocks `Coil`, `Contact`, `Relay`, `Contactor` and `ContactBlock`. A block holds figures checked for their kind, and a bare `Range` given to a list field becomes a one-item tuple. Every block subclasses the public `Block`, so `isinstance(x, Block)` tells a block from a value.
+
+```python
+from elecdef import Block, Contact
+from elecdef.vocab import ContactForm
+
+assert issubclass(Contact, Block)
+assert isinstance(Contact(ContactForm.MAKE), Block)
+assert isinstance(Block(), Block)
+```
 
 ## Connection
 

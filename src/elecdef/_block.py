@@ -33,7 +33,10 @@ def _check_figure(name: str, value: object, kinds: tuple[Kind, ...]) -> None:
 
 @dataclass(frozen=True)
 class Block:
-    """The base of every block: refuses a figure of another kind at construction."""
+    """The base of every block: it refuses a figure of the wrong kind at construction.
+
+    A caller types a block field, or checks isinstance, against this one class for every block.
+    """
 
     needs: ClassVar[tuple[str, ...]] = ()
 

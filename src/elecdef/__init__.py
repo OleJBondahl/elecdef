@@ -1,5 +1,6 @@
 """Standard-agnostic electrical engineering vocabulary as strict, typed, immutable values."""
 
+from elecdef._block import Block
 from elecdef._body import Body
 from elecdef._breaker import Breaker
 from elecdef._check import check
@@ -21,6 +22,7 @@ from elecdef.terminal import TerminalBlock
 
 __all__ = [
     "At",
+    "Block",
     "Body",
     "Breaker",
     "Coil",
