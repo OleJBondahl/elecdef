@@ -7,6 +7,7 @@ from decimal import Decimal
 import pytest
 
 from elecdef import Quantity, Unit
+from elecdef.vocab import Kind
 
 U = Unit
 
@@ -98,3 +99,13 @@ def test_a_quantity_needs_a_decimal_and_a_unit():
         Quantity(1, U.V)  # ty: ignore[invalid-argument-type] - the refusal under test
     with pytest.raises(TypeError):
         Quantity(Decimal(1), "V")  # ty: ignore[invalid-argument-type] - the refusal under test
+
+
+def test_ampere_hour_is_charge_and_prints_as_ah():
+    capacity = U.AH("2.5")
+    assert U.AH.symbol == "Ah"
+    assert U.AH.kind is Kind.CHARGE
+    assert capacity == Quantity(Decimal("2.5"), U.AH)
+    assert capacity.unit.symbol == "Ah"
+    with pytest.raises(TypeError):
+        capacity.to(U.A)

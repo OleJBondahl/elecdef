@@ -5,6 +5,8 @@ Every change to the public surface gets a line under Unreleased until the releas
 
 ## Unreleased
 
+- `Unit.AH`, symbol "Ah", and `Kind.CHARGE`: battery and cell capacity in ampere-hours. It converts only within its own kind.
+
 ## 0.2.0 (2026-10-23)
 
 - `Rating.current`: rated current as `Ranges`, per current kind and conditions.

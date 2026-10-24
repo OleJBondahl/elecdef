@@ -136,3 +136,11 @@ def test_a_wrong_role_at_or_end_type_is_refused():
         Range(Role.RATED, nom=U.V(1), at="dc")  # ty: ignore[invalid-argument-type] - the refusal under test
     with pytest.raises(TypeError):
         Range(Role.RATED, nom=24)  # ty: ignore[invalid-argument-type] - the refusal under test
+
+
+def test_ampere_hour_in_a_range():
+    rng = Range(Role.RATED, nom=U.AH(5), min=U.AH("4.5"), max=U.AH("5.5"))
+    assert rng.kind is Kind.CHARGE
+    assert rng.nom == U.AH(5)
+    assert rng.min is not None
+    assert rng.min.unit.symbol == "Ah"

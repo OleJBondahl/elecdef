@@ -23,6 +23,7 @@ class Kind(Enum):
     RATIO = auto()
     TEMPERATURE = auto()
     TEMPERATURE_DIFFERENCE = auto()
+    CHARGE = auto()
 
 
 # Every Quantity calculation runs here, never in the caller's decimal context.
@@ -83,6 +84,7 @@ class Unit(Enum):
     PPM = ("ppm", Kind.RATIO, "0.000001")
     DEG_C = ("degC", Kind.TEMPERATURE, "1")
     K = ("K", Kind.TEMPERATURE_DIFFERENCE, "1")
+    AH = ("Ah", Kind.CHARGE, "1")
 
     symbol: str
     kind: Kind
