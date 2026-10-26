@@ -103,6 +103,8 @@ groups. A product may give pins outright; a coil or contact stores only those an
 sub-blocks and stored nowhere else. A marking is a non-empty string of letters, digits and
 `/ + - . '`, so every marking reads back unchanged in a designation string such as `-K1:13`.
 
+`throws(pins, links)` returns a `Throw(common, throw, closed_at_rest)` for each switched link that joins a `COMMON` pin to a `BREAK` or `MAKE` pin, in marking order; a break throw is closed at rest. `poles(pins, links)` returns a `Pole(line, ends)` for each pair a switched link joins (links that share a pin are one pole) and for the pins no link joins, paired in marking order; `line` is the end with the `LINE` role. `check` reports STRAY_REST_STATE for a link that is not `SWITCHED` yet states `closed_at_rest`.
+
 ### 3.5 Product
 
 `Product(mpn, manufacturer, block, name)` is the one identity envelope: a block with its values
@@ -159,8 +161,8 @@ Top level (`elecdef.__all__`): `Unit`, `Quantity`, `Range`, `Ranges`, `Role`, `A
 `Contact`, `Coil`, `Relay`, `Contactor`, `ContactBlock`, `Overload`, `TerminalBlock`, `Fuse`,
 `Breaker`, `PowerSupply`, `PlcCard`, `Device`. Twelve doors, each with its own `__all__` of the
 names not exported at top level: `elecdef.vocab` (`Kind` and every vocabulary enum),
-`elecdef.pins` (`Pin`, `PinRole`, `Side`, `Link`, `LinkKind`, `Marking` and the marking
-functions), `elecdef.connections` (`SCREW`, `SPRING_CAGE`, `PUSH_IN`, `TENSION`, `IDC`, `CRIMP`,
+`elecdef.pins` (`Pin`, `PinRole`, `Side`, `Link`, `LinkKind`, `Marking`, `Throw`, `Pole` and the marking
+functions, `throws` and `poles`), `elecdef.connections` (`SCREW`, `SPRING_CAGE`, `PUSH_IN`, `TENSION`, `IDC`, `CRIMP`,
 `SOLDER`, `PRESS_IN`, `PLUG_IN`, `BOLT`, `WIRE_WRAP`, `THT`, `SMD`), `elecdef.tables`,
 `elecdef.supply` (`SupplyInput`), `elecdef.fuse` (`FuseHolder`), `elecdef.plc` (`Channel`,
 `ChannelGroup`, `DigitalInput`, `DigitalOutput`, `AnalogIo`), `elecdef.terminal` (`Level`),

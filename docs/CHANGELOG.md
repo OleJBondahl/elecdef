@@ -5,6 +5,11 @@ Every change to the public surface gets a line under Unreleased until the releas
 
 ## Unreleased
 
+- `throws` and `Throw`: the switched links that join a common pin to a break or make pin, with the state at rest.
+- `poles` and `Pole`: the pin pairs of a contact, the line end named.
+- `check` reports a rest state on a link that is not switched.
+- `IssueCode.STRAY_REST_STATE`: the code for that issue; `IssueCode` has nine members.
+
 ## 0.4.0 (2026-10-24)
 
 - `Block`: the base class of every block, now exported; it refuses a figure of the wrong kind at construction.

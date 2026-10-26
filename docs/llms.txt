@@ -112,8 +112,12 @@ elecdef.pins.LinkKind: how two pins are joined: conductive, switched or protecti
 elecdef.pins.Marking: the marking schemes: auxiliary, main, overload, timer and plain.
 elecdef.pins.Pin: one pin: its marking, role, side and alternate markings.
 elecdef.pins.PinRole: what a pin does in its part.
+elecdef.pins.Pole: one pole: its two ends and the line end when exactly one end has the line role.
 elecdef.pins.Side: which side of a part a pin is on.
+elecdef.pins.Throw: one throw: a common pin, the break or make pin it closes to, and whether it is closed at rest.
 elecdef.pins.contact_pins: the pins and links of contact n in a form under a marking scheme.
+elecdef.pins.poles: the poles of a contact: switched link pairs, then the unlinked pins in marking order.
+elecdef.pins.throws: the switched links that join a common pin to a break or make pin, in marking order.
 elecdef.supply.SupplyInput: what a powered thing draws: voltage and current per conditions, and its supply pins.
 elecdef.plc.AnalogIo: an analog channel: a voltage or current span, resolution, wires, sensor type and accuracy.
 elecdef.plc.Channel: one channel: its signal, number, electrical block and the pins it is wired on.
