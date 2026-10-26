@@ -1,7 +1,13 @@
 """`check`: the content issues of a block or a Product, reported as values and never raised."""
 
 from elecdef._block import Block
-from elecdef._checkpins import duplicate_issues, link_issues, marking_issues, rest_state_issues
+from elecdef._checkpins import (
+    conflicting_rest_issues,
+    duplicate_issues,
+    link_issues,
+    marking_issues,
+    rest_state_issues,
+)
 from elecdef._checkwalk import join, walk
 from elecdef._issue import Issue, IssueCode
 from elecdef._product import Product
@@ -31,7 +37,8 @@ def _block_issues(path: str, block: Block, *, product: bool) -> list[Issue]:
     if module != "elecdef" and not module.startswith("elecdef."):
         message = f"{type(block).__qualname__} is not defined in the elecdef catalogue"
         found.append(Issue(IssueCode.UNKNOWN_CLASS, message, path or "block"))
-    found += marking_issues(path, block) + link_issues(path, block) + rest_state_issues(path, block)
+    found += marking_issues(path, block) + link_issues(path, block)
+    found += rest_state_issues(path, block) + conflicting_rest_issues(path, block)
     if product:
         found.extend(
             Issue(IssueCode.MISSING_FIGURE, f"{name} is needed and unfilled", join(path, name))

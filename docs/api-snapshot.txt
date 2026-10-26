@@ -54,7 +54,7 @@ class Issue(code: 'IssueCode', message: 'str', subject: 'str') -> 'None'
     One finding: a code, a message and the subject path it concerns, such as `coil.voltage`.
 
 class IssueCode
-    The closed set of issue codes; `check` reports the first seven, `pick` the last two.
+    The closed set of issue codes; `check` reports the first eight, `pick` the last two.
 
 class Overload(poles: 'int | None' = None, setting: 'Range | None' = None, trip_class: 'TripClass | None' = None, reset: 'Reset | None' = None, phase_failure: 'bool' = False, aux: 'tuple[Contact, ...]' = (), connection: 'Connection | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
     A motor overload relay: main pins per pole, then auxiliaries numbered OVERLOAD.
@@ -378,10 +378,8 @@ class Pin(marking: 'str', role: 'PinRole', side: 'Side | None' = None, alternate
 class PinRole
     What a pin does in its part.
 
-class Pole(line: 'Pin | None', ends: 'tuple[Pin, Pin]') -> 'None'
-    One pole: its `ends`, and the `line` end when exactly one end has the LINE role.
-
-    `ends` is `(line, load)` when `line` is known; a pole of one pin has that pin twice.
+class Pole(line: 'Pin | None', pins: 'tuple[Pin, ...]') -> 'None'
+    One pole: every pin its links join, in marking order, and the `line` pin.
 
 class Side
     Which side of a part a pin is on.
@@ -397,9 +395,9 @@ contact_pins(form: 'ContactForm', n: 'int', scheme: 'Marking') -> 'tuple[tuple[P
     Raises TypeError for an `n` out of range or a form the scheme does not have.
 
 poles(pins: 'tuple[Pin, ...]', links: 'tuple[Link, ...]') -> 'tuple[Pole, ...]'
-    The poles in marking order: switched links that share a pin are one, then pins pair up.
+    The poles in marking order: one per run of switched or protective links that share a pin.
 
-    Pins no link joins, earth and screen left out, pair in order; an odd last pin stands alone.
+    A pin no such link joins is in no pole. A link that names an absent pin is skipped.
 
 throws(pins: 'tuple[Pin, ...]', links: 'tuple[Link, ...]') -> 'tuple[Throw, ...]'
     The switched links that join a COMMON pin to a BREAK or MAKE pin, in marking order.

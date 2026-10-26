@@ -103,7 +103,7 @@ groups. A product may give pins outright; a coil or contact stores only those an
 sub-blocks and stored nowhere else. A marking is a non-empty string of letters, digits and
 `/ + - . '`, so every marking reads back unchanged in a designation string such as `-K1:13`.
 
-`throws(pins, links)` returns a `Throw(common, throw, closed_at_rest)` for each switched link that joins a `COMMON` pin to a `BREAK` or `MAKE` pin, in marking order; a break throw is closed at rest. `poles(pins, links)` returns a `Pole(line, ends)` for each pair a switched link joins (links that share a pin are one pole) and for the pins no link joins, paired in marking order; `line` is the end with the `LINE` role. `check` reports STRAY_REST_STATE for a link that is not `SWITCHED` yet states `closed_at_rest`.
+`throws(pins, links)` returns a `Throw(common, throw, closed_at_rest)` for each switched link that joins a `COMMON` pin to a `BREAK` or `MAKE` pin, in marking order; a break throw is closed at rest. `closed_at_rest` of a `Throw` comes from the pin role, never from the link. `poles(pins, links)` returns a `Pole(line, pins)` for each run of `SWITCHED` or `PROTECTIVE` links that share a pin: a pole is a link the device acts on, so a fuse path is a pole and a changeover is one pole with its common and both throws. `pins` holds every pin of the pole in marking order. `line` is the pin with the `LINE` role; without one, the marking numbering gives it (a main marking `1/L1` has the odd number on the line side; an auxiliary marking has the lower function digit, the last digit, on the line side); else it is None. A pin no such link joins is in no pole, a coil pin is in none, and nothing pairs unlinked pins. `check` reports STRAY_REST_STATE for a link that is not `SWITCHED` yet states `closed_at_rest`, and CONFLICTING_REST_STATE for a `SWITCHED` link whose stated `closed_at_rest` contradicts its break or make pin.
 
 ### 3.5 Product
 
@@ -115,9 +115,9 @@ footprint, class letter) and never copies a block value out of it.
 
 `check(block | product) -> tuple[Issue, ...]` reports content problems as values: an end below
 another, a marking that repeats, a marking outside the character set, a link naming no pin, a
-rest state on a link that is not switched, a
+rest state on a link that is not switched, a rest state its pin roles contradict, a
 block kind missing a figure it needs, a class outside the catalogue. An `Issue` is `(code:
-IssueCode, message, subject)`. `IssueCode` has nine members: the seven that `check` reports and the
+IssueCode, message, subject)`. `IssueCode` has ten members: the eight that `check` reports and the
 two that `pick` returns (`NO_RATING`, `AMBIGUOUS_RATING`). A malformed call (a wrong type, a wrong
 kind, two conditions of one kind in an `At`) raises `TypeError`; content never does.
 

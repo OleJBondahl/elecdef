@@ -1,72 +1,54 @@
-"""The poles of a contact: the pin pairs a switched link joins, then the pins no link joins."""
+"""The poles of a contact: each run of pins a switched or protective link joins."""
 
 from dataclasses import dataclass
 
-from elecdef._pinorder import marking_key
+from elecdef._pinorder import line_marking, marking_key
 from elecdef.pins import Link, LinkKind, Pin, PinRole
 
-_NOT_POLE_PINS = frozenset({PinRole.PE, PinRole.SCREEN})
+_POLE_LINKS = frozenset({LinkKind.SWITCHED, LinkKind.PROTECTIVE})
 
 
 @dataclass(frozen=True)
 class Pole:
-    """One pole: its `ends`, and the `line` end when exactly one end has the LINE role.
-
-    `ends` is `(line, load)` when `line` is known; a pole of one pin has that pin twice.
-    """
+    """One pole: every pin its links join, in marking order, and the `line` pin."""
 
     line: Pin | None
-    ends: tuple[Pin, Pin]
+    pins: tuple[Pin, ...]
 
 
-def _pole(a: Pin, b: Pin) -> Pole:
-    """The pole of `a` and `b`; the LINE end first when exactly one end is LINE."""
-    for line, load in ((a, b), (b, a)):
-        if line.role is PinRole.LINE and load.role is not PinRole.LINE:
-            return Pole(line, (line, load))
-    first, second = sorted((a, b), key=lambda pin: marking_key(pin.marking))
-    return Pole(None, (first, second))
+def _line(group: list[Pin]) -> Pin | None:
+    """The line pin of a pole: the one LINE role wins, else the numbering decides."""
+    stated = [pin for pin in group if pin.role is PinRole.LINE]
+    if stated:
+        return stated[0] if len(stated) == 1 else None
+    marking = line_marking(tuple(pin.marking for pin in group))
+    return next((pin for pin in group if pin.marking == marking), None)
 
 
-def _ends_key(pole: Pole) -> tuple[tuple[int, int, str], ...]:
-    """The order of a pole: its lower end's marking."""
-    return min(marking_key(pin.marking) for pin in pole.ends)
-
-
-def _linked(pins: dict[str, Pin], links: tuple[Link, ...]) -> tuple[list[Pole], set[str]]:
-    """One pole per run of switched links that share a pin, and every marking they join."""
-    pairs = [
-        sorted((pins[m] for m in link.markings), key=lambda pin: marking_key(pin.marking))
-        for link in links
-        if link.kind is LinkKind.SWITCHED and all(m in pins for m in link.markings)
-    ]
-    poles: list[Pole] = []
-    seen: set[str] = set()
-    for a, b in sorted(pairs, key=lambda pair: [marking_key(pin.marking) for pin in pair]):
-        if not {a.marking, b.marking} & seen:
-            poles.append(_pole(a, b))
-        seen |= {a.marking, b.marking}
-    return poles, seen
+def _groups(by_marking: dict[str, Pin], links: tuple[Link, ...]) -> list[set[str]]:
+    """The sets of markings that pole links join; a link with an absent or coil pin is skipped."""
+    groups: list[set[str]] = []
+    for link in links:
+        joined = {m for m in link.markings if m in by_marking}
+        if link.kind not in _POLE_LINKS or len(joined) != len(link.markings):
+            continue
+        if any(by_marking[m].role is PinRole.COIL for m in joined):
+            continue
+        merged = joined.union(*(g for g in groups if g & joined))
+        groups = [g for g in groups if not g & joined] + [merged]
+    return groups
 
 
 def poles(pins: tuple[Pin, ...], links: tuple[Link, ...]) -> tuple[Pole, ...]:
-    """The poles in marking order: switched links that share a pin are one, then pins pair up.
+    """The poles in marking order: one per run of switched or protective links that share a pin.
 
-    Pins no link joins, earth and screen left out, pair in order; an odd last pin stands alone.
+    A pin no such link joins is in no pole. A link that names an absent pin is skipped.
     """
     by_marking: dict[str, Pin] = {}
     for pin in pins:
         by_marking.setdefault(pin.marking, pin)
-    found, joined = _linked(by_marking, links)
-    rest = sorted(
-        (
-            p
-            for p in by_marking.values()
-            if p.marking not in joined and p.role not in _NOT_POLE_PINS
-        ),
-        key=lambda pin: marking_key(pin.marking),
-    )
-    found += [_pole(a, b) for a, b in zip(rest[::2], rest[1::2], strict=False)]
-    if len(rest) % 2:
-        found.append(Pole(None, (rest[-1], rest[-1])))
-    return tuple(sorted(found, key=_ends_key))
+    found = []
+    for group in _groups(by_marking, links):
+        ordered = sorted((by_marking[m] for m in group), key=lambda pin: marking_key(pin.marking))
+        found.append(Pole(_line(ordered), tuple(ordered)))
+    return tuple(sorted(found, key=lambda pole: marking_key(pole.pins[0].marking)))

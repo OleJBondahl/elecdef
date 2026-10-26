@@ -92,9 +92,6 @@ class Link:
         ):
             message = "markings is a tuple of exactly two str"
             raise TypeError(message)
-        if self.closed_at_rest is not None and not isinstance(self.closed_at_rest, bool):
-            message = "closed_at_rest is a bool or None"
-            raise TypeError(message)
 
 
 def _is_marking(text: str) -> bool:

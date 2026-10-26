@@ -112,11 +112,11 @@ elecdef.pins.LinkKind: how two pins are joined: conductive, switched or protecti
 elecdef.pins.Marking: the marking schemes: auxiliary, main, overload, timer and plain.
 elecdef.pins.Pin: one pin: its marking, role, side and alternate markings.
 elecdef.pins.PinRole: what a pin does in its part.
-elecdef.pins.Pole: one pole: its two ends and the line end when exactly one end has the line role.
+elecdef.pins.Pole: one pole: every pin its switched or protective links join, and the line pin when known.
 elecdef.pins.Side: which side of a part a pin is on.
 elecdef.pins.Throw: one throw: a common pin, the break or make pin it closes to, and whether it is closed at rest.
 elecdef.pins.contact_pins: the pins and links of contact n in a form under a marking scheme.
-elecdef.pins.poles: the poles of a contact: switched link pairs, then the unlinked pins in marking order.
+elecdef.pins.poles: the poles of a contact: one per run of switched or protective links that share a pin.
 elecdef.pins.throws: the switched links that join a common pin to a break or make pin, in marking order.
 elecdef.supply.SupplyInput: what a powered thing draws: voltage and current per conditions, and its supply pins.
 elecdef.plc.AnalogIo: an analog channel: a voltage or current span, resolution, wires, sensor type and accuracy.
@@ -177,7 +177,7 @@ E12. A Connection belongs to the pins a block owns itself: Coil, Contact, Supply
 E13. elecdef.connections ships technology-only leaves with every range unfilled; vendor figures (torque, strip length, conductor ranges) never ship.
 E14. Data tables are generated Python modules whose rows carry no origin, and a row ships only when the generator's input file, which records each row's origin (an open source, a maker's datasheet or a measurement) and its confirmation status, marks it confirmed.
 E15. Product(mpn, manufacturer, block, name) is the one identity envelope; the library holds no supplier, price, footprint, class letter or description field.
-E16. check reports exactly the content issues the design names: an end below another, a repeated marking, a marking outside the character set, a link naming no pin, a rest state on a link that is not switched, a figure a block kind needs and lacks, a class outside the catalogue; IssueCode has these seven codes (END_ORDER, DUPLICATE_MARKING, BAD_MARKING, DANGLING_LINK, STRAY_REST_STATE, MISSING_FIGURE, UNKNOWN_CLASS) and the two that pick returns (NO_RATING, AMBIGUOUS_RATING), nine in all.
+E16. check reports exactly the content issues the design names: an end below another, a repeated marking, a marking outside the character set, a link naming no pin, a rest state on a link that is not switched, a rest state its pin roles contradict, a figure a block kind needs and lacks, a class outside the catalogue; IssueCode has these eight codes (END_ORDER, DUPLICATE_MARKING, BAD_MARKING, DANGLING_LINK, STRAY_REST_STATE, CONFLICTING_REST_STATE, MISSING_FIGURE, UNKNOWN_CLASS) and the two that pick returns (NO_RATING, AMBIGUOUS_RATING), ten in all.
 E17. A block names its symbol by Symbol(key, version) and holds nothing else of it.
 E18. For F15, Quantity is the only numeric value type, and in v1 it defines comparison dunders only; no surface class defines an arithmetic or bitwise dunder.
 E19. Coverage never falls below 95 % per module, and ty check passes.

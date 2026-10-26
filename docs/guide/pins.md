@@ -46,7 +46,7 @@ assert throws(*contact_pins(ContactForm.MAKE, 1, Marking.AUX)) == ()
 
 ## Poles
 
-`poles(pins, links)` gives each pole as `Pole(line, ends)`: the pair a switched link joins, then the pins no link joins, paired in marking order. `line` is the end with the LINE role. A changeover is one pole.
+`poles(pins, links)` gives each pole as `Pole(line, pins)`: one per run of switched or protective links that share a pin, so a fuse path is a pole and a changeover is one pole of three pins. `line` is the pin with the LINE role, else the line side the marking numbering gives, else None. A pin no link joins is in no pole.
 
 ```python
 from elecdef.pins import Marking, Pole, contact_pins, poles
@@ -54,8 +54,9 @@ from elecdef.vocab import ContactForm
 
 found = poles(*contact_pins(ContactForm.MAKE, 2, Marking.MAIN))
 assert all(isinstance(p, Pole) for p in found)
-assert [(p.line.marking, [e.marking for e in p.ends]) for p in found] == [("3/L2", ["3/L2", "4/T2"])]
+assert [(p.line.marking, [e.marking for e in p.pins]) for p in found] == [("3/L2", ["3/L2", "4/T2"])]
 assert len(poles(*contact_pins(ContactForm.CHANGEOVER, 1, Marking.AUX))) == 1
+assert poles(*contact_pins(ContactForm.CHANGEOVER, 1, Marking.AUX))[0].line.marking == "11"
 ```
 
 ## Supply input

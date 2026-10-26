@@ -13,6 +13,7 @@ import pytest
 import elecdef
 from elecdef import Breaker, Coil, Contact, Contactor, Overload, PowerSupply, Relay
 from elecdef._block import Block
+from elecdef.fuse import FuseHolder
 from elecdef.pins import (
     Link,
     LinkKind,
@@ -392,33 +393,71 @@ def test_throws_carry_the_pins_and_skip_what_is_no_throw() -> None:
     assert throws(pins, (Link(("12", "14"), LinkKind.SWITCHED, closed_at_rest=True),)) == ()
 
 
-def _ends(found) -> list[tuple[str | None, str, str]]:
-    return [(p.line.marking if p.line else None, *(e.marking for e in p.ends)) for p in found]
+def _shape(found) -> list[tuple[str | None, tuple[str, ...]]]:
+    return [(p.line.marking if p.line else None, tuple(e.marking for e in p.pins)) for p in found]
 
 
-# Expected poles as data: (scheme, form, n) -> ((line end or None, first end, second end), ...).
+# Expected poles as data: (scheme, form, n) -> ((line marking or None, every pin), ...).
 _POLES = {
-    (Marking.MAIN, ContactForm.MAKE, 2): (("3/L2", "3/L2", "4/T2"),),
-    (Marking.AUX, ContactForm.MAKE, 1): ((None, "13", "14"),),
-    (Marking.AUX, ContactForm.CHANGEOVER, 1): ((None, "11", "12"),),
-    (Marking.OVERLOAD, ContactForm.BREAK, 1): ((None, "95", "96"),),
+    (Marking.MAIN, ContactForm.MAKE, 2): (("3/L2", ("3/L2", "4/T2")),),
+    (Marking.AUX, ContactForm.MAKE, 1): (("13", ("13", "14")),),
+    (Marking.AUX, ContactForm.BREAK, 9): (("91", ("91", "92")),),
+    # A changeover is ONE pole with one common and two throws; its common is the line side.
+    (Marking.AUX, ContactForm.CHANGEOVER, 1): (("11", ("11", "12", "14")),),
+    (Marking.OVERLOAD, ContactForm.BREAK, 1): (("95", ("95", "96")),),
+    (Marking.OVERLOAD, ContactForm.CHANGEOVER, 1): (("95", ("95", "96", "98")),),
+    (Marking.TIMER, ContactForm.CHANGEOVER, 1): (("15", ("15", "16", "18")),),
+    (Marking.PLAIN, ContactForm.MAKE, 1): ((None, ("1", "2")),),
 }
 
 
 @pytest.mark.parametrize(("key", "expected"), _POLES.items(), ids=str)
 def test_poles_of_the_sample_contacts_equal_the_stated_values(key, expected) -> None:
-    """`poles` over `contact_pins` gives the line end and the ends as stated."""
+    """`poles` over `contact_pins` gives the line pin and every pin as stated."""
     scheme, form, n = key
-    assert tuple(_ends(poles(*contact_pins(form, n, scheme)))) == expected
+    assert tuple(_shape(poles(*contact_pins(form, n, scheme)))) == expected
 
 
-def test_poles_of_a_main_contactor_run_line_end_first_in_marking_order() -> None:
+def test_a_fuse_path_is_a_pole() -> None:
+    """A protective link is a pole: a fuse holder of two poles gives two, line pin first stated."""
+    got = poles(*(FuseHolder(poles=2).pins, FuseHolder(poles=2).links))
+    assert _shape(got) == [("1", ("1", "2")), ("3", ("3", "4"))]
+
+
+def test_a_conductive_link_is_no_pole() -> None:
+    """Only switched and protective links make a pole."""
+    pins = (Pin("1", PinRole.LINE), Pin("2", PinRole.LOAD))
+    assert poles(pins, (Link(("1", "2"), LinkKind.CONDUCTIVE),)) == ()
+
+
+def test_the_changeover_is_one_pole_not_two() -> None:
+    """The two throws of a changeover share the common: one pole of three pins."""
+    got = poles(*contact_pins(ContactForm.CHANGEOVER, 1, Marking.AUX))
+    assert len(got) == 1
+    assert len(got[0].pins) == 3
+
+
+def test_a_stated_line_role_wins_over_the_numbering() -> None:
+    """Numbering puts 13 on the line side; a LINE role on 14 overrides it."""
+    pins = (Pin("13", PinRole.LOAD), Pin("14", PinRole.LINE))
+    link = (Link(("13", "14"), LinkKind.SWITCHED, closed_at_rest=False),)
+    assert _shape(poles(pins, link)) == [("14", ("13", "14"))]
+
+
+def test_a_main_pole_takes_its_line_side_from_the_odd_number() -> None:
+    """Without roles, `1/L1` and `2/T1` give 1/L1 as the line side."""
+    pins = (Pin("2/T1", PinRole.SIGNAL), Pin("1/L1", PinRole.SIGNAL))
+    link = (Link(("1/L1", "2/T1"), LinkKind.SWITCHED, closed_at_rest=False),)
+    assert _shape(poles(pins, link)) == [("1/L1", ("1/L1", "2/T1"))]
+
+
+def test_poles_of_a_main_contactor_run_in_marking_order() -> None:
     """Three main poles of a contactor: 1/L1 2/T1, then 3/L2 4/T2, then 5/L3 6/T3."""
     got = poles(*_main_poles(3))
-    assert _ends(got) == [
-        ("1/L1", "1/L1", "2/T1"),
-        ("3/L2", "3/L2", "4/T2"),
-        ("5/L3", "5/L3", "6/T3"),
+    assert _shape(got) == [
+        ("1/L1", ("1/L1", "2/T1")),
+        ("3/L2", ("3/L2", "4/T2")),
+        ("5/L3", ("5/L3", "6/T3")),
     ]
     assert poles(*_main_poles(3)) == poles(_main_poles(3)[0][::-1], _main_poles(3)[1][::-1])
 
@@ -428,20 +467,29 @@ def _main_poles(count: int):
     return sum((c[0] for c in contacts), ()), sum((c[1] for c in contacts), ())
 
 
-def test_unlinked_pins_pair_in_marking_order_and_an_odd_pin_stands_alone() -> None:
-    """With no links the pins pair in natural marking order (9 before 10); earth is left out."""
-    names = ["10", "9", "2", "1", "11", "PE"]
-    pins = tuple(Pin(m, PinRole.PE if m == "PE" else PinRole.SIGNAL) for m in names)
-    assert _ends(poles(pins, ())) == [
-        (None, "1", "2"),
-        (None, "9", "10"),
-        (None, "11", "11"),
-    ]
+def test_unlinked_pins_make_no_pole() -> None:
+    """No link, no pole: signal pins, earth and a screen pair with nothing."""
+    names = ["10", "9", "2", "1", "11", "PE", "SH"]
+    roles = {"PE": PinRole.PE, "SH": PinRole.SCREEN}
+    pins = tuple(Pin(m, roles.get(m, PinRole.SIGNAL)) for m in names)
+    assert poles(pins, ()) == ()
 
 
-def test_a_coil_is_one_pole_and_a_link_to_an_absent_pin_is_skipped() -> None:
-    """A1 and A2 pair; a switched link naming an absent pin joins nothing."""
+def test_a_coil_is_no_pole_and_gets_no_line_side() -> None:
+    """A1 and A2 with no link give nothing; a switched link on a coil pin is skipped."""
     coil = (Pin("A2", PinRole.COIL), Pin("A1", PinRole.COIL))
-    assert _ends(poles(coil, ())) == [(None, "A1", "A2")]
-    stray = (Link(("A1", "X"), LinkKind.SWITCHED, closed_at_rest=False),)
-    assert poles(coil, stray) == poles(coil, ())
+    assert poles(coil, ()) == ()
+    assert poles(coil, (Link(("A1", "A2"), LinkKind.SWITCHED, closed_at_rest=False),)) == ()
+
+
+def test_a_link_to_an_absent_pin_is_skipped() -> None:
+    """A switched link naming an absent pin joins nothing."""
+    pins = (Pin("13", PinRole.MAKE),)
+    assert poles(pins, (Link(("13", "X"), LinkKind.SWITCHED, closed_at_rest=False),)) == ()
+
+
+def test_throws_take_the_rest_state_from_the_pin_role_not_the_link() -> None:
+    """A link that states the wrong rest state does not change the throw."""
+    pins = (Pin("11", PinRole.COMMON), Pin("12", PinRole.BREAK))
+    got = throws(pins, (Link(("11", "12"), LinkKind.SWITCHED, closed_at_rest=False),))
+    assert [t.closed_at_rest for t in got] == [True]

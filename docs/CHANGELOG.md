@@ -8,9 +8,11 @@ Every change to the public surface gets a line under Unreleased until the releas
 ## 0.5.0 (2026-10-26)
 
 - `throws` and `Throw`: the switched links that join a common pin to a break or make pin, with the state at rest.
-- `poles` and `Pole`: the pin pairs of a contact, the line end named.
+- `poles` and `Pole`: one pole per run of switched or protective links that share a pin, with every pin of the pole and the line pin named from the LINE role or the marking numbering. A fuse path is a pole, a changeover is one pole, and unlinked pins and coil pins are in none.
 - `check` reports a rest state on a link that is not switched.
-- `IssueCode.STRAY_REST_STATE`: the code for that issue; `IssueCode` has nine members.
+- `check` reports a switched link whose stated rest state contradicts its break or make pin.
+- `IssueCode.STRAY_REST_STATE` and `IssueCode.CONFLICTING_REST_STATE`: the codes for those issues; `IssueCode` has ten members.
+- `Link` no longer raises TypeError for a `closed_at_rest` that is not a bool or None.
 
 ## 0.4.0 (2026-10-24)
 

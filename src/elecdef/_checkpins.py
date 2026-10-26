@@ -5,7 +5,7 @@ from dataclasses import fields
 from elecdef._block import Block
 from elecdef._checkwalk import join, walk
 from elecdef._issue import Issue, IssueCode
-from elecdef.pins import LinkKind, Pin, _is_marking
+from elecdef.pins import Link, LinkKind, Pin, PinRole, _is_marking
 
 
 def _pin_field(block: Block) -> str | None:
@@ -65,6 +65,31 @@ def rest_state_issues(path: str, block: Block) -> list[Issue]:
         )
         for index, link in enumerate(getattr(block, "links", ()))
         if link.kind is not LinkKind.SWITCHED and link.closed_at_rest is not None
+    ]
+
+
+def _rest_state_of(link: Link, roles: dict[str, PinRole]) -> bool | None:
+    """The rest state the roles of a switched link give: a BREAK pin closed, a MAKE pin open."""
+    given = {roles.get(m) for m in link.markings}
+    if link.kind is not LinkKind.SWITCHED or given == {PinRole.BREAK, PinRole.MAKE}:
+        return None
+    if PinRole.BREAK in given:
+        return True
+    return False if PinRole.MAKE in given else None
+
+
+def conflicting_rest_issues(path: str, block: Block) -> list[Issue]:
+    """CONFLICTING_REST_STATE for a switched link whose rest state its break or make pin denies."""
+    roles = {pin.marking: pin.role for pin in getattr(block, "pins", ())}
+    return [
+        Issue(
+            IssueCode.CONFLICTING_REST_STATE,
+            f"the link states closed_at_rest={link.closed_at_rest} against its pin roles",
+            f"{join(path, 'links')}[{index}]",
+        )
+        for index, link in enumerate(getattr(block, "links", ()))
+        if link.closed_at_rest is not None
+        and _rest_state_of(link, roles) not in (None, link.closed_at_rest)
     ]
 
 

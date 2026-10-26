@@ -31,19 +31,20 @@ from elecdef.computer import Computer
 from elecdef.conductor import Conductor
 from elecdef.connector import Connector
 from elecdef.fuse import FuseHolder
-from elecdef.pins import Pin, PinRole
+from elecdef.pins import Link, LinkKind, Pin, PinRole
 from elecdef.plc import Channel, ChannelGroup
 from elecdef.supply import SupplyInput
 from elecdef.terminal import Level
 from elecdef.vocab import CoilKind, ContactForm, LevelKind, Potential
 
 FIXTURES = Path(__file__).parent / "fixtures" / "issues"
-NINE = {
+TEN = {
     "END_ORDER",
     "DUPLICATE_MARKING",
     "BAD_MARKING",
     "DANGLING_LINK",
     "STRAY_REST_STATE",
+    "CONFLICTING_REST_STATE",
     "MISSING_FIGURE",
     "UNKNOWN_CLASS",
     "NO_RATING",
@@ -56,6 +57,7 @@ STEMS = {
     "bad_marking": IssueCode.BAD_MARKING,
     "dangling_link": IssueCode.DANGLING_LINK,
     "stray_rest_state": IssueCode.STRAY_REST_STATE,
+    "conflicting_rest_state": IssueCode.CONFLICTING_REST_STATE,
     "missing_figure": IssueCode.MISSING_FIGURE,
     "unknown_class": IssueCode.UNKNOWN_CLASS,
     "pick_no_rating": IssueCode.NO_RATING,
@@ -108,19 +110,19 @@ def _codes(issues: tuple[Issue, ...]) -> set[IssueCode]:
     return {issue.code for issue in issues}
 
 
-def test_issue_code_is_exactly_the_nine() -> None:
-    """IssueCode has exactly the nine codes."""
-    assert {code.name for code in IssueCode} == NINE
+def test_issue_code_is_exactly_the_ten() -> None:
+    """IssueCode has exactly the ten codes."""
+    assert {code.name for code in IssueCode} == TEN
 
 
 def test_every_code_has_a_fixture_named_for_it() -> None:
-    """The fixtures cover all nine codes and each reports only the code its name gives."""
+    """The fixtures cover all ten codes and each reports only the code its name gives."""
     seen: set[IssueCode] = set()
     for path, issues, _via in _fixtures():
         assert issues, path.name
         assert _codes(tuple(issues)) == {STEMS[path.stem]}, path.name
         seen |= _codes(tuple(issues))
-    assert {code.name for code in seen} == NINE
+    assert {code.name for code in seen} == TEN
 
 
 def test_check_fixtures_report_no_pick_code() -> None:
@@ -131,7 +133,7 @@ def test_check_fixtures_report_no_pick_code() -> None:
 
 
 @pytest.mark.parametrize("block", _example_blocks(), ids=lambda b: type(b).__name__)
-def test_check_of_examples_emits_only_the_seven(block) -> None:
+def test_check_of_examples_emits_only_the_eight(block) -> None:
     """`check` of an example block, bare and in a Product, never reports a pick code."""
     assert not _codes(check(block)) & PICK_CODES
     assert not _codes(check(Product("P-1", "Maker", block))) & PICK_CODES
@@ -300,3 +302,20 @@ def test_sibling_contacts_sharing_a_marking_give_one_duplicate_at_the_composite(
 def test_a_clean_relay_has_no_pin_issue() -> None:
     """A coil and two numbered contacts give no issue."""
     assert check(Relay(coil=COIL, contacts=(CONTACT, CONTACT))) == ()
+
+
+@pytest.mark.parametrize(
+    ("role", "stated", "reported"),
+    [
+        (PinRole.BREAK, False, True),
+        (PinRole.MAKE, True, True),
+        (PinRole.BREAK, True, False),
+        (PinRole.MAKE, False, False),
+    ],
+)
+def test_a_stated_rest_state_is_checked_against_the_pin_role(role, stated, reported) -> None:
+    """A break pin is closed at rest and a make pin open; a contradicting link is reported."""
+    pins = (Pin("1", PinRole.COMMON), Pin("2", role))
+    link = Link(("1", "2"), LinkKind.SWITCHED, closed_at_rest=stated)
+    got = _codes(check(Device(pins=pins, links=(link,))))
+    assert (IssueCode.CONFLICTING_REST_STATE in got) is reported

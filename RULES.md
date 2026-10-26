@@ -178,12 +178,12 @@ and `tests/test_family_rules.py` in each compares it to the other's last release
   GATE: `tests/test_blocks.py` fails a dataclass field named exactly `supplier`, `price`,
   `footprint`, `class_letter` or `description` anywhere under `src/`.
 - **E16.** `check` reports exactly the content issues the design names: an end below another, a
-  repeated marking, a marking outside the character set, a link naming no pin, a rest state on a link that is not switched, a figure a block
-  kind needs and lacks, a class outside the catalogue; `IssueCode` has these seven codes
-  (`END_ORDER`, `DUPLICATE_MARKING`, `BAD_MARKING`, `DANGLING_LINK`, `STRAY_REST_STATE`, `MISSING_FIGURE`,
-  `UNKNOWN_CLASS`) and the two that `pick` returns (`NO_RATING`, `AMBIGUOUS_RATING`), nine in all.
-  GATE: `tests/test_check.py` asserts the `IssueCode` members equal these nine, has one
-  fixture per member that produces it, and asserts that `check` emits only the seven.
+  repeated marking, a marking outside the character set, a link naming no pin, a rest state on a link that is not switched, a rest state its pin roles contradict, a figure a block
+  kind needs and lacks, a class outside the catalogue; `IssueCode` has these eight codes
+  (`END_ORDER`, `DUPLICATE_MARKING`, `BAD_MARKING`, `DANGLING_LINK`, `STRAY_REST_STATE`, `CONFLICTING_REST_STATE`,
+  `MISSING_FIGURE`, `UNKNOWN_CLASS`) and the two that `pick` returns (`NO_RATING`, `AMBIGUOUS_RATING`), ten in all.
+  GATE: `tests/test_check.py` asserts the `IssueCode` members equal these ten, has one
+  fixture per member that produces it, and asserts that `check` emits only the eight.
 - **E17.** A block names its symbol by `Symbol(key, version)` and holds nothing else of it.
   GATE: `tests/test_blocks.py` fails a dataclass field named `symbol` whose annotation is not
   `Symbol | None` and any dataclass field named exactly `geometry`, `port`, `outline` or `glyph`.

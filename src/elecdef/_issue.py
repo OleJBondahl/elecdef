@@ -5,13 +5,14 @@ from enum import Enum, auto
 
 
 class IssueCode(Enum):
-    """The closed set of issue codes; `check` reports the first seven, `pick` the last two."""
+    """The closed set of issue codes; `check` reports the first eight, `pick` the last two."""
 
     END_ORDER = auto()
     DUPLICATE_MARKING = auto()
     BAD_MARKING = auto()
     DANGLING_LINK = auto()
     STRAY_REST_STATE = auto()
+    CONFLICTING_REST_STATE = auto()
     MISSING_FIGURE = auto()
     UNKNOWN_CLASS = auto()
     NO_RATING = auto()
