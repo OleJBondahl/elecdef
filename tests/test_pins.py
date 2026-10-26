@@ -13,7 +13,17 @@ import pytest
 import elecdef
 from elecdef import Breaker, Coil, Contact, Contactor, Overload, PowerSupply, Relay
 from elecdef._block import Block
-from elecdef.pins import Link, LinkKind, Marking, Pin, PinRole, _is_marking, contact_pins, throws
+from elecdef.pins import (
+    Link,
+    LinkKind,
+    Marking,
+    Pin,
+    PinRole,
+    _is_marking,
+    contact_pins,
+    poles,
+    throws,
+)
 from elecdef.supply import SupplyInput
 from elecdef.vocab import ContactForm
 
@@ -380,3 +390,58 @@ def test_throws_carry_the_pins_and_skip_what_is_no_throw() -> None:
     conductive = (Link(("11", "12"), LinkKind.CONDUCTIVE),)
     assert throws(pins, conductive) == ()
     assert throws(pins, (Link(("12", "14"), LinkKind.SWITCHED, closed_at_rest=True),)) == ()
+
+
+def _ends(found) -> list[tuple[str | None, str, str]]:
+    return [(p.line.marking if p.line else None, *(e.marking for e in p.ends)) for p in found]
+
+
+# Expected poles as data: (scheme, form, n) -> ((line end or None, first end, second end), ...).
+_POLES = {
+    (Marking.MAIN, ContactForm.MAKE, 2): (("3/L2", "3/L2", "4/T2"),),
+    (Marking.AUX, ContactForm.MAKE, 1): ((None, "13", "14"),),
+    (Marking.AUX, ContactForm.CHANGEOVER, 1): ((None, "11", "12"),),
+    (Marking.OVERLOAD, ContactForm.BREAK, 1): ((None, "95", "96"),),
+}
+
+
+@pytest.mark.parametrize(("key", "expected"), _POLES.items(), ids=str)
+def test_poles_of_the_sample_contacts_equal_the_stated_values(key, expected) -> None:
+    """`poles` over `contact_pins` gives the line end and the ends as stated."""
+    scheme, form, n = key
+    assert tuple(_ends(poles(*contact_pins(form, n, scheme)))) == expected
+
+
+def test_poles_of_a_main_contactor_run_line_end_first_in_marking_order() -> None:
+    """Three main poles of a contactor: 1/L1 2/T1, then 3/L2 4/T2, then 5/L3 6/T3."""
+    got = poles(*_main_poles(3))
+    assert _ends(got) == [
+        ("1/L1", "1/L1", "2/T1"),
+        ("3/L2", "3/L2", "4/T2"),
+        ("5/L3", "5/L3", "6/T3"),
+    ]
+    assert poles(*_main_poles(3)) == poles(_main_poles(3)[0][::-1], _main_poles(3)[1][::-1])
+
+
+def _main_poles(count: int):
+    contacts = [contact_pins(ContactForm.MAKE, n, Marking.MAIN) for n in range(1, count + 1)]
+    return sum((c[0] for c in contacts), ()), sum((c[1] for c in contacts), ())
+
+
+def test_unlinked_pins_pair_in_marking_order_and_an_odd_pin_stands_alone() -> None:
+    """With no links the pins pair in natural marking order (9 before 10); earth is left out."""
+    names = ["10", "9", "2", "1", "11", "PE"]
+    pins = tuple(Pin(m, PinRole.PE if m == "PE" else PinRole.SIGNAL) for m in names)
+    assert _ends(poles(pins, ())) == [
+        (None, "1", "2"),
+        (None, "9", "10"),
+        (None, "11", "11"),
+    ]
+
+
+def test_a_coil_is_one_pole_and_a_link_to_an_absent_pin_is_skipped() -> None:
+    """A1 and A2 pair; a switched link naming an absent pin joins nothing."""
+    coil = (Pin("A2", PinRole.COIL), Pin("A1", PinRole.COIL))
+    assert _ends(poles(coil, ())) == [(None, "A1", "A2")]
+    stray = (Link(("A1", "X"), LinkKind.SWITCHED, closed_at_rest=False),)
+    assert poles(coil, stray) == poles(coil, ())

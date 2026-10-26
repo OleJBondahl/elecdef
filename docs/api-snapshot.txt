@@ -378,6 +378,11 @@ class Pin(marking: 'str', role: 'PinRole', side: 'Side | None' = None, alternate
 class PinRole
     What a pin does in its part.
 
+class Pole(line: 'Pin | None', ends: 'tuple[Pin, Pin]') -> 'None'
+    One pole: its `ends`, and the `line` end when exactly one end has the LINE role.
+
+    `ends` is `(line, load)` when `line` is known; a pole of one pin has that pin twice.
+
 class Side
     Which side of a part a pin is on.
 
@@ -390,6 +395,11 @@ contact_pins(form: 'ContactForm', n: 'int', scheme: 'Marking') -> 'tuple[tuple[P
     Return the pins and links of contact `n` (1 to 9) in `form` under `scheme`.
 
     Raises TypeError for an `n` out of range or a form the scheme does not have.
+
+poles(pins: 'tuple[Pin, ...]', links: 'tuple[Link, ...]') -> 'tuple[Pole, ...]'
+    The poles in marking order: switched links that share a pin are one, then pins pair up.
+
+    Pins no link joins, earth and screen left out, pair in order; an odd last pin stands alone.
 
 throws(pins: 'tuple[Pin, ...]', links: 'tuple[Link, ...]') -> 'tuple[Throw, ...]'
     The switched links that join a COMMON pin to a BREAK or MAKE pin, in marking order.
