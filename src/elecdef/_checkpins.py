@@ -5,7 +5,7 @@ from dataclasses import fields
 from elecdef._block import Block
 from elecdef._checkwalk import join, walk
 from elecdef._issue import Issue, IssueCode
-from elecdef.pins import Pin, _is_marking
+from elecdef.pins import LinkKind, Pin, _is_marking
 
 
 def _pin_field(block: Block) -> str | None:
@@ -52,6 +52,19 @@ def link_issues(path: str, block: Block) -> list[Issue]:
         for index, link in enumerate(getattr(block, "links", ()))
         for marking in link.markings
         if marking not in names
+    ]
+
+
+def rest_state_issues(path: str, block: Block) -> list[Issue]:
+    """STRAY_REST_STATE for each link that is not SWITCHED yet states `closed_at_rest`."""
+    return [
+        Issue(
+            IssueCode.STRAY_REST_STATE,
+            f"a {link.kind.name} link states a rest state; only a SWITCHED link has one",
+            f"{join(path, 'links')}[{index}]",
+        )
+        for index, link in enumerate(getattr(block, "links", ()))
+        if link.kind is not LinkKind.SWITCHED and link.closed_at_rest is not None
     ]
 
 

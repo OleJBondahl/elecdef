@@ -38,11 +38,12 @@ from elecdef.terminal import Level
 from elecdef.vocab import CoilKind, ContactForm, LevelKind, Potential
 
 FIXTURES = Path(__file__).parent / "fixtures" / "issues"
-EIGHT = {
+NINE = {
     "END_ORDER",
     "DUPLICATE_MARKING",
     "BAD_MARKING",
     "DANGLING_LINK",
+    "STRAY_REST_STATE",
     "MISSING_FIGURE",
     "UNKNOWN_CLASS",
     "NO_RATING",
@@ -54,6 +55,7 @@ STEMS = {
     "duplicate_marking": IssueCode.DUPLICATE_MARKING,
     "bad_marking": IssueCode.BAD_MARKING,
     "dangling_link": IssueCode.DANGLING_LINK,
+    "stray_rest_state": IssueCode.STRAY_REST_STATE,
     "missing_figure": IssueCode.MISSING_FIGURE,
     "unknown_class": IssueCode.UNKNOWN_CLASS,
     "pick_no_rating": IssueCode.NO_RATING,
@@ -106,19 +108,19 @@ def _codes(issues: tuple[Issue, ...]) -> set[IssueCode]:
     return {issue.code for issue in issues}
 
 
-def test_issue_code_is_exactly_the_eight() -> None:
-    """IssueCode has exactly the eight codes."""
-    assert {code.name for code in IssueCode} == EIGHT
+def test_issue_code_is_exactly_the_nine() -> None:
+    """IssueCode has exactly the nine codes."""
+    assert {code.name for code in IssueCode} == NINE
 
 
 def test_every_code_has_a_fixture_named_for_it() -> None:
-    """The fixtures cover all eight codes and each reports only the code its name gives."""
+    """The fixtures cover all nine codes and each reports only the code its name gives."""
     seen: set[IssueCode] = set()
     for path, issues, _via in _fixtures():
         assert issues, path.name
         assert _codes(tuple(issues)) == {STEMS[path.stem]}, path.name
         seen |= _codes(tuple(issues))
-    assert {code.name for code in seen} == EIGHT
+    assert {code.name for code in seen} == NINE
 
 
 def test_check_fixtures_report_no_pick_code() -> None:
@@ -129,7 +131,7 @@ def test_check_fixtures_report_no_pick_code() -> None:
 
 
 @pytest.mark.parametrize("block", _example_blocks(), ids=lambda b: type(b).__name__)
-def test_check_of_examples_emits_only_the_six(block) -> None:
+def test_check_of_examples_emits_only_the_seven(block) -> None:
     """`check` of an example block, bare and in a Product, never reports a pick code."""
     assert not _codes(check(block)) & PICK_CODES
     assert not _codes(check(Product("P-1", "Maker", block))) & PICK_CODES

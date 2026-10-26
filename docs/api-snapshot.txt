@@ -54,7 +54,7 @@ class Issue(code: 'IssueCode', message: 'str', subject: 'str') -> 'None'
     One finding: a code, a message and the subject path it concerns, such as `coil.voltage`.
 
 class IssueCode
-    The closed set of issue codes; `check` reports the first six, `pick` the last two.
+    The closed set of issue codes; `check` reports the first seven, `pick` the last two.
 
 class Overload(poles: 'int | None' = None, setting: 'Range | None' = None, trip_class: 'TripClass | None' = None, reset: 'Reset | None' = None, phase_failure: 'bool' = False, aux: 'tuple[Contact, ...]' = (), connection: 'Connection | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
     A motor overload relay: main pins per pole, then auxiliaries numbered OVERLOAD.

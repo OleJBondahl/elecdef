@@ -113,8 +113,9 @@ footprint, class letter) and never copies a block value out of it.
 
 `check(block | product) -> tuple[Issue, ...]` reports content problems as values: an end below
 another, a marking that repeats, a marking outside the character set, a link naming no pin, a
+rest state on a link that is not switched, a
 block kind missing a figure it needs, a class outside the catalogue. An `Issue` is `(code:
-IssueCode, message, subject)`. `IssueCode` has eight members: the six that `check` reports and the
+IssueCode, message, subject)`. `IssueCode` has nine members: the seven that `check` reports and the
 two that `pick` returns (`NO_RATING`, `AMBIGUOUS_RATING`). A malformed call (a wrong type, a wrong
 kind, two conditions of one kind in an `At`) raises `TypeError`; content never does.
 
