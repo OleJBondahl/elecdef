@@ -29,6 +29,21 @@ main_pins, _ = contact_pins(ContactForm.MAKE, 2, Marking.MAIN)
 assert [p.marking for p in main_pins] == ["3/L2", "4/T2"]
 ```
 
+## Throws
+
+`throws(pins, links)` reads the switched links that join a common pin to a break or make pin, in marking order. A break throw is closed at rest.
+
+```python
+from elecdef.pins import Marking, Throw, contact_pins, throws
+from elecdef.vocab import ContactForm
+
+pins, links = contact_pins(ContactForm.CHANGEOVER, 1, Marking.AUX)
+found = throws(pins, links)
+assert all(isinstance(t, Throw) for t in found)
+assert [(t.common.marking, t.throw.marking, t.closed_at_rest) for t in found] == [("11", "12", True), ("11", "14", False)]
+assert throws(*contact_pins(ContactForm.MAKE, 1, Marking.AUX)) == ()
+```
+
 ## Supply input
 
 ```python

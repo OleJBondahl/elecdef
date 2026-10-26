@@ -381,10 +381,20 @@ class PinRole
 class Side
     Which side of a part a pin is on.
 
+class Throw(common: 'Pin', throw: 'Pin', closed_at_rest: 'bool') -> 'None'
+    One throw: the `common` pin, the `throw` pin it closes to, and the state at rest.
+
+    `closed_at_rest` is True when the throw is a break pin and False when it is a make pin.
+
 contact_pins(form: 'ContactForm', n: 'int', scheme: 'Marking') -> 'tuple[tuple[Pin, ...], tuple[Link, ...]]'
     Return the pins and links of contact `n` (1 to 9) in `form` under `scheme`.
 
     Raises TypeError for an `n` out of range or a form the scheme does not have.
+
+throws(pins: 'tuple[Pin, ...]', links: 'tuple[Link, ...]') -> 'tuple[Throw, ...]'
+    The switched links that join a COMMON pin to a BREAK or MAKE pin, in marking order.
+
+    A link that names an absent pin is skipped; `check` reports it.
 
 ## elecdef.supply
 class SupplyInput(voltage: 'Ranges' = (), current: 'Ranges' = (), pins: 'tuple[Pin, ...]' = (Pin(marking='+', role=<PinRole.PLUS: 7>, side=None, alternates=()), Pin(marking='-', role=<PinRole.MINUS: 8>, side=None, alternates=())), connection: 'Connection | None' = None) -> 'None'

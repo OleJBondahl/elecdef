@@ -13,7 +13,7 @@ import pytest
 import elecdef
 from elecdef import Breaker, Coil, Contact, Contactor, Overload, PowerSupply, Relay
 from elecdef._block import Block
-from elecdef.pins import Link, LinkKind, Marking, Pin, PinRole, _is_marking, contact_pins
+from elecdef.pins import Link, LinkKind, Marking, Pin, PinRole, _is_marking, contact_pins, throws
 from elecdef.supply import SupplyInput
 from elecdef.vocab import ContactForm
 
@@ -340,3 +340,43 @@ def test_e10_a_replaced_sub_block_is_read_fresh() -> None:
     """`replace` on a composite leaves no stale pins: they are read on every access."""
     relay = Relay(contacts=(_aux(),))
     assert replace(relay, contacts=(_aux(), _aux())).pins != relay.pins
+
+
+# Expected throws as data: (scheme, form, n) -> ((common, throw, closed at rest), ...).
+_THROWS = {
+    (Marking.AUX, ContactForm.CHANGEOVER, 1): (("11", "12", True), ("11", "14", False)),
+    (Marking.AUX, ContactForm.CHANGEOVER, 9): (("91", "92", True), ("91", "94", False)),
+    (Marking.OVERLOAD, ContactForm.CHANGEOVER, 1): (("95", "96", True), ("95", "98", False)),
+    (Marking.TIMER, ContactForm.CHANGEOVER, 1): (("15", "16", True), ("15", "18", False)),
+    (Marking.PLAIN, ContactForm.CHANGEOVER, 2): (("4", "5", True), ("4", "6", False)),
+    (Marking.AUX, ContactForm.MAKE, 1): (),
+    (Marking.AUX, ContactForm.BREAK, 1): (),
+    (Marking.MAIN, ContactForm.MAKE, 1): (),
+}
+
+
+@pytest.mark.parametrize(("key", "expected"), _THROWS.items(), ids=str)
+def test_throws_of_the_sample_contacts_equal_the_stated_values(key, expected) -> None:
+    """`throws` over `contact_pins` gives the common, the throw and the rest state as stated."""
+    scheme, form, n = key
+    pins, links = contact_pins(form, n, scheme)
+    got = tuple((t.common.marking, t.throw.marking, t.closed_at_rest) for t in throws(pins, links))
+    assert got == expected
+
+
+def test_throws_do_not_depend_on_the_order_of_pins_or_links() -> None:
+    """Reversed pins, reversed links and swapped link ends give the same throws."""
+    pins, links = contact_pins(ContactForm.CHANGEOVER, 1, Marking.AUX)
+    swapped = tuple(Link(link.markings[::-1], link.kind, link.closed_at_rest) for link in links)
+    assert throws(pins[::-1], swapped[::-1]) == throws(pins, links)
+
+
+def test_throws_carry_the_pins_and_skip_what_is_no_throw() -> None:
+    """A throw holds the two pins; an absent pin, a conductive link or two throws give none."""
+    pins, links = contact_pins(ContactForm.CHANGEOVER, 1, Marking.AUX)
+    first = throws(pins, links)[0]
+    assert (first.common, first.throw) == (pins[0], pins[1])
+    assert throws(pins[:1], links) == ()
+    conductive = (Link(("11", "12"), LinkKind.CONDUCTIVE),)
+    assert throws(pins, conductive) == ()
+    assert throws(pins, (Link(("12", "14"), LinkKind.SWITCHED, closed_at_rest=True),)) == ()

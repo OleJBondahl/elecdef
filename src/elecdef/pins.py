@@ -5,7 +5,17 @@ from enum import Enum, auto
 
 from elecdef.vocab import ContactForm
 
-__all__ = ["Link", "LinkKind", "Marking", "Pin", "PinRole", "Side", "contact_pins"]
+__all__ = [
+    "Link",
+    "LinkKind",
+    "Marking",
+    "Pin",
+    "PinRole",
+    "Side",
+    "Throw",
+    "contact_pins",
+    "throws",
+]
 
 _PAIR = 2
 _MAX_N = 9
@@ -159,3 +169,6 @@ def contact_pins(
         for i, j, closed in link_rows
     )
     return pins, links
+
+
+from elecdef._throws import Throw, throws  # noqa: E402 - needs Pin and Link above; re-exported here
