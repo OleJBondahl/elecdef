@@ -1,4 +1,4 @@
-"""The order of markings: digit runs compare as numbers, so `9` comes before `10`."""
+"""The order of markings, digit runs compared as numbers, and the line side a marking states."""
 
 import re
 

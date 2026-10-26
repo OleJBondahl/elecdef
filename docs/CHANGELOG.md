@@ -12,7 +12,6 @@ Every change to the public surface gets a line under Unreleased until the releas
 - `check` reports a rest state on a link that is not switched.
 - `check` reports a switched link whose stated rest state contradicts its break or make pin.
 - `IssueCode.STRAY_REST_STATE` and `IssueCode.CONFLICTING_REST_STATE`: the codes for those issues; `IssueCode` has ten members.
-- `Link` no longer raises TypeError for a `closed_at_rest` that is not a bool or None.
 
 ## 0.4.0 (2026-10-24)
 
