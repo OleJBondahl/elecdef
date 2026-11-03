@@ -491,7 +491,7 @@ def test_a_marking_repeated_on_both_sides_gives_one_pole_of_two_pins() -> None:
 
 
 def test_a_repeated_marking_leaves_the_other_poles_as_they_were() -> None:
-    """A 1P+N part: the N pair is one pole and the phase pole is unchanged; a lone N joins nothing."""
+    """A 1P+N part: the N pair is one pole, the phase pole is unchanged, a lone N joins nothing."""
     pins = (
         Pin("1", PinRole.LINE),
         Pin("2", PinRole.LOAD),

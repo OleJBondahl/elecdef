@@ -5,6 +5,8 @@ Every change to the public surface gets a line under Unreleased until the releas
 
 ## Unreleased
 
+- `poles` keys a pin by `(marking, side)`: a marking on both sides of a part is two pins of one pole, joined by a link that names the marking twice. A part with no repeated marking gives the same poles as before.
+
 ## 0.5.0 (2026-10-26)
 
 - `throws` and `Throw`: the switched links that join a common pin to a break or make pin, with the state at rest.
