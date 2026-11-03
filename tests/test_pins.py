@@ -20,6 +20,7 @@ from elecdef.pins import (
     Marking,
     Pin,
     PinRole,
+    Side,
     _is_marking,
     contact_pins,
     poles,
@@ -480,6 +481,29 @@ def test_a_coil_is_no_pole_and_gets_no_line_side() -> None:
     coil = (Pin("A2", PinRole.COIL), Pin("A1", PinRole.COIL))
     assert poles(coil, ()) == ()
     assert poles(coil, (Link(("A1", "A2"), LinkKind.SWITCHED, closed_at_rest=False),)) == ()
+
+
+def test_a_marking_repeated_on_both_sides_gives_one_pole_of_two_pins() -> None:
+    """A neutral pin on each side, joined by one link, is one pole of two pins; none collapses."""
+    pins = (Pin("N", PinRole.SIGNAL, side=Side.A), Pin("N", PinRole.SIGNAL, side=Side.B))
+    got = poles(pins, (Link(("N", "N"), LinkKind.SWITCHED, closed_at_rest=True),))
+    assert [p.pins for p in got] == [pins]
+
+
+def test_a_repeated_marking_leaves_the_other_poles_as_they_were() -> None:
+    """A 1P+N part: the N pair is one pole and the phase pole is unchanged; a lone N joins nothing."""
+    pins = (
+        Pin("1", PinRole.LINE),
+        Pin("2", PinRole.LOAD),
+        Pin("N", PinRole.SIGNAL, side=Side.A),
+        Pin("N", PinRole.SIGNAL, side=Side.B),
+    )
+    links = (
+        Link(("1", "2"), LinkKind.SWITCHED, closed_at_rest=True),
+        Link(("N", "N"), LinkKind.SWITCHED, closed_at_rest=True),
+    )
+    assert _shape(poles(pins, links)) == [("1", ("1", "2")), (None, ("N", "N"))]
+    assert poles(pins[2:3], links[1:]) == ()
 
 
 def test_a_link_to_an_absent_pin_is_skipped() -> None:

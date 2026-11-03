@@ -3,9 +3,10 @@
 from dataclasses import dataclass
 
 from elecdef._pinorder import line_marking, marking_key
-from elecdef.pins import Link, LinkKind, Pin, PinRole
+from elecdef.pins import Link, LinkKind, Pin, PinRole, Side
 
 _POLE_LINKS = frozenset({LinkKind.SWITCHED, LinkKind.PROTECTIVE})
+_PAIR = 2
 
 
 @dataclass(frozen=True)
@@ -25,14 +26,26 @@ def _line(group: list[Pin]) -> Pin | None:
     return next((pin for pin in group if pin.marking == marking), None)
 
 
-def _groups(by_marking: dict[str, Pin], links: tuple[Link, ...]) -> list[set[str]]:
-    """The sets of markings that pole links join; a link with an absent or coil pin is skipped."""
-    groups: list[set[str]] = []
+_Key = tuple[str, Side | None]
+
+
+def _order(pin: Pin) -> tuple[object, int]:
+    """Marking order, a pin on no side first, then side A, then side B."""
+    return marking_key(pin.marking), pin.side.value if pin.side else 0
+
+
+def _groups(by_key: dict[_Key, Pin], links: tuple[Link, ...]) -> list[set[_Key]]:
+    """The sets of (marking, side) keys that pole links join; an absent or coil pin skips a link.
+
+    A link marking names every pin with it, so a marking on both sides joins both.
+    """
+    groups: list[set[_Key]] = []
     for link in links:
-        joined = {m for m in link.markings if m in by_marking}
-        if link.kind not in _POLE_LINKS or len(joined) != len(link.markings):
+        named = [[key for key in by_key if key[0] == m] for m in link.markings]
+        joined = {key for keys in named for key in keys}
+        if link.kind not in _POLE_LINKS or not all(named) or len(joined) < _PAIR:
             continue
-        if any(by_marking[m].role is PinRole.COIL for m in joined):
+        if any(by_key[key].role is PinRole.COIL for key in joined):
             continue
         merged = joined.union(*(g for g in groups if g & joined))
         groups = [g for g in groups if not g & joined] + [merged]
@@ -44,11 +57,11 @@ def poles(pins: tuple[Pin, ...], links: tuple[Link, ...]) -> tuple[Pole, ...]:
 
     A pin no such link joins is in no pole. A link that names an absent pin is skipped.
     """
-    by_marking: dict[str, Pin] = {}
+    by_key: dict[_Key, Pin] = {}
     for pin in pins:
-        by_marking.setdefault(pin.marking, pin)
+        by_key.setdefault((pin.marking, pin.side), pin)
     found = []
-    for group in _groups(by_marking, links):
-        ordered = sorted((by_marking[m] for m in group), key=lambda pin: marking_key(pin.marking))
+    for group in _groups(by_key, links):
+        ordered = sorted((by_key[key] for key in group), key=_order)
         found.append(Pole(_line(ordered), tuple(ordered)))
-    return tuple(sorted(found, key=lambda pole: marking_key(pole.pins[0].marking)))
+    return tuple(sorted(found, key=lambda pole: _order(pole.pins[0])))
