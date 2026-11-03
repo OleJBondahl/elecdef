@@ -7,7 +7,7 @@ Docs: <https://olejbondahl.github.io/elecdef/>. Surface: `python -m elecdef api`
 ## Read first
 
 Read `DESIGN.md`, then `RULES.md`. They bind: a change follows RULES.md, and code that disagrees
-with them is wrong. Family rules F1-F17 are shared with the sibling library; E1-E19 are ours.
+with them is wrong. Family rules F1-F17 are shared with the sibling library; the E rules are ours.
 
 ## Gate
 

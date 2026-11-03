@@ -3,7 +3,7 @@
 Every implementation and every later change follows these rules. Each rule is one sentence and
 its GATE: the mechanical check that fails a breach. "Review" is the gate only where no mechanism
 can see the breach, and the reason is given. The family rules F1-F17 are shared with `refdef`
-and carried verbatim; the rules E1-E19 are elecdef's own and repeat no family rule.
+and carried verbatim; the E rules are elecdef's own and repeat no family rule.
 
 ## Family rules
 
@@ -193,3 +193,5 @@ and `tests/test_family_rules.py` in each compares it to the other's last release
   and comparison dunders on `Quantity` alone.
 - **E19.** Coverage never falls below 95 % per module, and `ty check` passes.
   GATE: `pytest --cov=elecdef --cov-fail-under=95` and `ty check` in CI.
+- **E20.** `poles` keys a pin by `(marking, side)`; a link marking names every pin with it, so a marking on both sides is two pins of one pole, listed in marking order with a pin on no side first, then side A, then side B.
+  GATE: `tests/test_pins.py` asserts that the N pair of a part is one pole and that a part with no repeated marking keeps its poles.
