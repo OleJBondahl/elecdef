@@ -195,3 +195,5 @@ and `tests/test_family_rules.py` in each compares it to the other's last release
   GATE: `pytest --cov=elecdef --cov-fail-under=95` and `ty check` in CI.
 - **E20.** `poles` keys a pin by `(marking, side)`; a link marking names every pin with it, so a marking on both sides is two pins of one pole, listed in marking order with a pin on no side first, then side A, then side B.
   GATE: `tests/test_pins.py` asserts that the N pair of a part is one pole and that a part with no repeated marking keeps its poles.
+- **E21.** A link that joins a `LINE` pin to a `LOAD` pin is a pole, whatever its kind, beside every `SWITCHED` and `PROTECTIVE` link; a coil pin is in no pole.
+  GATE: `tests/test_pins.py` asserts that the conductive main links of an overload are its poles, that a conductive link between other roles is none, and that a breaker keeps its poles.

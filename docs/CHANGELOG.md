@@ -5,6 +5,8 @@ Every change to the public surface gets a line under Unreleased until the releas
 
 ## Unreleased
 
+- `poles` also counts a link of any kind that joins a `LINE` pin to a `LOAD` pin, so the conductive main links of an `Overload` are its poles (0.7.0, a minor: `poles` answers change for an overload; `Breaker`, `FuseHolder` and `Contactor` are unchanged).
+
 ## 0.6.0 (2026-11-03)
 
 - `poles` keys a pin by `(marking, side)`: a marking on both sides of a part is two pins of one pole, joined by a link that names the marking twice. A part with no repeated marking gives the same poles as before.

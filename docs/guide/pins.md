@@ -46,7 +46,7 @@ assert throws(*contact_pins(ContactForm.MAKE, 1, Marking.AUX)) == ()
 
 ## Poles
 
-`poles(pins, links)` gives each pole as `Pole(line, pins)`: one per run of switched or protective links that share a pin, so a fuse path is a pole and a changeover is one pole of three pins. `line` is the pin with the LINE role, else the line side the marking numbering gives, else None. A marking repeated on both sides, as the N of a 3P+N breaker, is two pins; a link naming it twice joins both into one pole. A pin no link joins is in no pole.
+`poles(pins, links)` gives each pole as `Pole(line, pins)`: one per run of pole links that share a pin (a switched or protective link, or a link of any kind from a LINE pin to a LOAD pin), so a fuse path and the main path of an overload relay are poles and a changeover is one pole of three pins. `line` is the pin with the LINE role, else the line side the marking numbering gives, else None. A marking repeated on both sides, as the N of a 3P+N breaker, is two pins; a link naming it twice joins both into one pole. A pin no link joins is in no pole.
 
 ```python
 from elecdef.pins import Marking, Pole, contact_pins, poles

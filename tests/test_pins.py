@@ -425,10 +425,32 @@ def test_a_fuse_path_is_a_pole() -> None:
     assert _shape(got) == [("1", ("1", "2")), ("3", ("3", "4"))]
 
 
-def test_a_conductive_link_is_no_pole() -> None:
-    """Only switched and protective links make a pole."""
-    pins = (Pin("1", PinRole.LINE), Pin("2", PinRole.LOAD))
-    assert poles(pins, (Link(("1", "2"), LinkKind.CONDUCTIVE),)) == ()
+def test_a_conductive_link_is_a_pole_only_between_a_line_and_a_load_pin() -> None:
+    """A LINE-LOAD link is a pole of any kind; a conductive link between other roles is none."""
+    link = (Link(("1", "2"), LinkKind.CONDUCTIVE),)
+    assert _shape(poles((Pin("1", PinRole.LINE), Pin("2", PinRole.LOAD)), link)) == [
+        ("1", ("1", "2"))
+    ]
+    assert poles((Pin("1", PinRole.SIGNAL), Pin("2", PinRole.SIGNAL)), link) == ()
+    assert poles((Pin("1", PinRole.LINE), Pin("2", PinRole.COIL)), link) == ()
+
+
+def test_the_main_links_of_an_overload_are_its_poles() -> None:
+    """Three conductive main links give three poles; each aux stays one pole."""
+    relay = Overload(poles=3, aux=(Contact(form=ContactForm.BREAK), Contact(form=ContactForm.MAKE)))
+    got = _shape(poles(relay.pins, relay.links))
+    assert got[:3] == [
+        ("1/L1", ("1/L1", "2/T1")),
+        ("3/L2", ("3/L2", "4/T2")),
+        ("5/L3", ("5/L3", "6/T3")),
+    ]
+    assert got[3:] == [("95", ("95", "96")), ("97", ("97", "98"))]
+
+
+def test_the_poles_of_a_breaker_are_its_protective_links() -> None:
+    """A breaker of two poles gives two poles, as its protective links did before."""
+    breaker = Breaker(poles=2)
+    assert _shape(poles(breaker.pins, breaker.links)) == [("1", ("1", "2")), ("3", ("3", "4"))]
 
 
 def test_the_changeover_is_one_pole_not_two() -> None:

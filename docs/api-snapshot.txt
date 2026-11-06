@@ -395,9 +395,9 @@ contact_pins(form: 'ContactForm', n: 'int', scheme: 'Marking') -> 'tuple[tuple[P
     Raises TypeError for an `n` out of range or a form the scheme does not have.
 
 poles(pins: 'tuple[Pin, ...]', links: 'tuple[Link, ...]') -> 'tuple[Pole, ...]'
-    The poles in marking order: one per run of switched or protective links that share a pin.
+    The poles in marking order: one per run of pole links that share a pin.
 
-    A pin no such link joins is in no pole. A link that names an absent pin is skipped.
+    A pole link is switched, protective, or joins a LINE pin to a LOAD pin.
 
 throws(pins: 'tuple[Pin, ...]', links: 'tuple[Link, ...]') -> 'tuple[Throw, ...]'
     The switched links that join a COMMON pin to a BREAK or MAKE pin, in marking order.

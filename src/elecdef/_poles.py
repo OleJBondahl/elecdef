@@ -1,11 +1,11 @@
-"""The poles of a contact: each run of pins a switched or protective link joins."""
+"""The poles of a contact: each run of pins a pole link joins."""
 
 from dataclasses import dataclass
 
 from elecdef._pinorder import line_marking, marking_key
 from elecdef.pins import Link, LinkKind, Pin, PinRole, Side
 
-_POLE_LINKS = frozenset({LinkKind.SWITCHED, LinkKind.PROTECTIVE})
+_POLE_KINDS = frozenset({LinkKind.SWITCHED, LinkKind.PROTECTIVE})
 _PAIR = 2
 
 
@@ -34,6 +34,14 @@ def _order(pin: Pin) -> tuple[object, int]:
     return marking_key(pin.marking), pin.side.value if pin.side else 0
 
 
+def _is_pole(link: Link, by_key: dict[_Key, Pin], joined: set[_Key]) -> bool:
+    """A pole link is switched, protective, or joins a LINE pin to a LOAD pin of any kind."""
+    if link.kind in _POLE_KINDS:
+        return True
+    roles = {by_key[key].role for key in joined}
+    return PinRole.LINE in roles and PinRole.LOAD in roles
+
+
 def _groups(by_key: dict[_Key, Pin], links: tuple[Link, ...]) -> list[set[_Key]]:
     """The sets of (marking, side) keys that pole links join; an absent or coil pin skips a link.
 
@@ -43,7 +51,7 @@ def _groups(by_key: dict[_Key, Pin], links: tuple[Link, ...]) -> list[set[_Key]]
     for link in links:
         named = [[key for key in by_key if key[0] == m] for m in link.markings]
         joined = {key for keys in named for key in keys}
-        if link.kind not in _POLE_LINKS or not all(named) or len(joined) < _PAIR:
+        if not all(named) or len(joined) < _PAIR or not _is_pole(link, by_key, joined):
             continue
         if any(by_key[key].role is PinRole.COIL for key in joined):
             continue
@@ -53,9 +61,9 @@ def _groups(by_key: dict[_Key, Pin], links: tuple[Link, ...]) -> list[set[_Key]]
 
 
 def poles(pins: tuple[Pin, ...], links: tuple[Link, ...]) -> tuple[Pole, ...]:
-    """The poles in marking order: one per run of switched or protective links that share a pin.
+    """The poles in marking order: one per run of pole links that share a pin.
 
-    A pin no such link joins is in no pole. A link that names an absent pin is skipped.
+    A pole link is switched, protective, or joins a LINE pin to a LOAD pin.
     """
     by_key: dict[_Key, Pin] = {}
     for pin in pins:
