@@ -116,3 +116,23 @@ def test_card_refuses_foreign_groups() -> None:
     """Groups are a tuple of ChannelGroup."""
     with pytest.raises(TypeError):
         PlcCard(groups=(1,))  # ty: ignore[invalid-argument-type] - refused on purpose
+
+
+EXPECTED_FLAGS = {
+    Signal.DI: (False, False),
+    Signal.DO: (True, False),
+    Signal.RELAY: (True, False),
+    Signal.AI_CURRENT: (False, True),
+    Signal.AI_VOLTAGE: (False, True),
+    Signal.RTD: (False, True),
+    Signal.TC: (False, True),
+    Signal.AO_CURRENT: (True, True),
+    Signal.AO_VOLTAGE: (True, True),
+}
+
+
+def test_every_signal_answers_output_and_analogue() -> None:
+    """Every member has a row, and its two flags are the stated ones."""
+    assert set(EXPECTED_FLAGS) == set(Signal)
+    for signal, (output, analogue) in EXPECTED_FLAGS.items():
+        assert (signal.is_output, signal.is_analogue) == (output, analogue)

@@ -16,6 +16,30 @@ class Signal(Vocab):
     TC = ""
     RELAY = ""
 
+    @property
+    def is_output(self) -> bool:
+        """Whether the channel drives a field device: DO, RELAY and the analogue outputs."""
+        return _FLAGS[self][0]
+
+    @property
+    def is_analogue(self) -> bool:
+        """Whether the channel carries a value, not a state: the analogue, RTD and TC kinds."""
+        return _FLAGS[self][1]
+
+
+# (output, analogue) per signal; a member without a row fails the table test.
+_FLAGS: dict[Signal, tuple[bool, bool]] = {
+    Signal.DI: (False, False),
+    Signal.DO: (True, False),
+    Signal.AI_CURRENT: (False, True),
+    Signal.AI_VOLTAGE: (False, True),
+    Signal.AO_CURRENT: (True, True),
+    Signal.AO_VOLTAGE: (True, True),
+    Signal.RTD: (False, True),
+    Signal.TC: (False, True),
+    Signal.RELAY: (True, False),
+}
+
 
 class DiType(Vocab):
     """The digital input type."""

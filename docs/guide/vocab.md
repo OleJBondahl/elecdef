@@ -458,6 +458,8 @@ assert isinstance(SheathMaterial.PVC.gloss, str)
 from elecdef.vocab import Signal
 
 assert Signal.DI.name == "DI"
+assert Signal.RELAY.is_output and not Signal.RELAY.is_analogue
+assert Signal.TC.is_analogue and not Signal.TC.is_output
 assert isinstance(Signal.DI.gloss, str)
 ```
 

@@ -3,6 +3,10 @@
 This file holds one section per release of elecdef, newest first.
 Every change to the public surface gets a line under Unreleased until the release is cut.
 
+## 0.8.0 (unreleased)
+
+- `Signal.is_output` and `Signal.is_analogue` state what a channel kind is (DO, RELAY and the analogue outputs drive; the analogue, RTD and TC kinds carry a value).
+
 ## 0.7.0 (2026-11-06)
 
 - `poles` also counts a link of any kind that joins a `LINE` pin to a `LOAD` pin, so the conductive main links of an `Overload` are its poles (0.7.0, a minor: `poles` answers change for an overload; `Breaker`, `FuseHolder` and `Contactor` are unchanged).
