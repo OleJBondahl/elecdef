@@ -4,41 +4,28 @@ from elecdef.vocab._base import Vocab
 
 
 class Signal(Vocab):
-    """The signal kind of a channel."""
+    """The signal kind of a channel.
 
-    DI = ""
-    DO = ""
-    AI_CURRENT = ""
-    AI_VOLTAGE = ""
-    AO_CURRENT = ""
-    AO_VOLTAGE = ""
-    RTD = ""
-    TC = ""
-    RELAY = ""
+    `output` is true when it drives a field device, `analogue` when it carries a value.
+    """
 
-    @property
-    def is_output(self) -> bool:
-        """Whether the channel drives a field device: DO, RELAY and the analogue outputs."""
-        return _FLAGS[self][0]
+    output: bool
+    analogue: bool
 
-    @property
-    def is_analogue(self) -> bool:
-        """Whether the channel carries a value, not a state: the analogue, RTD and TC kinds."""
-        return _FLAGS[self][1]
+    def __init__(self, _gloss: str, output: bool, analogue: bool) -> None:  # noqa: FBT001 - an enum row of three fields
+        """Hold the two flags of the row; a member written without them is refused."""
+        self.output = output
+        self.analogue = analogue
 
-
-# (output, analogue) per signal; a member without a row fails the table test.
-_FLAGS: dict[Signal, tuple[bool, bool]] = {
-    Signal.DI: (False, False),
-    Signal.DO: (True, False),
-    Signal.AI_CURRENT: (False, True),
-    Signal.AI_VOLTAGE: (False, True),
-    Signal.AO_CURRENT: (True, True),
-    Signal.AO_VOLTAGE: (True, True),
-    Signal.RTD: (False, True),
-    Signal.TC: (False, True),
-    Signal.RELAY: (True, False),
-}
+    DI = ("", False, False)
+    DO = ("", True, False)
+    AI_CURRENT = ("", False, True)
+    AI_VOLTAGE = ("", False, True)
+    AO_CURRENT = ("", True, True)
+    AO_VOLTAGE = ("", True, True)
+    RTD = ("", False, True)
+    TC = ("", False, True)
+    RELAY = ("", True, False)
 
 
 class DiType(Vocab):

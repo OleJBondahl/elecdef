@@ -155,6 +155,17 @@ assert ConductorClass.CLASS_1.name == "CLASS_1"
 assert isinstance(ConductorClass.CLASS_1.gloss, str)
 ```
 
+### ConductorMark
+
+```python
+from elecdef.vocab import ConductorMark
+
+assert ConductorMark.of("U") is ConductorMark.L1
+assert ConductorMark.of("+") is ConductorMark.L_PLUS
+assert ConductorMark.L_MINUS.marking == "L-"
+assert ConductorMark.of("13") is None
+```
+
 ### ConductorMaterial
 
 ```python
@@ -458,8 +469,8 @@ assert isinstance(SheathMaterial.PVC.gloss, str)
 from elecdef.vocab import Signal
 
 assert Signal.DI.name == "DI"
-assert Signal.RELAY.is_output and not Signal.RELAY.is_analogue
-assert Signal.TC.is_analogue and not Signal.TC.is_output
+assert Signal.RELAY.output and not Signal.RELAY.analogue
+assert Signal.TC.analogue and not Signal.TC.output
 assert isinstance(Signal.DI.gloss, str)
 ```
 

@@ -106,3 +106,32 @@ def test_members_have_unique_names_and_a_text_gloss(item):
 
 def test_vocab_values_are_running_integers():
     assert [m.value for m in vocab.Current] == [1, 2]
+
+
+@pytest.mark.parametrize(
+    ("text", "mark"),
+    [
+        ("L1", "L1"), ("L2", "L2"), ("L3", "L3"), ("N", "N"), ("L+", "L_PLUS"), ("L-", "L_MINUS"),
+        ("M", "M"), ("PE", "PE"), ("U", "L1"), ("V", "L2"), ("W", "L3"), ("U1", "L1"),
+        ("+", "L_PLUS"), ("-", "L_MINUS"),
+    ],
+)  # fmt: skip
+def test_conductor_mark_names_a_marking(text: str, mark: str) -> None:
+    """Each printed marking and terminal letter names its conductor; the others name none."""
+    assert vocab.ConductorMark.of(text) is vocab.ConductorMark[mark]
+
+
+def test_conductor_mark_refuses_other_text_and_prints_back() -> None:
+    """An unknown text, a case slip and the empty text name none; `marking` prints each member."""
+    assert [vocab.ConductorMark.of(t) for t in ("13", "l1", "", "X")] == [None] * 4
+    assert all(vocab.ConductorMark.of(m.marking) is m for m in vocab.ConductorMark)
+    assert {m.marking for m in vocab.ConductorMark} == {
+        "L1",
+        "L2",
+        "L3",
+        "N",
+        "L+",
+        "L-",
+        "M",
+        "PE",
+    }

@@ -13,6 +13,7 @@ from elecdef.vocab._cable import (
 )
 from elecdef.vocab._coil import ActuatorKind, CoilKind, RelayKind, Suppression, TimerFunction
 from elecdef.vocab._conditions import CoilState, ConductorKind, Current, Utilisation
+from elecdef.vocab._conductor import ConductorMark
 from elecdef.vocab._connection import (
     ConductorMaterial,
     IpCode,
@@ -71,6 +72,7 @@ __all__ = [
     "Colour",
     "ConductorClass",
     "ConductorKind",
+    "ConductorMark",
     "ConductorMaterial",
     "ConnectorFamily",
     "ContactFeature",

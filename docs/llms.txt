@@ -53,6 +53,7 @@ elecdef.vocab.Coding: the connector coding key.
 elecdef.vocab.CoilKind: the drive kind of a coil.
 elecdef.vocab.Colour: a conductor colour code.
 elecdef.vocab.ConductorClass: the conductor stranding class.
+elecdef.vocab.ConductorMark: a conductor marking: a phase, the neutral, a DC pole, the mid point or protective earth.
 elecdef.vocab.ConductorMaterial: the metal a conductor is made of.
 elecdef.vocab.ConnectorFamily: the connector family.
 elecdef.vocab.ContactFeature: a special property of a contact.

@@ -164,6 +164,9 @@ class ConductorClass
 class ConductorKind
     The construction of a conductor a terminal range is stated for.
 
+class ConductorMark
+    A conductor marking: a phase, the neutral, a DC pole, the mid point or protective earth.
+
 class ConductorMaterial
     The metal a conductor is made of.
 
@@ -271,6 +274,8 @@ class SheathMaterial
 
 class Signal
     The signal kind of a channel.
+
+    `output` is true when it drives a field device, `analogue` when it carries a value.
 
 class Sil
     The safety integrity level.

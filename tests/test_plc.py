@@ -135,4 +135,4 @@ def test_every_signal_answers_output_and_analogue() -> None:
     """Every member has a row, and its two flags are the stated ones."""
     assert set(EXPECTED_FLAGS) == set(Signal)
     for signal, (output, analogue) in EXPECTED_FLAGS.items():
-        assert (signal.is_output, signal.is_analogue) == (output, analogue)
+        assert (signal.output, signal.analogue) == (output, analogue)
