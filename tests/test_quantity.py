@@ -111,6 +111,26 @@ def test_ampere_hour_is_charge_and_prints_as_ah():
         capacity.to(U.A)
 
 
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [("24 V", U.V(24)), ("2.5 mm2", U.MM2("2.5")), ("-40 degC", U.DEG_C(-40)), ("5 N m", U.N_M(5)),
+     ("100 A2s", U.A2S(100)), ("0 V", U.V(0)), ("10 %", U.PCT(10))],
+)  # fmt: skip
+def test_parse_reads_a_figure_and_its_unit(text, expected):
+    """A plain number, one space and a unit symbol read as that Quantity, as written."""
+    assert Quantity.parse(text) == expected
+
+
+@pytest.mark.parametrize(
+    "text",
+    ["24V", "24  V", " 24 V", "24 v", "24 X", "V", "", "1e3 V", ".5 V", "+5 V", "1,5 V", "24 V "],
+)
+def test_parse_refuses_other_text(text):
+    """No unit, a wrong case, an exponent, a plus sign or a stray space is a ValueError."""
+    with pytest.raises(ValueError, match="not a quantity"):
+        Quantity.parse(text)
+
+
 def test_melting_energy_is_its_own_kind():
     """A2s and kA2s are of kind I2T, convert between them and refuse every other kind."""
     assert U.A2S.kind is Kind.I2T

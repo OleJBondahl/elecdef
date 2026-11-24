@@ -1,6 +1,7 @@
 """Measured figures: `Kind`, `Unit` and `Quantity`, exact in `Decimal`."""
 
 import decimal
+import re
 from dataclasses import dataclass
 from decimal import Decimal
 from enum import Enum, auto
@@ -120,6 +121,16 @@ class Quantity:
             message = f"a Quantity holds a Unit, not {self.unit!r}"
             raise TypeError(message)
 
+    @classmethod
+    def parse(cls, text: str) -> Quantity:
+        """The Quantity a text such as `24 V` states; any other text is a ValueError."""
+        number, _, symbol = text.partition(" ")
+        unit = _BY_SYMBOL.get(symbol)
+        if _NUMBER.fullmatch(number) is None or unit is None:
+            message = f'{text!r} is not a quantity such as "24 V"'
+            raise ValueError(message)
+        return unit(number)
+
     def base(self) -> Decimal:
         """The value in the base unit of its kind."""
         return _CONTEXT.multiply(self.value, self.unit.factor)
@@ -163,3 +174,7 @@ class Quantity:
             raise TypeError(message)
         self._expect(other.unit.kind, other.unit.symbol)
         return other.base()
+
+
+_NUMBER = re.compile(r"-?[0-9]+(\.[0-9]+)?")
+_BY_SYMBOL = {unit.symbol: unit for unit in Unit}

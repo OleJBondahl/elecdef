@@ -83,3 +83,19 @@ except TypeError:
     across_kinds = True
 assert across_kinds
 ```
+
+## A quantity from text
+
+`Quantity.parse(text)` reads a plain number, one space and a unit symbol, such as `24 V` or `-40 degC`. Any other text, as no unit, an exponent or a stray space, is a `ValueError`.
+
+```python
+from elecdef import Quantity, Unit as U
+
+assert Quantity.parse("24 V") == U.V(24)
+assert Quantity.parse("2.5 mm2") == U.MM2("2.5")
+try:
+    Quantity.parse("24V")
+except ValueError:
+    refused = True
+assert refused
+```
