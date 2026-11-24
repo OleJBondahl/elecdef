@@ -76,6 +76,7 @@ from elecdef.vocab import Kind
 
 assert U.V.kind is Kind.VOLTAGE
 assert U.MM2.kind is Kind.AREA
+assert U.KA2S(1).to(U.A2S) == U.A2S(1000000)
 try:
     U.KV(1).to(U.A)
 except TypeError:

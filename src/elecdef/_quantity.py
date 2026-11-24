@@ -24,6 +24,7 @@ class Kind(Enum):
     TEMPERATURE = auto()
     TEMPERATURE_DIFFERENCE = auto()
     CHARGE = auto()
+    I2T = auto()
 
 
 # Every Quantity calculation runs here, never in the caller's decimal context.
@@ -85,6 +86,8 @@ class Unit(Enum):
     DEG_C = ("degC", Kind.TEMPERATURE, "1")
     K = ("K", Kind.TEMPERATURE_DIFFERENCE, "1")
     AH = ("Ah", Kind.CHARGE, "1")
+    A2S = ("A2s", Kind.I2T, "1")
+    KA2S = ("kA2s", Kind.I2T, "1000000")
 
     symbol: str
     kind: Kind

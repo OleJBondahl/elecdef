@@ -139,3 +139,12 @@ def test_breaker_kind_check_and_no_stored_pins():
 def test_fuse_holder_poles_not_an_int_raises(poles):
     with pytest.raises(TypeError):
         FuseHolder(poles=poles)
+
+
+def test_fuse_melting_energy_round_trips_and_refuses_a_wrong_kind() -> None:
+    """`i2t` holds a Range of Kind I2T as given; a current there is a TypeError."""
+    figure = Range(Role.RATED, nom=U.KA2S(2))
+    assert Fuse(i2t=figure).i2t == figure
+    assert Fuse().i2t is None
+    with pytest.raises(TypeError):
+        Fuse(i2t=Range(Role.RATED, nom=U.A(2)))

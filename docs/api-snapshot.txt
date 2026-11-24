@@ -45,8 +45,8 @@ class Device(pins: 'tuple[Pin, ...]' = (), links: 'tuple[Link, ...]' = (), ratin
 
     Every field is unfilled by default.
 
-class Fuse(system: 'FuseSystem | None' = None, fuse_class: 'FuseClass | None' = None, current: 'Range | None' = None, voltage: 'Ranges' = (), breaking_capacity: 'Ranges' = (), speed: 'FuseSpeed | None' = None, indicator: 'bool' = False, connection: 'Connection | None' = None, symbol: 'Symbol | None' = None) -> 'None'
-    A fuse: system, class, current, voltage and breaking capacity, and its two pins.
+class Fuse(system: 'FuseSystem | None' = None, fuse_class: 'FuseClass | None' = None, current: 'Range | None' = None, voltage: 'Ranges' = (), breaking_capacity: 'Ranges' = (), speed: 'FuseSpeed | None' = None, indicator: 'bool' = False, connection: 'Connection | None' = None, symbol: 'Symbol | None' = None, i2t: 'Range | None' = None) -> 'None'
+    A fuse: system, class, current, voltage, breaking capacity, i2t and its two pins.
 
     The pins are `1` (LINE) and `2` (LOAD), joined by a protective link.
 

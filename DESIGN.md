@@ -33,7 +33,7 @@ reads nothing from `symdef`. A pin marking (`13`, `A1`, `95`) is an elecdef fact
 
 A `Quantity` is a `Decimal` and a `Unit`. A `Unit` is an enum member carrying a symbol, a `Kind`
 (voltage, current, power, apparent power, resistance, frequency, time, length, area, gauge,
-torque, ratio, temperature, temperature difference) and an exact factor to the kind's base unit.
+torque, ratio, temperature, temperature difference, charge, melting energy) and an exact factor to the kind's base unit.
 `U.V(24)`, `U.MM2("2.5")` is the one spelling; a `float` is refused. `==` compares as written,
 `same()` and ordering compare in base units, `to(unit)` converts within a kind and refuses across
 kinds. Percent is a unit of kind ratio. Degrees Celsius and kelvin are different kinds.

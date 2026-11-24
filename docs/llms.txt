@@ -35,7 +35,7 @@ PowerSupply: a power supply: its input, output figures and OK contact; the pins 
 PlcCard: a PLC card: supply, groups of channels, form, role, bus and safety levels; the pins are read on every access.
 Device: a thing with no block of its own yet: its pins and links are stored as given.
 Overload: a motor overload relay: main pins per pole, then auxiliaries numbered OVERLOAD.
-Fuse: a fuse: system, class, current, voltage and breaking capacity, and its two pins.
+Fuse: a fuse: system, class, current, voltage, breaking capacity, i2t and its two pins.
 Breaker: a circuit breaker: current, trip curve and breaking capacities, pole pins, auxiliaries.
 TerminalBlock: a terminal block: its levels, the connection on each side and its mounting.
 elecdef.vocab.Kind: the physical kind a unit belongs to; conversion and ordering stay inside one kind.

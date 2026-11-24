@@ -109,3 +109,11 @@ def test_ampere_hour_is_charge_and_prints_as_ah():
     assert capacity.unit.symbol == "Ah"
     with pytest.raises(TypeError):
         capacity.to(U.A)
+
+
+def test_melting_energy_is_its_own_kind():
+    """A2s and kA2s are of kind I2T, convert between them and refuse every other kind."""
+    assert U.A2S.kind is Kind.I2T
+    assert U.KA2S(2).to(U.A2S) == U.A2S(2000000)
+    with pytest.raises(TypeError):
+        U.A2S(1).to(U.A)

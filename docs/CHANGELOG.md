@@ -10,6 +10,7 @@ Every change to the public surface gets a line under Unreleased until the releas
 - `core_colour(text)` reads a core colour code (`BU`, `GNYE`, `BKWH`, `BK1`, the screen `SH`) into a `CoreColour`; each `Colour` now has its colour name as `gloss`.
 - `pin_side(marking)` gives the side a marking states: odd numbers and a coil's `A1` are side A, even numbers and `A2` are side B.
 - `pair_poles(pins, links)` pairs the pins no pole link joins, in marking order; an odd last pin is a pole of one pin, PE pins are left out.
+- `Fuse.i2t`, a figure of the new `Kind.I2T` (melting energy), with the units `Unit.A2S` ("A2s") and `Unit.KA2S` ("kA2s").
 
 ## 0.7.0 (2026-11-06)
 

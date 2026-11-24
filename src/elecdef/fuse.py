@@ -34,7 +34,7 @@ def pole_pins(poles: int | None) -> tuple[tuple[Pin, ...], tuple[Link, ...]]:
 
 @dataclass(frozen=True)
 class Fuse(Block):
-    """A fuse: system, class, current, voltage and breaking capacity, and its two pins.
+    """A fuse: system, class, current, voltage, breaking capacity, i2t and its two pins.
 
     The pins are `1` (LINE) and `2` (LOAD), joined by a protective link.
     """
@@ -50,6 +50,7 @@ class Fuse(Block):
     indicator: bool = False
     connection: Connection | None = None
     symbol: Symbol | None = None
+    i2t: Range | None = figure(Kind.I2T)
 
     @property
     def pins(self) -> tuple[Pin, ...]:
