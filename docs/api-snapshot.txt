@@ -400,9 +400,9 @@ contact_pins(form: 'ContactForm', n: 'int', scheme: 'Marking') -> 'tuple[tuple[P
     Raises TypeError for an `n` out of range or a form the scheme does not have.
 
 pair_poles(pins: 'tuple[Pin, ...]', links: 'tuple[Link, ...]' = ()) -> 'tuple[Pole, ...]'
-    The poles of the pins no pole link joins: consecutive pins in marking order pair.
+    The poles of the pins no link joins, PE left out; an odd number pairs with the next.
 
-    An odd last pin is a pole of one pin with no line pin; PE pins are left out.
+    By number: 1, 3, 4 gives 1 alone, then 3 with 4; a coil's `A1` pairs with `A2`.
 
 pin_side(marking: 'str') -> 'Side | None'
     The side a marking states: odd numbers and a coil's `A1` are side A, even ones and `A2` B.
@@ -566,11 +566,13 @@ class Core(number: 'int | None' = None, colour: 'tuple[Colour, ...]' = (), pair:
 class CoreColour(colours: 'tuple[Colour, ...]' = (), number: 'int | None' = None, screen: 'bool' = False) -> 'None'
     What a core colour text states: its colours, its core number, or that it is a screen.
 
+    `protective` is true for green-yellow alone. A screen is not a core: the caller handles it.
+
 class TypeCode(scheme: 'Scheme', text: 'str') -> 'None'
     A cable type designation: the scheme family and the text as printed.
 
 core_colour(text: 'str') -> 'CoreColour | None'
-    The colours of a core colour code (`BU`, `BKWH`, `GNYE`, `BK1`, the screen `SH`), else None.
+    The colours of a core colour code (`BU`, `BKWH`, `GNYE`, `BK1`, `GNYE1`, `SH`), else None.
 
     A core number has no sign and no leading zero; two joined base codes differ.
 

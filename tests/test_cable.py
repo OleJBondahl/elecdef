@@ -131,6 +131,7 @@ def test_44_colour_table_gives_the_44_markings() -> None:
     [
         ("BU", (Colour.BU,), None, "blue"),
         ("GNYE", (Colour.GNYE,), None, "green-yellow"),
+        ("GNYE1", (Colour.GNYE,), 1, "green-yellow"),
         ("BKWH", (Colour.BK, Colour.WH), None, "black-white"),
         ("BK1", (Colour.BK,), 1, "black"),
         ("GY12", (Colour.GY,), 12, "grey"),
@@ -161,7 +162,39 @@ def test_core_colour_reads_the_screen_and_refuses_the_rest() -> None:
         "BKSH",
         "SH1",
         "BKWHBU",
-        "GNYE1",
         "BK1 ",
     ]
     assert [core_colour(t) for t in bad] == [None] * len(bad)
+
+
+@pytest.mark.parametrize(
+    ("text", "protective"),
+    [
+        ("GNYE", True),
+        ("GNYE1", True),
+        ("GN", False),
+        ("GNBU", False),
+        ("BK1", False),
+        ("SH", False),
+    ],
+)
+def test_only_green_yellow_is_protective(text: str, protective: bool) -> None:  # noqa: FBT001 - a parametrised flag
+    """`protective` is true for green-yellow alone; a screen is not a core and is not protective."""
+    got = core_colour(text)
+    assert got is not None
+    assert got.protective is protective
+    assert CoreColour((Colour.GNYE,)).protective
+    assert not CoreColour((Colour.GN, Colour.YE)).protective
+
+
+def test_core_colour_name_leaves_the_number_to_its_own_field() -> None:
+    """`BK` and `BK1` print one name; the number is `number`, and green-yellow reads as BK does."""
+    plain, numbered, green = core_colour("BK"), core_colour("BK1"), core_colour("GNYE1")
+    assert plain is not None
+    assert numbered is not None
+    assert green is not None
+    assert plain.name == numbered.name == "black"
+    assert green.name == "green-yellow"
+    assert green.number == 1
+    assert core_colour("GNYE0") is None
+    assert core_colour("GNYEBK") is None

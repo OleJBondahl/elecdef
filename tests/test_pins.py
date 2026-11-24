@@ -11,8 +11,9 @@ from dataclasses import dataclass, fields, replace
 import pytest
 
 import elecdef
-from elecdef import Breaker, Coil, Contact, Contactor, Overload, PowerSupply, Relay
+from elecdef import Breaker, Coil, Contact, Contactor, Overload, PowerSupply, Quantity, Relay
 from elecdef._block import Block
+from elecdef.cable import core_colour
 from elecdef.fuse import FuseHolder
 from elecdef.pins import (
     Link,
@@ -30,7 +31,7 @@ from elecdef.pins import (
     throws,
 )
 from elecdef.supply import SupplyInput
-from elecdef.vocab import ContactForm
+from elecdef.vocab import ConductorMark, ContactForm
 
 # TIMER and PLAIN rows are proposed, not sourced. Each value is the nine contacts, space separated.
 _GOLDEN = {
@@ -606,3 +607,25 @@ def test_pair_poles_takes_the_one_pin_on_side_a_as_the_line() -> None:
     """With no stated or numbered line pin, the one pin on side A is the line pin."""
     pins = (Pin("X1", PinRole.COMMON, Side.B), Pin("X2", PinRole.COMMON, Side.A))
     assert _pole_shape(pair_poles(pins)) == [("X2", ["X1", "X2"])]
+
+
+def test_pair_poles_pairs_by_number_not_by_position() -> None:
+    """An odd number pairs with the next: 1, 3, 4 gives 1 alone and 3 with 4; 2, 3 stay apart."""
+    assert _pole_shape(pair_poles(_plain("1", "3", "4"))) == [(None, ["1"]), (None, ["3", "4"])]
+    assert _pole_shape(pair_poles(_plain("2", "3"))) == [(None, ["2"]), (None, ["3"])]
+    assert _pole_shape(pair_poles(_plain("1", "4"))) == [(None, ["1"]), (None, ["4"])]
+    assert _pole_shape(pair_poles(_plain("A1", "B2"))) == [(None, ["A1"]), (None, ["B2"])]
+
+
+def test_pair_poles_pairs_a_coil_a1_with_a2() -> None:
+    """A coil's A1 and A2 are a pair, as by the marking rule of `pin_side`."""
+    pins = (Pin("A2", PinRole.COIL), Pin("A1", PinRole.COIL))
+    assert _pole_shape(pair_poles(pins)) == [(None, ["A1", "A2"])]
+
+
+@pytest.mark.parametrize("call", [pin_side, core_colour, ConductorMark.of, Quantity.parse])
+@pytest.mark.parametrize("bad", [None, 1, b"1", ("1",)])
+def test_a_text_function_refuses_a_non_str(call, bad) -> None:
+    """F3: a wrong type is a malformed call and raises TypeError, never a quiet None."""
+    with pytest.raises(TypeError):
+        call(bad)

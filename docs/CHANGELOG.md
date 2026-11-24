@@ -6,12 +6,12 @@ Every change to the public surface gets a line under Unreleased until the releas
 ## 0.8.0 (unreleased)
 
 - `Signal.output` and `Signal.analogue` state what a channel kind is (DO, RELAY and the analogue outputs drive; the analogue, RTD and TC kinds carry a value).
-- `ConductorMark` (L1, L2, L3, N, L+, L-, M, PE): `ConductorMark.of(text)` maps a printed marking and the terminal letters U, V, W, + and - onto it, and `.marking` prints it.
-- `core_colour(text)` reads a core colour code (`BU`, `GNYE`, `BKWH`, `BK1`, the screen `SH`) into a `CoreColour`; each `Colour` now has its colour name as `gloss`.
+- `ConductorMark` (L1, L2, L3, N, L+, L-, M, PE): `ConductorMark.of(text)` maps a printed marking and the terminal letters (U and U1 name L1, V and V1 L2, W and W1 L3), + and - onto it, and `.marking` prints it.
+- `core_colour(text)` reads a core colour code (`BU`, `GNYE`, `BKWH`, `BK1`, the screen `SH`) into a `CoreColour`; each `Colour` now has its colour name as `gloss`. `GNYE1` reads as `GNYE` with core number 1, and `CoreColour.protective` is true for green-yellow alone; `CoreColour.name` leaves the number out (`number` is its own field), and a screen is not a core, so the caller handles it.
 - `pin_side(marking)` gives the side a marking states: odd numbers and a coil's `A1` are side A, even numbers and `A2` are side B.
-- `pair_poles(pins, links)` pairs the pins no pole link joins, in marking order; an odd last pin is a pole of one pin, PE pins are left out.
+- `pair_poles(pins, links)` pairs the pins no pole link joins, by number: an odd number pairs with the next (a coil's `A1` with `A2`), 1, 3, 4 gives 1 alone and 3 with 4; a pin with no mate is a pole of one pin, PE pins are left out.
 - `Fuse.i2t`, a figure of the new `Kind.I2T` (melting energy), with the units `Unit.A2S` ("A2s") and `Unit.KA2S` ("kA2s").
-- `Quantity.parse(text)` reads a text such as `24 V` into a Quantity; other text is a ValueError.
+- `Quantity.parse(text)` reads a text such as `24 V` into a Quantity; other text is a ValueError, a non-str a TypeError.
 
 ## 0.7.0 (2026-11-06)
 

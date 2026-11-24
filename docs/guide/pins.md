@@ -70,7 +70,7 @@ assert pin_side("A2") is Side.B
 assert pin_side("PE") is None
 ```
 
-`pair_poles(pins, links)` pairs the pins no pole link joins: consecutive pins in marking order form a pole, an odd last pin is a pole of one pin with no line pin, and PE pins are left out.
+`pair_poles(pins, links)` pairs the pins no pole link joins: an odd number pairs with the next (3 with 4, a coil's `A1` with `A2`), a pin with no mate is a pole of one pin with no line pin, and PE pins are left out. The pairing is by number, not position: 1, 3, 4 gives 1 alone and 3 with 4.
 
 ```python
 from elecdef.pins import Pin, PinRole, pair_poles

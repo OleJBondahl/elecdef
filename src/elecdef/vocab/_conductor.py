@@ -23,6 +23,9 @@ class ConductorMark(Vocab):
     @classmethod
     def of(cls, text: str) -> ConductorMark | None:
         """The mark a printed marking names, terminal letters included (`U` is L1), else None."""
+        if not isinstance(text, str):
+            message = f"expected a str, not {type(text).__name__}"
+            raise TypeError(message)
         return _BY_TEXT.get(text)
 
 

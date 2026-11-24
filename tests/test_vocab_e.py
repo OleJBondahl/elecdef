@@ -135,3 +135,13 @@ def test_conductor_mark_refuses_other_text_and_prints_back() -> None:
         "M",
         "PE",
     }
+
+
+def test_a_vocab_row_holds_a_gloss_only_unless_the_class_reads_more() -> None:
+    """A row with extra fields in a class with no `__init__` of its own is a TypeError."""
+    with pytest.raises(TypeError, match="gloss only"):
+
+        class _Bad(Vocab):
+            A = ("gloss", 1)
+
+    assert vocab.Signal.DO.output

@@ -123,7 +123,13 @@ class Quantity:
 
     @classmethod
     def parse(cls, text: str) -> Quantity:
-        """The Quantity a text such as `24 V` states; any other text is a ValueError."""
+        """The Quantity a text such as `24 V` states.
+
+        Other text is a ValueError, a non-str a TypeError.
+        """
+        if not isinstance(text, str):
+            message = f"expected a str, not {type(text).__name__}"
+            raise TypeError(message)
         number, _, symbol = text.partition(" ")
         unit = _BY_SYMBOL.get(symbol)
         if _NUMBER.fullmatch(number) is None or unit is None:

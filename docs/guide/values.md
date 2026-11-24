@@ -86,7 +86,7 @@ assert across_kinds
 
 ## A quantity from text
 
-`Quantity.parse(text)` reads a plain number, one space and a unit symbol, such as `24 V` or `-40 degC`. Any other text, as no unit, an exponent or a stray space, is a `ValueError`.
+`Quantity.parse(text)` reads a plain number, one space and a unit symbol, such as `24 V` or `-40 degC`. Any other text, as no unit, an exponent or a stray space, is a `ValueError`, and a non-str is a `TypeError`.
 
 ```python
 from elecdef import Quantity, Unit as U

@@ -1,8 +1,9 @@
 """The poles of a contact: each run of pins a pole link joins."""
 
+import re
 from dataclasses import dataclass
 
-from elecdef._pinorder import line_marking, marking_key
+from elecdef._pinorder import line_marking, line_number, marking_key
 from elecdef.pins import Link, LinkKind, Pin, PinRole, Side
 
 _POLE_KINDS = frozenset({LinkKind.SWITCHED, LinkKind.PROTECTIVE})
@@ -84,10 +85,25 @@ def _pair(first: Pin, second: Pin) -> Pole:
     return Pole(line, (first, second))
 
 
-def pair_poles(pins: tuple[Pin, ...], links: tuple[Link, ...] = ()) -> tuple[Pole, ...]:
-    """The poles of the pins no pole link joins: consecutive pins in marking order pair.
+_NUMBERED = re.compile(r"(\D*)(\d+)")
 
-    An odd last pin is a pole of one pin with no line pin; PE pins are left out.
+
+def _numbered(pin: Pin) -> tuple[str, int] | None:
+    """The text and the number a marking ends in (`A1` is `A`, 1), None for another marking."""
+    hit = _NUMBERED.fullmatch(pin.marking)
+    return (hit[1], int(hit[2])) if hit else None
+
+
+def _mates(first: Pin, second: Pin) -> bool:
+    """Whether `second` is the even mate of `first`: the same text, an odd number and the next."""
+    one, two = _numbered(first), _numbered(second)
+    return bool(one and two and one[0] == two[0] and line_number(one[1]) and two[1] == one[1] + 1)
+
+
+def pair_poles(pins: tuple[Pin, ...], links: tuple[Link, ...] = ()) -> tuple[Pole, ...]:
+    """The poles of the pins no link joins, PE left out; an odd number pairs with the next.
+
+    By number: 1, 3, 4 gives 1 alone, then 3 with 4; a coil's `A1` pairs with `A2`.
     """
     by_key: dict[_Key, Pin] = {}
     for pin in pins:
@@ -97,7 +113,10 @@ def pair_poles(pins: tuple[Pin, ...], links: tuple[Link, ...] = ()) -> tuple[Pol
         (pin for key, pin in by_key.items() if key not in linked and pin.role is not PinRole.PE),
         key=_order,
     )
-    found = [_pair(a, b) for a, b in zip(free[::2], free[1::2], strict=False)]
-    if len(free) % _PAIR:
-        found.append(Pole(None, (free[-1],)))
+    found: list[Pole] = []
+    at = 0
+    while at < len(free):
+        mated = at + 1 < len(free) and _mates(free[at], free[at + 1])
+        found.append(_pair(free[at], free[at + 1]) if mated else Pole(None, (free[at],)))
+        at += _PAIR if mated else 1
     return tuple(found)

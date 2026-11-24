@@ -137,3 +137,11 @@ def test_melting_energy_is_its_own_kind():
     assert U.KA2S(2).to(U.A2S) == U.A2S(2000000)
     with pytest.raises(TypeError):
         U.A2S(1).to(U.A)
+
+
+def test_parse_refuses_a_non_str_as_a_type_error():
+    """A malformed call is a TypeError, as `U.V("abc")` is; malformed text stays a ValueError."""
+    with pytest.raises(TypeError):
+        Quantity.parse(24)  # ty: ignore[invalid-argument-type] - the bad type is the test
+    with pytest.raises(TypeError):
+        U.V("abc")

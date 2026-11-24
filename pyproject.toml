@@ -145,7 +145,7 @@ ignore_names = [
     "insulation_voltage", "ip", "material", "mounting", "needs", "overvoltage_category",
     "pitch", "pollution_degree", "power_loss", "screw", "strip_length", "subject", "technology",
     "temperature", "thermal_current", "to", "tolerance", "torque", "voltage", "width",
-    "COIL", "SUPPLY", "CONDUCTIVE", "PROTECTIVE", "side", "alternates", "closed_at_rest",
+    "COIL", "SUPPLY", "CONDUCTIVE", "PROTECTIVE", "side", "protective", "alternates", "closed_at_rest",
     "current", "connection",
     "pick_up", "drop_out", "resistance", "apparent_power", "operate_time",
     "release_time", "features", "switching", "min_load_voltage", "min_load_current",
