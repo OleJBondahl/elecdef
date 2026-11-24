@@ -38,3 +38,17 @@ assert cable.links == ()
 ```
 
 With numbers the markings are the numbers: `Core(number=1)` gives the pin `1`.
+
+## A core colour text
+
+`core_colour(text)` reads a core colour code: a base code (`BU`), two different base codes joined (`BKWH`, and `GNYE` as `Colour.GNYE`), a base code and a core number (`BK1`), or the screen code `SH` alone. It gives a `CoreColour` with `colours`, `number`, `screen` and the printed `name`, or None when the text is none of these. Colour names are the `gloss` of each `Colour`.
+
+```python
+from elecdef.cable import CoreColour, core_colour
+from elecdef.vocab import Colour
+
+assert core_colour("BK1") == CoreColour((Colour.BK,), number=1)
+assert core_colour("GNYE").name == "green-yellow"
+assert core_colour("SH").screen
+assert core_colour("BKBK") is None
+```

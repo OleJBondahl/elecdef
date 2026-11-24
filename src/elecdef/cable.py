@@ -4,13 +4,14 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 from elecdef._block import Block, figure
+from elecdef._corecolour import CoreColour, core_colour
 from elecdef._quantity import Kind, Quantity
 from elecdef._range import Range, Ranges
 from elecdef.conductor import Conductor
 from elecdef.pins import Pin, PinRole
 from elecdef.vocab import Armour, Colour, CoreRole, Scheme, Screen, SheathMaterial
 
-__all__ = ["Cable", "Core", "TypeCode"]
+__all__ = ["Cable", "Core", "CoreColour", "TypeCode", "core_colour"]
 
 _SCREEN_MARKING = "SH"
 

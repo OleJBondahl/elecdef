@@ -7,6 +7,7 @@ Every change to the public surface gets a line under Unreleased until the releas
 
 - `Signal.output` and `Signal.analogue` state what a channel kind is (DO, RELAY and the analogue outputs drive; the analogue, RTD and TC kinds carry a value).
 - `ConductorMark` (L1, L2, L3, N, L+, L-, M, PE): `ConductorMark.of(text)` maps a printed marking and the terminal letters U, V, W, + and - onto it, and `.marking` prints it.
+- `core_colour(text)` reads a core colour code (`BU`, `GNYE`, `BKWH`, `BK1`, the screen `SH`) into a `CoreColour`; each `Colour` now has its colour name as `gloss`.
 
 ## 0.7.0 (2026-11-06)
 

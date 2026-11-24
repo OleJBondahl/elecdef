@@ -6,7 +6,7 @@ from dataclasses import replace
 import pytest
 
 from elecdef import Unit as U  # noqa: N817 - the brief names the alias U
-from elecdef.cable import Cable, Core, TypeCode
+from elecdef.cable import Cable, Core, CoreColour, TypeCode, core_colour
 from elecdef.conductor import Conductor
 from elecdef.pins import PinRole
 from elecdef.tables import CORE_COLOURS
@@ -124,3 +124,44 @@ def test_44_colour_table_gives_the_44_markings() -> None:
     assert len(_MARKINGS_44) == 44
     cable = Cable(cores=tuple(Core(colour=c) for c in CORE_COLOURS), screen=Screen.FOIL)
     assert [p.marking for p in cable.pins] == [*_MARKINGS_44, "SH"]
+
+
+@pytest.mark.parametrize(
+    ("text", "colours", "number", "name"),
+    [
+        ("BU", (Colour.BU,), None, "blue"),
+        ("GNYE", (Colour.GNYE,), None, "green-yellow"),
+        ("BKWH", (Colour.BK, Colour.WH), None, "black-white"),
+        ("BK1", (Colour.BK,), 1, "black"),
+        ("GY12", (Colour.GY,), 12, "grey"),
+    ],
+)
+def test_core_colour_reads_a_colour_code(text, colours, number, name) -> None:
+    """A base code, a two-colour code and a numbered core give their colours, number and name."""
+    got = core_colour(text)
+    assert got is not None
+    assert got == CoreColour(colours, number)
+    assert got.name == name
+    assert not got.screen
+
+
+def test_core_colour_reads_the_screen_and_refuses_the_rest() -> None:
+    """`SH` alone is the screen; anything else that is no code, as the empty text, is None."""
+    assert core_colour("SH") == CoreColour(screen=True)
+    assert CoreColour(screen=True).name == "screen"
+    bad = [
+        "",
+        "bu",
+        "XX",
+        "BK0",
+        "BK01",
+        "BK-1",
+        "BKBK",
+        "SHBK",
+        "BKSH",
+        "SH1",
+        "BKWHBU",
+        "GNYE1",
+        "BK1 ",
+    ]
+    assert [core_colour(t) for t in bad] == [None] * len(bad)

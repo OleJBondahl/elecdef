@@ -553,8 +553,16 @@ class Cable(conductor: 'Conductor | None' = None, cores: 'tuple[Core, ...]' = ()
 class Core(number: 'int | None' = None, colour: 'tuple[Colour, ...]' = (), pair: 'int | None' = None, role: 'CoreRole | None' = None, conductor: 'Conductor | None' = None) -> 'None'
     One core of a cable: its number, colour code, pair, role and own conductor.
 
+class CoreColour(colours: 'tuple[Colour, ...]' = (), number: 'int | None' = None, screen: 'bool' = False) -> 'None'
+    What a core colour text states: its colours, its core number, or that it is a screen.
+
 class TypeCode(scheme: 'Scheme', text: 'str') -> 'None'
     A cable type designation: the scheme family and the text as printed.
+
+core_colour(text: 'str') -> 'CoreColour | None'
+    The colours of a core colour code (`BU`, `BKWH`, `GNYE`, `BK1`, the screen `SH`), else None.
+
+    A core number has no sign and no leading zero; two joined base codes differ.
 
 ## elecdef.connector
 class Connector(family: 'ConnectorFamily | None' = None, coding: 'Coding | None' = None, poles: 'int | None' = None, gender: 'Gender | None' = None, locking: 'Locking | None' = None, shielded: 'bool' = False, rating: 'Rating | None' = None, connection: 'Connection | None' = None, body: 'Body | None' = None, symbol: 'Symbol | None' = None) -> 'None'
