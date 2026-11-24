@@ -23,6 +23,7 @@ from elecdef.pins import (
     Side,
     _is_marking,
     contact_pins,
+    pin_side,
     poles,
     throws,
 )
@@ -546,3 +547,13 @@ def test_throws_take_the_rest_state_from_the_pin_role_not_the_link() -> None:
     pins = (Pin("11", PinRole.COMMON), Pin("12", PinRole.BREAK))
     got = throws(pins, (Link(("11", "12"), LinkKind.SWITCHED, closed_at_rest=False),))
     assert [t.closed_at_rest for t in got] == [True]
+
+
+@pytest.mark.parametrize(
+    ("marking", "side"),
+    [("1", Side.A), ("2", Side.B), ("13", Side.A), ("14", Side.B), ("A1", Side.A), ("A2", Side.B),
+     ("3/L2", None), ("A3", None), ("PE", None), ("", None), ("+", None)],
+)  # fmt: skip
+def test_pin_side_reads_the_side_a_marking_states(marking: str, side: Side | None) -> None:
+    """An odd number and a coil's A1 are side A, an even number and A2 are side B, others none."""
+    assert pin_side(marking) is side

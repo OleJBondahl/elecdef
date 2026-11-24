@@ -59,6 +59,17 @@ assert len(poles(*contact_pins(ContactForm.CHANGEOVER, 1, Marking.AUX))) == 1
 assert poles(*contact_pins(ContactForm.CHANGEOVER, 1, Marking.AUX))[0].line.marking == "11"
 ```
 
+`pin_side(marking)` gives the side a marking states: an odd number and a coil's `A1` are side A, an even number and `A2` are side B, any other marking none.
+
+```python
+from elecdef.pins import Side, pin_side
+
+assert pin_side("13") is Side.A
+assert pin_side("14") is Side.B
+assert pin_side("A2") is Side.B
+assert pin_side("PE") is None
+```
+
 ## Supply input
 
 ```python

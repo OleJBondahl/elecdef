@@ -12,6 +12,11 @@ def marking_key(marking: str) -> tuple[tuple[int, int, str], ...]:
     )
 
 
+def line_number(number: int) -> bool:
+    """Whether an odd number marks the line side: the one parity rule of the package."""
+    return number % 2 == 1
+
+
 _MAIN_MARKING = re.compile(r"(\d+)/")
 _AUX_MARKING = re.compile(r"\d{2,}")
 
@@ -23,7 +28,9 @@ def line_marking(markings: tuple[str, ...]) -> str | None:
     """
     mains = [_MAIN_MARKING.match(m) for m in markings]
     if all(mains):
-        odd = [m for m, hit in zip(markings, mains, strict=True) if hit and int(hit[1]) % 2]
+        odd = [
+            m for m, hit in zip(markings, mains, strict=True) if hit and line_number(int(hit[1]))
+        ]
         return odd[0] if len(odd) == 1 else None
     if all(_AUX_MARKING.fullmatch(m) for m in markings):
         low = min(int(m[-1]) for m in markings)

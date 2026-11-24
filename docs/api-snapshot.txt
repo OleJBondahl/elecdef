@@ -399,6 +399,11 @@ contact_pins(form: 'ContactForm', n: 'int', scheme: 'Marking') -> 'tuple[tuple[P
 
     Raises TypeError for an `n` out of range or a form the scheme does not have.
 
+pin_side(marking: 'str') -> 'Side | None'
+    The side a marking states: odd numbers and a coil's `A1` are side A, even ones and `A2` B.
+
+    Any other marking states none.
+
 poles(pins: 'tuple[Pin, ...]', links: 'tuple[Link, ...]') -> 'tuple[Pole, ...]'
     The poles in marking order: one per run of pole links that share a pin.
 

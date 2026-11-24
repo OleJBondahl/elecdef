@@ -15,6 +15,7 @@ __all__ = [
     "Side",
     "Throw",
     "contact_pins",
+    "pin_side",
     "poles",
     "throws",
 ]
@@ -170,5 +171,6 @@ def contact_pins(
     return pins, links
 
 
+from elecdef._pinside import pin_side  # noqa: E402 - needs Side above; re-exported here
 from elecdef._poles import Pole, poles  # noqa: E402 - needs Pin and Link above; re-exported here
 from elecdef._throws import Throw, throws  # noqa: E402 - needs Pin and Link above; re-exported here
