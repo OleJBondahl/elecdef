@@ -9,6 +9,7 @@ Every change to the public surface gets a line under Unreleased until the releas
 - `ConductorMark` (L1, L2, L3, N, L+, L-, M, PE): `ConductorMark.of(text)` maps a printed marking and the terminal letters U, V, W, + and - onto it, and `.marking` prints it.
 - `core_colour(text)` reads a core colour code (`BU`, `GNYE`, `BKWH`, `BK1`, the screen `SH`) into a `CoreColour`; each `Colour` now has its colour name as `gloss`.
 - `pin_side(marking)` gives the side a marking states: odd numbers and a coil's `A1` are side A, even numbers and `A2` are side B.
+- `pair_poles(pins, links)` pairs the pins no pole link joins, in marking order; an odd last pin is a pole of one pin, PE pins are left out.
 
 ## 0.7.0 (2026-11-06)
 

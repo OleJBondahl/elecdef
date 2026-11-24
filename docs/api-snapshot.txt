@@ -399,6 +399,11 @@ contact_pins(form: 'ContactForm', n: 'int', scheme: 'Marking') -> 'tuple[tuple[P
 
     Raises TypeError for an `n` out of range or a form the scheme does not have.
 
+pair_poles(pins: 'tuple[Pin, ...]', links: 'tuple[Link, ...]' = ()) -> 'tuple[Pole, ...]'
+    The poles of the pins no pole link joins: consecutive pins in marking order pair.
+
+    An odd last pin is a pole of one pin with no line pin; PE pins are left out.
+
 pin_side(marking: 'str') -> 'Side | None'
     The side a marking states: odd numbers and a coil's `A1` are side A, even ones and `A2` B.
 

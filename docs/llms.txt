@@ -117,6 +117,7 @@ elecdef.pins.Pole: one pole: every pin its switched or protective links join, an
 elecdef.pins.Side: which side of a part a pin is on.
 elecdef.pins.Throw: one throw: a common pin, the break or make pin it closes to, and whether it is closed at rest.
 elecdef.pins.contact_pins: the pins and links of contact n in a form under a marking scheme.
+elecdef.pins.pair_poles: the poles of the pins no pole link joins: consecutive pins in marking order pair, an odd last pin stands alone, PE pins are left out.
 elecdef.pins.pin_side: the side a marking states: an odd number and a coil A1 are side A, an even number and A2 are side B.
 elecdef.pins.poles: the poles of a contact: one per run of pole links that share a pin.
 elecdef.pins.throws: the switched links that join a common pin to a break or make pin, in marking order.

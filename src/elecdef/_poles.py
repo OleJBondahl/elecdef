@@ -73,3 +73,31 @@ def poles(pins: tuple[Pin, ...], links: tuple[Link, ...]) -> tuple[Pole, ...]:
         ordered = sorted((by_key[key] for key in group), key=_order)
         found.append(Pole(_line(ordered), tuple(ordered)))
     return tuple(sorted(found, key=lambda pole: _order(pole.pins[0])))
+
+
+def _pair(first: Pin, second: Pin) -> Pole:
+    """A pair as a pole: the line pin is the stated or numbered one, else the one pin on side A."""
+    line = _line([first, second])
+    if line is None:
+        on_a = [pin for pin in (first, second) if pin.side is Side.A]
+        line = on_a[0] if len(on_a) == 1 else None
+    return Pole(line, (first, second))
+
+
+def pair_poles(pins: tuple[Pin, ...], links: tuple[Link, ...] = ()) -> tuple[Pole, ...]:
+    """The poles of the pins no pole link joins: consecutive pins in marking order pair.
+
+    An odd last pin is a pole of one pin with no line pin; PE pins are left out.
+    """
+    by_key: dict[_Key, Pin] = {}
+    for pin in pins:
+        by_key.setdefault((pin.marking, pin.side), pin)
+    linked = set().union(*_groups(by_key, links))
+    free = sorted(
+        (pin for key, pin in by_key.items() if key not in linked and pin.role is not PinRole.PE),
+        key=_order,
+    )
+    found = [_pair(a, b) for a, b in zip(free[::2], free[1::2], strict=False)]
+    if len(free) % _PAIR:
+        found.append(Pole(None, (free[-1],)))
+    return tuple(found)

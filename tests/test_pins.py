@@ -20,9 +20,11 @@ from elecdef.pins import (
     Marking,
     Pin,
     PinRole,
+    Pole,
     Side,
     _is_marking,
     contact_pins,
+    pair_poles,
     pin_side,
     poles,
     throws,
@@ -557,3 +559,50 @@ def test_throws_take_the_rest_state_from_the_pin_role_not_the_link() -> None:
 def test_pin_side_reads_the_side_a_marking_states(marking: str, side: Side | None) -> None:
     """An odd number and a coil's A1 are side A, an even number and A2 are side B, others none."""
     assert pin_side(marking) is side
+
+
+def _plain(*markings: str) -> tuple[Pin, ...]:
+    return tuple(Pin(m, PinRole.COMMON) for m in markings)
+
+
+def _pole_shape(found: tuple[Pole, ...]) -> list[tuple[str | None, list[str]]]:
+    return [(p.line.marking if p.line else None, [e.marking for e in p.pins]) for p in found]
+
+
+def test_pair_poles_pairs_an_even_group_in_marking_order() -> None:
+    """Pins given out of order pair as 1+2, 3+4, 9+10: marking order, digit runs by value."""
+    got = pair_poles(_plain("10", "3", "9", "4", "1", "2"))
+    assert _pole_shape(got) == [(None, ["1", "2"]), (None, ["3", "4"]), (None, ["9", "10"])]
+
+
+def test_pair_poles_leaves_an_odd_last_pin_a_pole_of_one() -> None:
+    """The odd last pin is a one-pin pole with no line pin, last."""
+    assert _pole_shape(pair_poles(_plain("1", "2", "3"))) == [(None, ["1", "2"]), (None, ["3"])]
+    assert _pole_shape(pair_poles(_plain("7"))) == [(None, ["7"])]
+    assert pair_poles(()) == ()
+
+
+def test_pair_poles_leaves_earth_pins_out() -> None:
+    """A PE pin is no part of a pole and does not shift the pairing."""
+    pins = (Pin("PE", PinRole.PE), *_plain("1", "2"))
+    assert _pole_shape(pair_poles(pins)) == [(None, ["1", "2"])]
+
+
+def test_pair_poles_leaves_the_pins_a_pole_link_joins() -> None:
+    """Pins a pole link joins are poles already; the rest pair among themselves."""
+    pins = _plain("1", "2", "5", "6", "7")
+    links = (Link(("1", "2"), LinkKind.SWITCHED),)
+    assert _pole_shape(pair_poles(pins, links)) == [(None, ["5", "6"]), (None, ["7"])]
+    assert _pole_shape(poles(pins, links)) == [(None, ["1", "2"])]
+
+
+def test_pair_poles_takes_the_stated_line_pin() -> None:
+    """A pair with a LINE pin names it, whatever the numbering says."""
+    pins = (Pin("2", PinRole.LINE), Pin("1", PinRole.LOAD))
+    assert _pole_shape(pair_poles(pins)) == [("2", ["1", "2"])]
+
+
+def test_pair_poles_takes_the_one_pin_on_side_a_as_the_line() -> None:
+    """With no stated or numbered line pin, the one pin on side A is the line pin."""
+    pins = (Pin("X1", PinRole.COMMON, Side.B), Pin("X2", PinRole.COMMON, Side.A))
+    assert _pole_shape(pair_poles(pins)) == [("X2", ["X1", "X2"])]

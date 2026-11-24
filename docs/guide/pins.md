@@ -70,6 +70,16 @@ assert pin_side("A2") is Side.B
 assert pin_side("PE") is None
 ```
 
+`pair_poles(pins, links)` pairs the pins no pole link joins: consecutive pins in marking order form a pole, an odd last pin is a pole of one pin with no line pin, and PE pins are left out.
+
+```python
+from elecdef.pins import Pin, PinRole, pair_poles
+
+found = pair_poles(tuple(Pin(m, PinRole.COMMON) for m in ("1", "2", "3")))
+assert [[p.marking for p in pole.pins] for pole in found] == [["1", "2"], ["3"]]
+assert found[1].line is None
+```
+
 ## Supply input
 
 ```python
