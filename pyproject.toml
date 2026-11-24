@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "elecdef"
-version = "0.7.0"
+version = "0.8.0"
 description = "Standard-agnostic electrical engineering vocabulary as strict, typed, immutable Python values"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -167,6 +167,8 @@ ignore_names = [
     "breaking_capacity", "speed", "indicator", "disconnect",
     # ED-10: Product fields that src never reads
     "mpn", "manufacturer",
+    # 0.8.0: public names that only downstream code and the tests use
+    "A2S", "KA2S", "parse", "i2t", "L1", "L2", "L3", "of",
 ]
 
 [tool.family]
